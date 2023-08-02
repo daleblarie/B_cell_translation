@@ -24,21 +24,21 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
   auto antigen = getOneBacteriaHere(naive_b_cell->getX(), naive_b_cell->getY());
 
   if ((apc != nullptr && apc->getPresentedAntigen() != 0 && apc->getResponsiveness() > random_encounter) || antigen != nullptr){
-    if(naive_b_cell->getCd21Level() > bcell_cd21_activation_threshold){
-      
+    if(naive_b_cell->getCd21Level() > BCELL_CD21_ACTIVATION_THRESHOLD){
+
       // creating a new activated_b_cell
       auto new_activated_b_cell = std::make_shared<ActivatedBCell>(naive_b_cell->getX(), naive_b_cell->getX(), global_ID_counter, naive_b_cell->getID());
       global_ID_counter++;
-      current_patch.setIl6(current_patch.getIl6() + phag_il6_burst);
+      current_patch.setIl6(current_patch.getIl6() + PHAG_IL6_BURST);
       new_activated_b_cell->setProBreg(0);
       new_activated_b_cell->setShape("circle");
       new_activated_b_cell->setSize(1);
       new_activated_b_cell->setCsrBool(false);
       new_activated_b_cell->setTimeAlive(0);
-      
+
       int rTI = RNG_Engine() % 100;
       int rTD = RNG_Engine() % 100;
-      
+
       if(antigen != nullptr){
         if(rTI > rTD){
           new_activated_b_cell->setResponseType(1); // TI response
@@ -59,19 +59,19 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
             new_activated_b_cell->setEbi2rLevel(12);
         }
       }
-      
-      
+
+
       std::weak_ptr<Turtle> new_activated_b_cell_weak_ptr = new_activated_b_cell;
       all_turtles.push_back(new_activated_b_cell_weak_ptr);
       all_activated_b_cells.push_back(new_activated_b_cell);
-      
+
       kill(naive_b_cell);
       std::shared_ptr<ActivatedBCell> naive_b_cell = new_activated_b_cell;
     }
   }
-  
-  
-  
+
+
+
   naive_b_cell->chemotaxis();
   move_turtle(naive_b_cell);
 
@@ -94,6 +94,6 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
   {
       kill(naive_b_cell);
   }
-  
+
 
 }

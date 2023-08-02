@@ -17,8 +17,8 @@ class Agent {
     int alpha = 255;
     int x;
     int y;
+    bool visible = true;
   public:
-
     virtual double getX() const {return x;};
     virtual double getY() const {return y;};
     virtual void setX(int newX){x=newX;};
@@ -29,9 +29,12 @@ class Agent {
     std::string getShape() const {return shape;};
     void setOpacity(int newAlpha){alpha = newAlpha;};
     int getOpacity() const {return alpha;};
-    
+
     void setSize(int newSize){size = newSize;};
     int getSize() const {return size;};
+
+    void setVisible(bool status){visible = status;}
+    bool getVisible() const {return visible;}
 };
 
 

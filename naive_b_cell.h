@@ -5,7 +5,7 @@
 
 class NaiveBCell : public Turtle {
 private:
-  int type=3;
+
 public:
     // You can add specific methods and properties for this subclass
     NaiveBCell(int x, int y, int id, int heading=0);

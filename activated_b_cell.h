@@ -7,13 +7,13 @@ class ActivatedBCell : public Turtle {
 private:
     // Response type for activated B cells
     int response_type;
-    int type=1;
+
 public:
     // You can add specific methods and properties for this subclass
     ActivatedBCell(int x, int y, int id, int heading);
 
     // Override Turtle methods if needed
-    
+
     // Getter for response type
     int getResponseType() const { return response_type; }
 

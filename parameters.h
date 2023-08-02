@@ -24,9 +24,9 @@ const int STOP_EXPOSURE_TIME = 4800;
 
 const int BCELL_TNFA_APOP_THRESHOLD = 0;
 const int BCELL_BREG_DIFF_THRESHOLD = 0;
+const int BCELL_CD21_ACTIVATION_THRESHOLD =101;;
 
-const int bcell_cd21_activation_threshold =101;;
-const int phag_il6_burst=0;
+const int PHAG_IL6_BURST=0;
 
 
 #endif

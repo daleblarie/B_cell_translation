@@ -12,8 +12,7 @@ private:
     int num_TI_ep;
     // Number of TD-ep
     int num_TD_ep;
-    
-    int type=3;
+
 public:
     // You can add specific methods and properties for this subclass
     Bacteria(int x, int y, int id, int heading=0);

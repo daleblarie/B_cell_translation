@@ -2,7 +2,7 @@
 
 // functions here are ones that are used in the simulation, but are not go or setup. Functions defined in world.cpp are more general or dont have to do much with the specific simulation, besudes setup and go
 
-void World::spawn_b_cell() {
+void World::spawnBCell() {
   if(step % 10 == 0) {
       // Position of the new Naive B-cell
       int cell_x = std::floor(WORLD_WIDTH / 2); //I added std::floor()
@@ -39,7 +39,7 @@ void World::spawn_b_cell() {
 }
 
 
-void World::spawn_th0_cell() {
+void World::spawnTh0Cell() {
     if(step % 20 == 0) {
         // Position of the new Th0-cell
         int cell_x, cell_y;
@@ -146,4 +146,54 @@ std::shared_ptr<Bacteria> World::getOneBacteriaHere(int patchX, int patchY){
 
     // Return the randomly selected Bacteria
     return bacteriaOnPatch[randomIndex];
+}
+// Function to randomly return a Th2 cell on a specific patch
+std::shared_ptr<Th2Cell> World::getOneTh2Here(int patchX, int patchY){
+    std::vector<std::shared_ptr<Th2Cell>> Th2CellsOnPatch;
+    Patch& current_patch = get_patch(patchX, patchY);
+    std::vector<std::shared_ptr<Turtle>> turtles_on_patch = current_patch.getTurtlesHere();
+    for (const auto& turtle : turtles_on_patch) {
+      if (std::shared_ptr<Th2Cell> th2 = std::dynamic_pointer_cast<Th2Cell>(turtle)) {
+        Th2CellsOnPatch.push_back(th2);
+      }
+    }
+    if (Th2CellsOnPatch.empty()) {
+        return nullptr;
+    }
+    int randomIndex = RNG_Engine() % Th2CellsOnPatch.size();
+    return Th2CellsOnPatch[randomIndex];
+}
+
+// Function to randomly return a Tfh cell on a specific patch
+std::shared_ptr<TfhCell> World::getOneTfhHere(int patchX, int patchY){
+    std::vector<std::shared_ptr<TfhCell>> TfhCellsOnPatch;
+    Patch& current_patch = get_patch(patchX, patchY);
+    std::vector<std::shared_ptr<Turtle>> turtles_on_patch = current_patch.getTurtlesHere();
+    for (const auto& turtle : turtles_on_patch) {
+      if (std::shared_ptr<TfhCell> tfh = std::dynamic_pointer_cast<TfhCell>(turtle)) {
+        TfhCellsOnPatch.push_back(tfh);
+      }
+    }
+    if (TfhCellsOnPatch.empty()) {
+        return nullptr;
+    }
+    int randomIndex = RNG_Engine() % TfhCellsOnPatch.size();
+    return TfhCellsOnPatch[randomIndex];
+}
+
+// Function to randomly return an Activated B cell on a specific patch
+std::shared_ptr<ActivatedBCell> World::getOneActivatedBCellHere(int patchX, int patchY){
+    std::vector<std::shared_ptr<ActivatedBCell>> ActivatedBCellsOnPatch;
+    Patch& current_patch = get_patch(patchX, patchY);
+    std::vector<std::shared_ptr<Turtle>> turtles_on_patch = current_patch.getTurtlesHere();
+    for (const auto& turtle : turtles_on_patch) {
+      if (std::shared_ptr<ActivatedBCell> activated_b_cell = std::dynamic_pointer_cast<ActivatedBCell>(turtle)) {
+        ActivatedBCellsOnPatch.push_back(activated_b_cell);
+      }
+    }
+    if (ActivatedBCellsOnPatch.empty()) {
+        return nullptr;
+    }
+    int randomIndex = RNG_Engine() % ActivatedBCellsOnPatch.size();
+    return ActivatedBCellsOnPatch[randomIndex];
 }

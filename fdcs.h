@@ -15,8 +15,6 @@ private:
     // Responsiveness
     int responsiveness;
     
-    int type =4;
-
 public:
     // You can add specific methods and properties for this subclass
     FDCs(int x, int y, int id, int heading=0);
@@ -46,7 +44,7 @@ public:
 
     // Setter for responsiveness
     void setResponsiveness(int responsiveness) { this->responsiveness = responsiveness; }
-    
+
     void calculate_responsiveness();
 };
 

@@ -13,7 +13,7 @@ Patch& World::get_patch(int x, int y){
   return all_patches[x][y];
 }
 
-Patch& World::getPatchAhead(std::shared_ptr<Turtle> turtle, float distance){
+Patch& World::get_patch_ahead(std::shared_ptr<Turtle> turtle, float distance){
   // default value for distance=1
   // get the patch in front of the turtle, based on its current heading
   int heading = turtle->getHeading();
@@ -29,7 +29,7 @@ Patch& World::getPatchAhead(std::shared_ptr<Turtle> turtle, float distance){
   return get_patch(ahead_x, ahead_y);
 }
 
-Patch& World::getPatchAheadRight(std::shared_ptr<Turtle> turtle, float distance){
+Patch& World::get_patch_ahead_right(std::shared_ptr<Turtle> turtle, float distance){
   // default value for distance=1
   // get the patch in front and to the right of the turtle, based on its current heading
   int heading = turtle->getHeading() - 45; // to look right 45 degrees
@@ -45,7 +45,7 @@ Patch& World::getPatchAheadRight(std::shared_ptr<Turtle> turtle, float distance)
   return get_patch(ahead_x, ahead_y);
 }
 
-Patch& World::getPatchAheadLeft(std::shared_ptr<Turtle> turtle, float distance){
+Patch& World::get_patch_ahead_left(std::shared_ptr<Turtle> turtle, float distance){
   // default value for distance=1
   // get the patch in front and to the right of the turtle, based on its current heading
   int heading = turtle->getHeading() + 45; // to look left 45 degrees
@@ -151,7 +151,7 @@ void World::setup(){
   step = 0;
   time = 1;
   setup_patches(); // Initializing the patches
-  
+
   // Clear all existing entities
   all_turtles.clear();
   all_bacterias.clear();
@@ -168,19 +168,19 @@ void World::setup(){
   all_th0_cells.clear();
   all_th1_cells.clear();
   all_th2_cells.clear();
-  
+
   // Check if random runs is false, then set seed
   if (!RandomRuns) {
       set_rng_seed(RNG_SEED);
   }
-  
+
   // Sets up the world structure
   // In NetLogo, the center of the world is 0,0
   // In C++, the bottom left of the world is 0,0
   // Therefore, we need to shift the patches
-  int center_x = std::ceil(WORLD_WIDTH / 2);   //added the std::floor() because only in odd world sizes 
+  int center_x = std::ceil(WORLD_WIDTH / 2);   //added the std::floor() because only in odd world sizes
   int center_y = std::ceil(WORLD_HEIGHT / 2);  //will it matter, but 101 is odd
-  
+
   // Paracortex zone
   for (int x = center_x - 200; x <= center_x + 200; x++) {
       for (int y = center_y - 200; y <= center_y + 200; y++) {
@@ -191,7 +191,7 @@ void World::setup(){
           }
       }
   }
-  
+
   // Follicle zone
   for (int x = center_x - 49; x <= center_x + 49; x++) {
       for (int y = center_y - 49; y <= center_y + 49; y++) {
@@ -207,7 +207,7 @@ void World::setup(){
           }
       }
   }
-  
+
   // Exit from follicle
   for (int y = center_y - 5; y <= center_y + 5; y++) {
       if (y >= 0 && y < WORLD_HEIGHT) {
@@ -219,11 +219,11 @@ void World::setup(){
           p2.setColor("red");
       }
   }
-  
+
   //I added this part. In order to initialize 100 (or however many) FDCs that are apropriate distances from the center and also from eachother, we need to generate their positions intentionally, and not randomly. To do this we should generate all of them ahead of time, then create the cells.
   std::vector<std::pair<int, int>> FDCcoordinates = generateCoordinates(100, center_x, center_y, 30, 3);
   // creates 100 coordinates, centered on our origin (center_x/y) within 30 units of the center, and each at least 3 units apart
-  
+
   // using the above command, I told gpt to recreate the pmn example from the general world.h example, but doing a different initialization command
   for (int i = 0; i < FDCcoordinates.size(); i++) {
       global_ID_counter++; // increment global ID counter to give to the new cell
@@ -243,7 +243,7 @@ void World::setup(){
       all_turtles.push_back(fdc_weak_ptr);
       all_fdcs.push_back(fdc);
   }
-  
+
   int NUM_TFH_CELLS_TO_ADD = 50;
   for (int i = 0; i < NUM_TFH_CELLS_TO_ADD; i++) {
       global_ID_counter++; // increment global ID counter to give to the new cell
@@ -276,7 +276,7 @@ void World::setup(){
       all_turtles.push_back(tfhCell_weak_ptr);
       all_tfh_cells.push_back(tfhCell);
   }
-  
+
   int NUM_TH1_CELLS_TO_ADD = 10;
   for (int i = 0; i < NUM_TH1_CELLS_TO_ADD; i++) {
       global_ID_counter++; // increment global ID counter to give to the new cell
@@ -306,7 +306,7 @@ void World::setup(){
       all_turtles.push_back(th1Cell_weak_ptr);
       all_th1_cells.push_back(th1Cell);
   }
-  
+
   int NUM_TH2_CELLS_TO_ADD = 50;
   for (int i = 0; i < NUM_TH2_CELLS_TO_ADD; i++) {
       global_ID_counter++; // increment global ID counter to give to the new cell
@@ -337,8 +337,8 @@ void World::setup(){
       all_th2_cells.push_back(th2Cell);
   }
 
-  
-  
+
+
   // Initialize global variables and counters
   days_passed = 0;
 
@@ -354,8 +354,8 @@ void World::go() {
   // Update days_passed based on the step value.
   setDaysPassed(step / 48);
 
-  spawn_b_cell();
-  spawn_th0_cell();
+  spawnBCell();
+  spawnTh0Cell();
 
   // Cytokine release from paracortex
   for (int x = 0; x < WORLD_WIDTH; x++) {
@@ -380,33 +380,33 @@ void World::go() {
 
   // Ask all agents to perform their functions
   // for (auto& fdc : all_fdcs){fdcFunction(fdc);}
-  // 
+  // //
   // for (auto& naiveBCell : all_naive_b_cells){naiveBCell->naiveBCellFunction();}
-  // 
+  //
   // for (auto& activatedBCell : all_activated_b_cells){activatedBCell->activatedBCellFunction(activatedBCell);}
-  // 
+  //
   // for (auto& gcbCell : all_gcb_cells){gcbCell->gcbCellFunction(gcbCell);}
-  // 
+  //
   // for (auto& llPlasmaCell : all_ll_plasma_cells){llPlasmaCell->llPlasmaCellFunction(llPlasmaCell);}
-  // 
+  //
   // for (auto& slPlasmaCell : all_sl_plasma_cells){slPlasmaCell->slPlasmaCellFunction(slPlasmaCell);}
-  // 
+  //
   // for (auto& memBCell : all_mem_b_cells){memBCell->memBCellFunction(memBCell);}
-  // 
+  //
   // for (auto& antibody : all_antibodies){antibodiesFunction(antibody);}
-  // 
+  //
   // for (auto& bregCell : all_breg_cells){bregCell->bregFunction(bregCell);}
-  // 
+  //
   // for (auto& tfhCell : all_tfh_cells){tfhCell->tfhCellFunction(tfhCell);}
-  // 
+  //
   // for (auto& th0Cell : all_th0_cells){th0Cell->th0CellFunction(th0Cell);}
-  // 
+  //
   // for (auto& th1Cell : all_th1_cells){th1Cell->th1CellFunction(th1Cell);}
-  // 
+  //
   // for (auto& th2Cell : all_th2_cells){th2Cell->th2CellFunction(th2Cell);}
-  // 
+  //
   // for (auto& bacteria : all_bacterias){bacteria->bacteriaFunction(bacteria);}
-  // 
+  //
   // Check if autoinoculate is active
   if(AUTOINOCULATE) {
       if(step == AUTIINOCULATE_FIRST_TIME) {
@@ -431,9 +431,9 @@ void World::go() {
 
   // Increase the step (equivalent to NetLogo's tick)
   step++;
-  
-  
-  
+
+
+
   // end of go
   updateTurtleVectors(); // need to update turtle positions/delete dead turtles
 }
@@ -467,10 +467,10 @@ void World::diffuse(){
   //   patch->setEndotoxin((patch->getEndotoxin() * (1-ENDOTOXIN_DIFFUSION_FACTOR)) + patch->getTempVar());  // new total is starting amount minus the amount that diffused out, plus the amount that diffused in from neighbors
   //   patch->setTempVar(0); // resetting
   // }
-  
+
   //implement diffusion for other variables below
-  
-  
+
+
 }
 
 void World::evaporate(){
@@ -481,4 +481,3 @@ void World::evaporate(){
 
   }
 }
-

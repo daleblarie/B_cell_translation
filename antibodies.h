@@ -8,7 +8,7 @@ class Antibodies : public Turtle {
 private:
     // Type of the antibody
     std::string antibody_type;
-    int type=2;
+
 public:
     // You can add specific methods and properties for this subclass
     Antibodies(int x, int y, int id, int heading=0);
