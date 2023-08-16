@@ -331,6 +331,7 @@ to activated-b-cell-function
 
     ;check-breg-status
 
+    chemotaxis
     move
   ]
 

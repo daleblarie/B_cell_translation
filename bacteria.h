@@ -7,7 +7,7 @@
 class Bacteria : public Turtle {
 private:
     // Type of the epitope
-    std::string epitope_type;
+    int epitope_type;
     // Number of TI-ep
     int num_TI_ep;
     // Number of TD-ep
@@ -20,10 +20,10 @@ public:
     // Override Turtle methods if needed
 
     // Getter for epitope type
-    std::string getEpitopeType() const { return epitope_type; }
+    int getEpitopeType() const { return epitope_type; }
 
     // Setter for epitope type
-    void setEpitopeType(const std::string& epitope_type) { this->epitope_type = epitope_type; }
+    void setEpitopeType(const int epitope_type) { this->epitope_type = epitope_type; }
 
     // Getter for num_TI_ep
     int getNumTIep() const { return num_TI_ep; }

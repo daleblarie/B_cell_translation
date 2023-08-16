@@ -84,10 +84,10 @@ void World::add_turtle(int x, int y, int id, int heading){
   all_turtles.emplace_back(new_turtle);
 }
 
-void World::move_turtle(std::shared_ptr<Turtle> turtle){
+void World::move_turtle(std::shared_ptr<Turtle> turtle, float distance){
   // moves the turtle but asking the turtle to calculate its movement, and if there is space on the target_patch, the world executes the move
   Patch &turtle_current_patch = get_patch(turtle->getX(), turtle->getY());
-  std::pair<int,int> new_coords = turtle->move(); //moving along turtle.heading for the default value of 1 unit
+  std::pair<int,int> new_coords = turtle->move(distance); //moving along turtle.heading for the default value of 1 unit
   Patch& target_patch = get_patch(new_coords.first, new_coords.second);
   if (turtle_current_patch == target_patch){
     return;
@@ -379,33 +379,33 @@ void World::go() {
   }
 
   // Ask all agents to perform their functions
-  // for (auto& fdc : all_fdcs){fdcFunction(fdc);}
-  // //
-  // for (auto& naiveBCell : all_naive_b_cells){naiveBCell->naiveBCellFunction();}
+  for (auto& fdc : all_fdcs){fdcFunction(fdc);}
   //
-  // for (auto& activatedBCell : all_activated_b_cells){activatedBCell->activatedBCellFunction(activatedBCell);}
-  //
-  // for (auto& gcbCell : all_gcb_cells){gcbCell->gcbCellFunction(gcbCell);}
-  //
-  // for (auto& llPlasmaCell : all_ll_plasma_cells){llPlasmaCell->llPlasmaCellFunction(llPlasmaCell);}
-  //
-  // for (auto& slPlasmaCell : all_sl_plasma_cells){slPlasmaCell->slPlasmaCellFunction(slPlasmaCell);}
-  //
-  // for (auto& memBCell : all_mem_b_cells){memBCell->memBCellFunction(memBCell);}
-  //
-  // for (auto& antibody : all_antibodies){antibodiesFunction(antibody);}
-  //
-  // for (auto& bregCell : all_breg_cells){bregCell->bregFunction(bregCell);}
-  //
-  // for (auto& tfhCell : all_tfh_cells){tfhCell->tfhCellFunction(tfhCell);}
-  //
-  // for (auto& th0Cell : all_th0_cells){th0Cell->th0CellFunction(th0Cell);}
-  //
-  // for (auto& th1Cell : all_th1_cells){th1Cell->th1CellFunction(th1Cell);}
-  //
-  // for (auto& th2Cell : all_th2_cells){th2Cell->th2CellFunction(th2Cell);}
-  //
-  // for (auto& bacteria : all_bacterias){bacteria->bacteriaFunction(bacteria);}
+  for (auto& naiveBCell : all_naive_b_cells){naiveBCellFunction(naiveBCell);}
+  
+  for (auto& activatedBCell : all_activated_b_cells){activatedBCellFunction(activatedBCell);}
+  
+  for (auto& gcbCell : all_gcb_cells){gc_b_cell_function(gcbCell);}
+  
+  for (auto& llPlasmaCell : all_ll_plasma_cells){ll_plasma_cell_function(llPlasmaCell);}
+  
+  for (auto& slPlasmaCell : all_sl_plasma_cells){sl_plasma_cell_function(slPlasmaCell);}
+  
+  for (auto& memBCell : all_mem_b_cells){memBCellFunction(memBCell);}
+  
+  for (auto& antibody : all_antibodies){antibodiesFunction(antibody);}
+  
+  for (auto& bregCell : all_breg_cells){bregFunction(bregCell);}
+  
+  for (auto& tfhCell : all_tfh_cells){tfhCellFunction(tfhCell);}
+  
+  for (auto& th0Cell : all_th0_cells){th0CellFunction(th0Cell);}
+  
+  for (auto& th1Cell : all_th1_cells){th1CellFunction(th1Cell);}
+  
+  for (auto& th2Cell : all_th2_cells){th2CellFunction(th2Cell);}
+  
+  for (auto& bacteria : all_bacterias){bacteriaFunction(bacteria);}
   //
   // Check if autoinoculate is active
   if(AUTOINOCULATE) {

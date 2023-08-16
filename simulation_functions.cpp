@@ -197,3 +197,21 @@ std::shared_ptr<ActivatedBCell> World::getOneActivatedBCellHere(int patchX, int 
     int randomIndex = RNG_Engine() % ActivatedBCellsOnPatch.size();
     return ActivatedBCellsOnPatch[randomIndex];
 }
+
+
+std::vector<std::shared_ptr<FDCs>> World::get_fdcs_with_no_presented_antigen(int patchX, int patchY){
+  std::vector<std::shared_ptr<FDCs>> FDCs_with_no_anitigen;
+  Patch& current_patch = get_patch(patchX, patchY);
+  std::vector<std::shared_ptr<Turtle>> turtles_on_patch = current_patch.getTurtlesHere();
+  for (const auto& turtle : turtles_on_patch) {
+    if (std::shared_ptr<FDCs> fdc = std::dynamic_pointer_cast<FDCs>(turtle)) {
+      if (fdc->getPresentedAntigen() ==0) {
+        FDCs_with_no_anitigen.push_back(fdc);
+      }
+    }
+  }
+  return FDCs_with_no_anitigen;
+}
+
+
+

@@ -90,6 +90,7 @@ void World::tdResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
         all_gcb_cells.push_back(new_gc_b_cell);
 
         // createLinkWith(new_gc_b_cell, tfh);
+        new_gc_b_cell->addLinkedTurtle(tfh);
         tfh->setEbi2rLevel(0);
         tfh->setCcr7Level(0);
         tfh->setBcellBindingStatus(true);
@@ -113,6 +114,7 @@ void World::tdResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
             all_gcb_cells.push_back(new_gc_b_cell);
 
             // createLinkWith(new_gc_b_cell, th2);
+            new_gc_b_cell->addLinkedTurtle(th2);
             th2->setEbi2rLevel(0);
             th2->setCcr7Level(0);
             th2->setBcellBindingStatus(true);
@@ -164,19 +166,23 @@ void World::tiResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
                 all_turtles.push_back(new_mem_b_cell_weak_ptr);
                 all_mem_b_cells.push_back(new_mem_b_cell);
             } else {
-              // Create a new Memory B Cell and add it to the corresponding containers
-              auto new_mem_b_cell = std::make_shared<MemBCell>(activated_b_cell->getX(), activated_b_cell->getY(), global_ID_counter++);
+                // Create a new Memory B Cell and add it to the corresponding containers
+                auto new_mem_b_cell = std::make_shared<MemBCell>(activated_b_cell->getX(), activated_b_cell->getY(), global_ID_counter++);
 
-              new_mem_b_cell->setExposureNumber(2);
-              new_mem_b_cell->setAge(0);
-              // Set color, shape, size, etc. as required
-              new_mem_b_cell->setColor("white");
-              new_mem_b_cell->setShape("target");
-              new_mem_b_cell->setSize(1);
-              new_mem_b_cell->setS1pr1Level(10);
-              new_mem_b_cell->setProBreg(0);
-              new_mem_b_cell->setCd21Level(0);
-              new_mem_b_cell->setCxcr5Level(10);
+                new_mem_b_cell->setExposureNumber(2);
+                new_mem_b_cell->setAge(0);
+                // Set color, shape, size, etc. as required
+                new_mem_b_cell->setColor("white");
+                new_mem_b_cell->setShape("target");
+                new_mem_b_cell->setSize(1);
+                new_mem_b_cell->setS1pr1Level(10);
+                new_mem_b_cell->setProBreg(0);
+                new_mem_b_cell->setCd21Level(0);
+                new_mem_b_cell->setCxcr5Level(10);
+                
+                std::weak_ptr<Turtle> new_mem_b_cell_weak_ptr = new_mem_b_cell;
+                all_turtles.push_back(new_mem_b_cell_weak_ptr);
+                all_mem_b_cells.push_back(new_mem_b_cell);
             }
         }
     }

@@ -77,7 +77,7 @@ public:
   void display_patches();
 
   void add_turtle(int x, int y, int id, int heading=0);
-  void move_turtle(std::shared_ptr<Turtle> turtle);
+  void move_turtle(std::shared_ptr<Turtle> turtle, float distance=1);
   void move_turtle_random_jump(std::shared_ptr<Turtle> turtle);
   void turtle_wiggle(std::shared_ptr<Turtle> turtle);
 
@@ -86,6 +86,7 @@ public:
   // templated function to kill any turtle or agent
   template <typename T>
   void kill(std::shared_ptr<T> &ptr){
+    ptr->removeLinkedTurtle();
     kill_turtle(ptr);
     ptr.reset();
   }
@@ -100,6 +101,7 @@ public:
 
   void spawnTh0Cell();
   void spawnBCell();
+
   void fdcFunction(std::shared_ptr<FDCs> fdc);
   void antibodiesFunction(std::shared_ptr<Antibodies> antibody);
   void naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell);
@@ -107,8 +109,15 @@ public:
   void activatedBCellFunction(std::shared_ptr<ActivatedBCell> activated_b_cell);
   void tdResponse(std::shared_ptr<ActivatedBCell> activated_b_cell);
   void tiResponse(std::shared_ptr<ActivatedBCell> activated_b_cell);
-
-
+  void gc_b_cell_function(std::shared_ptr<GCBCell> gc_b_cell);
+  void ll_plasma_cell_function(std::shared_ptr<LLPlasmaCell> ll_plasma_cell);
+  void sl_plasma_cell_function(std::shared_ptr<SLPlasmaCell> sl_plasma_cell);
+  void memBCellFunction(std::shared_ptr<MemBCell> naive_b_cell);
+  void th0CellFunction(std::shared_ptr<Th0Cell> th0_cell);
+  void tfhCellFunction(std::shared_ptr<TfhCell> tfh_cell);
+  void th1CellFunction(std::shared_ptr<Th1Cell> th1_cell);
+  void th2CellFunction(std::shared_ptr<Th2Cell> th2_cell);
+  void bacteriaFunction(std::shared_ptr<Bacteria> bacteria);
 
   std::shared_ptr<Antibodies> getOneAntibodyHere(int xPos, int yPos);
   std::shared_ptr<FDCs> getOneFDCHere(int patchX, int patchY);
@@ -116,7 +125,7 @@ public:
   std::shared_ptr<Th2Cell> getOneTh2Here(int patchX, int patchY);
   std::shared_ptr<TfhCell> getOneTfhHere(int patchX, int patchY);
   std::shared_ptr<ActivatedBCell> getOneActivatedBCellHere(int patchX, int patchY);
-
+  std::vector<std::shared_ptr<FDCs>> get_fdcs_with_no_presented_antigen(int patchX, int patchY);
 
   // void checkTNFStatus(std::shared_ptr<T> cell) lives at bottom because of template declaration restrictions
   void isotypeSwitch(std::shared_ptr<ActivatedBCell> activated_b_cell);
@@ -166,6 +175,33 @@ public:
       }
   }
 
+  template <typename CellType>
+  bool checkBregStatus(CellType& cell){
+    Patch& current_patch = get_patch(cell->getX(), cell->getY());
+    if (cell->getProBreg() > cell.getBregThreshold()){
+      return true;
+    } else{
+      cell->setProBreg((current_patch.getIl6() + current_patch.getIl21()) * 45);
+      return false;
+    }
+  }
+
+  template <typename CellType>
+  void turnIntoBreg(CellType& cell){
+    std::shared_ptr<BregCell> breg = std::make_shared<BregCell>(cell->getX(), cell->getY(), cell->getHeading(), global_ID_counter++);
+    
+    breg->setSize(1);
+    breg->setShape("circle");
+    breg->setColor("violet");
+    breg->setS1pr1Level(0);
+    breg->setCxcr5Level(10);
+    breg->setTimeAlive(0);
+    
+    std::weak_ptr<Turtle> breg_weak_ptr = breg;
+    all_turtles.push_back(breg_weak_ptr);
+    all_breg_cells.push_back(breg);
+    kill(cell);
+  }
 };
 
 

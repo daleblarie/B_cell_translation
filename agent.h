@@ -2,12 +2,13 @@
 #ifndef AGENT_H
 #define AGENT_H
 
-
+#include <memory>
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <algorithm>
 
-class Agent {
+class Agent: std::enable_shared_from_this<Agent> {
   protected:
     Agent(int x, int y) : x(x), y(y) {}
   private:
@@ -35,6 +36,9 @@ class Agent {
 
     void setVisible(bool status){visible = status;}
     bool getVisible() const {return visible;}
+    
+    std::weak_ptr<Agent> createWeakPtr() {return shared_from_this();}
+
 };
 
 

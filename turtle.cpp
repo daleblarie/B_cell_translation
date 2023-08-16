@@ -6,6 +6,34 @@
 #include "turtle.h"
 #include "parameters.h"
 
+void Turtle::addLinkedTurtle(std::weak_ptr<Turtle> linkedTurtle) {
+    linkedTurtles.push_back(linkedTurtle);
+    linkedTurtle.lock()->getLinkedTurtles().push_back(this->createWeakTurtlePtr());
+}
+
+std::vector<std::weak_ptr<Turtle>>& Turtle::getLinkedTurtles() {
+    return linkedTurtles;
+}
+
+void Turtle::removeLinkedTurtle(){
+  for(auto neighbor : this->getLinkedTurtles()){
+    auto iter = std::find_if(neighbor.lock()->getLinkedTurtles().begin(), neighbor.lock()->getLinkedTurtles().end(), WeakPtrComparator<Turtle>(ID_num));  // finding where current ID_num of this turtle is in the nieghbors list of links
+    if (iter != neighbor.lock()->getLinkedTurtles().end()) {
+         neighbor.lock()->getLinkedTurtles().erase(iter);
+     } else {
+         std::cout << "Linked turtle not found in the neighbors vector. 1 ERRORRRR" << std::endl;
+     }
+     
+     iter = std::find_if(this->getLinkedTurtles().begin(), this->getLinkedTurtles().end(), WeakPtrComparator<Turtle>(neighbor.lock()->getID()));
+     if (iter != this->getLinkedTurtles().end()) {
+          this->getLinkedTurtles().erase(iter);
+      } else {
+          std::cout << "Neighbor Linked turtle not found in the vector. 2 ERRORRRR" << std::endl;
+      }
+  }
+}
+
+
 std::pair<int,int> Turtle::move(float distance) {
   // default val for distance=1
   // calculates the movement for the turtle based on its heading and distance to move and returns the coordinates of the destination patch

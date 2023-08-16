@@ -32,10 +32,10 @@ public:
     void setR2(float r2) { this->r2 = r2; }
 
     // Getter for rf
-    float getRF() const { return rf; }
+    float getRf() const { return rf; }
 
     // Setter for rf
-    void setRF(float rf) { this->rf = rf; }
+    void setRf(float rf) { this->rf = rf; }
 
     // Getter for th1_activation
     float getTh1Activation() const { return th1_activation; }

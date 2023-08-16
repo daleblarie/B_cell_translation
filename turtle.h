@@ -5,12 +5,30 @@
 #include "agent.h"
 #include <random>
 
+// Comparator function for std::find with std::weak_ptr
+template <typename T>
+struct WeakPtrComparator {
+    int targetID;
+
+    WeakPtrComparator(int id) : targetID(id) {}
+
+    bool operator()(const std::weak_ptr<T>& ptr) const {
+        if (auto locked = ptr.lock()) {
+            return locked->getID() == targetID;
+        }
+        return false;
+    }
+};
+
 class Turtle : public Agent{
   public :
     Turtle(int x, int y, int ID_num, int heading=0) : Agent(x, y), ID_num(ID_num), heading(heading) {x_dec=x; y_dec=y;};
     virtual ~Turtle() = default;
 
   private:
+    std::vector<std::weak_ptr<Turtle>> linkedTurtles;
+
+    
     int type =0;  //agent type, will be used for the get-one-of functions 
     int ID_num;
     int heading;
@@ -64,10 +82,9 @@ class Turtle : public Agent{
     void check_tnf_status(){};
     void chemotaxis(){};
 
-
-
-
-
+    void addLinkedTurtle(std::weak_ptr<Turtle> linkedTurtle);
+    void removeLinkedTurtle();
+    std::vector<std::weak_ptr<Turtle>>& getLinkedTurtles();
 
 
 
@@ -141,9 +158,10 @@ class Turtle : public Agent{
     void setExposureNumber(int exposureNumber) { exposure_number = exposureNumber; }
     int getExposureNumber() const { return exposure_number; }
 
-    
+    std::weak_ptr<Turtle> createWeakTurtlePtr() {std::weak_ptr<Turtle> test = std::dynamic_pointer_cast<Turtle>(createWeakPtr().lock()); return test;}
     bool operator== (const Turtle& turt2){return this->ID_num==turt2.ID_num;};
     bool operator== (const Turtle* turt2){return this->ID_num==turt2->ID_num;};
+    bool operator== (const std::weak_ptr<Turtle> turt2){return this->ID_num==turt2.lock()->ID_num;};
     
     // add more turtle specific functions below. These are functions that will apply to all turtle types, not a single breed
 
