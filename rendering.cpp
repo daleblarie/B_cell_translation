@@ -77,16 +77,16 @@ std::tuple<int, int, int> RenderingEngine::getColor(const std::string& color){
     green = 165;
     blue = 0;
   }
-  else if (color == "grey"){
+  else if (color == "grey" || color =="gray"){
     red = 128;
     green = 128;
     blue = 128;
   }
   
   else {
-      red = 100;
-      green = 100;
-      blue = 100;
+      red = 255;
+      green = 16;
+      blue = 240;
   }
   return std::make_tuple(red, green, blue);
 }

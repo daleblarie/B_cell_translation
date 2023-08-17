@@ -21,7 +21,7 @@ void World::gc_b_cell_function(std::shared_ptr<GCBCell> gc_b_cell) {
 
         // The GC B-cell only moves if it has not yet reached the follicle center
         if(calculateDistance(WORLD_WIDTH/2, WORLD_HEIGHT/2, gc_b_cell->getX(), gc_b_cell->getY()) > 15) {
-            gc_b_cell->chemotaxis();
+            chemotaxis(gc_b_cell);
             move_turtle(gc_b_cell, 0.5);
             // gc_b_cell->gc_move();
         } else {

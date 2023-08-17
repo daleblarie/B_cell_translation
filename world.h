@@ -98,6 +98,8 @@ public:
   void setup();
   void go();
 
+  void update_chemokine_gradient();
+
   void diffuse();
   void evaporate();
 
@@ -194,6 +196,61 @@ public:
     kill(cell);
     return breg;
   }
+  
+  template <typename CellType>
+  void chemotaxis(CellType& cell){
+    std::cout<<"chemotaxing"<<std::endl;
+    std::cout<<"my location" <<cell->getX()<<", "<< cell->getY()<<std::endl;
+    Patch& current_patch = get_patch(cell->getX(), cell->getY());
+    double rt_turn = 0.0;
+    double lt_turn = 0.0;
+    double s1pr1_weight = current_patch.getS1pLevel() / 100.0;
+    std::vector<Patch> neighbors;
+    for (int x = -1; x < 2; x++) {
+      for (int y = -1; y < 2; y++) {
+        if (x==0 && y==0){continue;}
+        std::cout<<"neighbor location"<<cell->getX() + x<<", "<< cell->getY()+ y <<std::endl;
+
+        neighbors.push_back(get_patch(current_patch.getX() + x, current_patch.getY() + y));
+      }
+    }
+    std::cout<<"chemotaxing2"<<std::endl;
+    
+    double max_s1p = -1;
+    Patch max_patch;
+    for (auto neighbor_patch: neighbors){
+      std::cout<<neighbor_patch.getX()<<std::endl;
+      if (neighbor_patch.getS1pLevel() > max_s1p) {
+        std::cout<<"Changing max patch"<<std::endl;
+        max_s1p = neighbor_patch.getS1pLevel();
+        max_patch = get_patch(neighbor_patch.getX(), neighbor_patch.getY());
+        /* code */
+      }
+    }
+   std::cout<<"chemotaxing3"<<std::endl;
+// Patch max_s1p_patch = std::max_element(neighbors.begin(), neighbors.end(), 
+    //                                          [](const Patch* a, const Patch* b) {
+    //                                              return a.getS1pLevel() < b.getS1pLevel();
+    //                                          });
+    std::cout<<max_patch.getX()<<","<< max_patch.getY()<<std::endl;
+    double angle_to_s1p = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
+    std::cout<<"chemotaxing4"<<std::endl;
+
+    double cur_angle = cell->getHeading();
+    double x = angle_to_s1p - cur_angle;
+    if (x < 0.0) {
+        x += 360.0;
+    }
+    double y = 360.0 - x;
+    if (x < y) {
+        rt_turn += x * s1pr1_weight;
+    } else {
+        lt_turn += y * s1pr1_weight;
+    }
+  }
+  
+  
+  
 };
 
 

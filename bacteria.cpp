@@ -35,6 +35,6 @@ void World::bacteriaFunction(std::shared_ptr<Bacteria> bacteria) {
     }
 
     bacteria->setS1pr1Level(bacteria->getS1pr1Level() + 0.004);
-    bacteria->chemotaxis();
+    chemotaxis(bacteria);
     move_turtle(bacteria);
 }

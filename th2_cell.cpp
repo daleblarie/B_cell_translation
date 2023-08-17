@@ -12,7 +12,7 @@ void World::th2CellFunction(std::shared_ptr<Th2Cell> th2_cell) {
 
     // Calculate the Euclidean distance between the cell's location and the center of the world (WORLD_WIDTH/2, WORLD_HEIGHT/2)
     if (calculateDistance(WORLD_WIDTH/2, WORLD_HEIGHT/2, th2_cell->getX(), th2_cell->getY()) > 20 || !th2_cell->getBcellBindingStatus()) {
-        th2_cell->chemotaxis();
+        chemotaxis(th2_cell);
         move_turtle(th2_cell);
     }
 

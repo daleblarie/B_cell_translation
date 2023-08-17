@@ -9,7 +9,7 @@ void World::tfhCellFunction(std::shared_ptr<TfhCell> tfh_cell) {
     Patch& current_patch = get_patch(tfh_cell->getX(), tfh_cell->getY());
 
     if (calculateDistance(tfh_cell->getX(), tfh_cell->getY(), WORLD_WIDTH / 2, WORLD_HEIGHT / 2) > 20 || !tfh_cell->getBcellBindingStatus()) {
-        tfh_cell->chemotaxis();
+        chemotaxis(tfh_cell);
         move_turtle(tfh_cell);
     }
 

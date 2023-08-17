@@ -8,7 +8,7 @@ Th1Cell::Th1Cell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) 
 void World::th1CellFunction(std::shared_ptr<Th1Cell> th1_cell) {
     Patch& current_patch = get_patch(th1_cell->getX(), th1_cell->getY());
 
-    th1_cell->chemotaxis();
+    chemotaxis(th1_cell);
     move_turtle(th1_cell);
 
     // Secretes the following cytokines

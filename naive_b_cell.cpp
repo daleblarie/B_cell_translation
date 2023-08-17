@@ -72,7 +72,7 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
 
 
 
-  naive_b_cell->chemotaxis();
+  chemotaxis(naive_b_cell);
   move_turtle(naive_b_cell);
 
   // Checks level of stimulation of b-reg differentiation

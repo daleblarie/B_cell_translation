@@ -421,7 +421,7 @@ void World::go() {
   }
 
 
-  // update_chemokine_gradient();
+  update_chemokine_gradient();
   // check_overall_cd21_expression();
 
   // Check if autoinoculate is active
@@ -437,47 +437,134 @@ void World::go() {
   // end of go
   updateTurtleVectors(); // need to update turtle positions/delete dead turtles
 }
-
+void World::update_chemokine_gradient(){
+  diffuse();
+  evaporate();
+}
 
 void World::diffuse(){
   // need to diffuse values from patches out to neighboring patches
   float factor_for_neighbors = 1/8; //eight neighbors in a 2D grid
 
-  // // follow this example format for each diffusing variable
-  // for (auto& patch : all_patches){patch->setTempVar(0);}  // reset temp_var
-  // // start with Endotoxin
-  // // get totals for neighbors
-  // for (auto& center_patch : all_patches){
-  //   int center_patch_x_pos = center_patch->getX();
-  //   int center_patch_y_pos = center_patch->getY();
-  //   for (int i=-1; i<2; i++){
-  //     for (int j=-1; j<2; j++){
-  //       if (i==0 && j==0) { // skipping center cell
-  //         continue;
-  //       }
-  //       int neighbor_x = fmod((center_patch_x_pos + i), WORLD_WIDTH); // getting modulo of position + x/y to wrap around toroidal world
-  //       int neighbor_y = fmod((center_patch_y_pos + j), WORLD_HEIGHT);
-  //       auto& neighbor_patch = get_patch(neighbor_x, neighbor_y);
-  //       neighbor_patch.setTempVar(neighbor_patch.getTempVar() + center_patch->getEndotoxin()*factor_for_neighbors*ENDOTOXIN_DIFFUSION_FACTOR); // evenly adding the amount diffused out from the center patch to neighbor patches
-  //     }
-  //   }
-  // }
-  // // set Endotoxin on each patch from the temp var, then reset tempvar
-  // for (auto& patch : all_patches){
-  //   patch->setEndotoxin((patch->getEndotoxin() * (1-ENDOTOXIN_DIFFUSION_FACTOR)) + patch->getTempVar());  // new total is starting amount minus the amount that diffused out, plus the amount that diffused in from neighbors
-  //   patch->setTempVar(0); // resetting
-  // }
-
-  //implement diffusion for other variables below
-
-
+  // follow this example format for each diffusing variable
+  for (auto& patch : all_patches) {  // reset temp_var
+      patch->setTempS1pLevel(0);
+      patch->setTempCxcl13Level(0);
+      patch->setTempCcl19Level(0);
+      patch->setTempEbi2Level(0);
+      patch->setTempIl2(0);
+      patch->setTempIl4(0);
+      patch->setTempIl6(0);
+      patch->setTempIl10(0);
+      patch->setTempIl12(0);
+      patch->setTempIl15(0);
+      patch->setTempIl21(0);
+      patch->setTempIfG(0);
+      patch->setTempIfA(0);
+      patch->setTempTnfA(0);
+      patch->setTempTgfB(0);
+  }
+  // start with Endotoxin
+  // get totals for neighbors
+  for (auto& center_patch : all_patches){
+    int center_patch_x_pos = center_patch->getX();
+    int center_patch_y_pos = center_patch->getY();
+    for (int i=-1; i<2; i++){
+      for (int j=-1; j<2; j++){
+        if (i==0 && j==0) { // skipping center cell
+          continue;
+        }
+        int neighbor_x = fmod((center_patch_x_pos + i), WORLD_WIDTH); // getting modulo of position + x/y to wrap around toroidal world
+        int neighbor_y = fmod((center_patch_y_pos + j), WORLD_HEIGHT);
+        auto& neighbor_patch = get_patch(neighbor_x, neighbor_y);
+        
+        // evenly adding the amount diffused out from the center patch to neighbor patches
+        neighbor_patch.setTempCxcl13Level(neighbor_patch.getTempCxcl13Level() + center_patch->getTempCxcl13Level() * factor_for_neighbors * CXCL13_LEVEL_DIFFUSION_FACTOR);
+        neighbor_patch.setTempCcl19Level(neighbor_patch.getTempCcl19Level() + center_patch->getTempCcl19Level() * factor_for_neighbors * CCL19_LEVEL_DIFFUSION_FACTOR);
+        neighbor_patch.setTempEbi2Level(neighbor_patch.getTempEbi2Level() + center_patch->getTempEbi2Level() * factor_for_neighbors * EBI2_LEVEL_DIFFUSION_FACTOR);
+        neighbor_patch.setTempS1pLevel(neighbor_patch.getTempS1pLevel() + center_patch->getTempS1pLevel() * factor_for_neighbors * S1P_LEVEL_DIFFUSION_FACTOR);
+        neighbor_patch.setTempIl2(neighbor_patch.getTempIl2() + center_patch->getTempIl2() * factor_for_neighbors * IL2_DIFFUSION_FACTOR);
+        neighbor_patch.setTempIl4(neighbor_patch.getTempIl4() + center_patch->getTempIl4() * factor_for_neighbors * IL4_DIFFUSION_FACTOR);
+        neighbor_patch.setTempIl6(neighbor_patch.getTempIl6() + center_patch->getTempIl6() * factor_for_neighbors * IL6_DIFFUSION_FACTOR);
+        neighbor_patch.setTempIl10(neighbor_patch.getTempIl10() + center_patch->getTempIl10() * factor_for_neighbors * IL10_DIFFUSION_FACTOR);
+        neighbor_patch.setTempIl12(neighbor_patch.getTempIl12() + center_patch->getTempIl12() * factor_for_neighbors * IL12_DIFFUSION_FACTOR);
+        neighbor_patch.setTempIl15(neighbor_patch.getTempIl15() + center_patch->getTempIl15() * factor_for_neighbors * IL15_DIFFUSION_FACTOR);
+        neighbor_patch.setTempIl21(neighbor_patch.getTempIl21() + center_patch->getTempIl21() * factor_for_neighbors * IL21_DIFFUSION_FACTOR);
+        neighbor_patch.setTempIfG(neighbor_patch.getTempIfG() + center_patch->getTempIfG() * factor_for_neighbors * IF_G_DIFFUSION_FACTOR);
+        neighbor_patch.setTempIfA(neighbor_patch.getTempIfA() + center_patch->getTempIfA() * factor_for_neighbors * IF_A_DIFFUSION_FACTOR);
+        neighbor_patch.setTempTnfA(neighbor_patch.getTempTnfA() + center_patch->getTempTnfA() * factor_for_neighbors * TNF_A_DIFFUSION_FACTOR);
+        neighbor_patch.setTempTgfB(neighbor_patch.getTempTgfB() + center_patch->getTempTgfB() * factor_for_neighbors * TGF_B_DIFFUSION_FACTOR);
+      }
+    }
+  }
+  // set Endotoxin on each patch from the temp var, then reset tempvar
+  for (auto& patch : all_patches){
+    // new total is starting amount minus the amount that diffused out, plus the amount that diffused in from neighbors
+    patch->setS1pLevel((patch->getS1pLevel() * (1 - S1P_LEVEL_DIFFUSION_FACTOR)) + patch->getTempS1pLevel());
+    patch->setTempS1pLevel(0); // resetting
+    
+    patch->setCxcl13Level((patch->getCxcl13Level() * (1 - CXCL13_LEVEL_DIFFUSION_FACTOR)) + patch->getTempCxcl13Level());
+    patch->setTempCxcl13Level(0); // resetting
+    
+    patch->setCcl19Level((patch->getCcl19Level() * (1 - CCL19_LEVEL_DIFFUSION_FACTOR)) + patch->getTempCcl19Level());
+    patch->setTempCcl19Level(0); // resetting
+    
+    patch->setEbi2Level((patch->getEbi2Level() * (1 - EBI2_LEVEL_DIFFUSION_FACTOR)) + patch->getTempEbi2Level());
+    patch->setTempEbi2Level(0); // resetting
+    
+    patch->setIl2((patch->getIl2() * (1 - IL2_DIFFUSION_FACTOR)) + patch->getTempIl2());
+    patch->setTempIl2(0); // resetting
+    
+    patch->setIl4((patch->getIl4() * (1 - IL4_DIFFUSION_FACTOR)) + patch->getTempIl4());
+    patch->setTempIl4(0); // resetting
+    
+    patch->setIl6((patch->getIl6() * (1 - IL6_DIFFUSION_FACTOR)) + patch->getTempIl6());
+    patch->setTempIl6(0); // resetting
+    
+    patch->setIl10((patch->getIl10() * (1 - IL10_DIFFUSION_FACTOR)) + patch->getTempIl10());
+    patch->setTempIl10(0); // resetting
+    
+    patch->setIl12((patch->getIl12() * (1 - IL12_DIFFUSION_FACTOR)) + patch->getTempIl12());
+    patch->setTempIl12(0); // resetting
+    
+    patch->setIl15((patch->getIl15() * (1 - IL15_DIFFUSION_FACTOR)) + patch->getTempIl15());
+    patch->setTempIl15(0); // resetting
+    
+    patch->setIl21((patch->getIl21() * (1 - IL21_DIFFUSION_FACTOR)) + patch->getTempIl21());
+    patch->setTempIl21(0); // resetting
+    
+    patch->setIfG((patch->getIfG() * (1 - IF_G_DIFFUSION_FACTOR)) + patch->getTempIfG());
+    patch->setTempIfG(0); // resetting
+    
+    patch->setIfA((patch->getIfA() * (1 - IF_A_DIFFUSION_FACTOR)) + patch->getTempIfA());
+    patch->setTempIfA(0); // resetting
+    
+    patch->setTnfA((patch->getTnfA() * (1 - TNF_A_DIFFUSION_FACTOR)) + patch->getTempTnfA());
+    patch->setTempTnfA(0); // resetting
+    
+    patch->setTgfB((patch->getTgfB() * (1 - TGF_B_DIFFUSION_FACTOR)) + patch->getTempTgfB());
+    patch->setTempTgfB(0); // resetting
+  }
 }
 
 void World::evaporate(){
   // evaporate variables off of all patches
   for (auto& patch : all_patches) {
     // Endotoxin as an example, amount to set is current amount times the evaporation factor
-    // patch->setEndotoxin(patch->getEndotoxin() * ENDOTOXIN_EVAPORATION_FACTOR);
-
+    patch->setCxcl13Level(patch->getCxcl13Level() * CXCL13_EVAPORATION_FACTOR);
+    patch->setCcl19Level(patch->getCcl19Level() * CCL19_EVAPORATION_FACTOR);
+    patch->setEbi2Level(patch->getEbi2Level() * EBI2_EVAPORATION_FACTOR);
+    patch->setS1pLevel(patch->getS1pLevel() * S1P_EVAPORATION_FACTOR);
+    patch->setIl2(patch->getIl2() * IL2_EVAPORATION_FACTOR);
+    patch->setIl4(patch->getIl4() * IL4_EVAPORATION_FACTOR);
+    patch->setIl6(patch->getIl6() * IL6_EVAPORATION_FACTOR);
+    patch->setIl10(patch->getIl10() * IL10_EVAPORATION_FACTOR);
+    patch->setIl12(patch->getIl12() * IL12_EVAPORATION_FACTOR);
+    patch->setIl15(patch->getIl15() * IL15_EVAPORATION_FACTOR);
+    patch->setIl21(patch->getIl21() * IL21_EVAPORATION_FACTOR);
+    patch->setIfG(patch->getIfG() * IF_G_EVAPORATION_FACTOR);
+    patch->setIfA(patch->getIfA() * IF_A_EVAPORATION_FACTOR);
+    patch->setTnfA(patch->getTnfA() * TNF_A_EVAPORATION_FACTOR);
+    patch->setTgfB(patch->getTgfB() * TGF_B_EVAPORATION_FACTOR);
   }
 }

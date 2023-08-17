@@ -68,7 +68,7 @@ class Turtle : public Agent{
     int getID() const {return ID_num;};
     int getType() const {return type;};
     
-    void setHeading(int newHeading){heading = newHeading;};
+    void setHeading(int newHeading){heading = newHeading; std::cout<<"SETTING HEADING"<<std::endl;};
     int getHeading() const {return heading;};
     
     void setAge(int newAge){age=newAge;};
@@ -79,7 +79,7 @@ class Turtle : public Agent{
 
     // void check_breg_status(){};
     // void check_tnf_status(){};
-    void chemotaxis(){};
+    // void chemotaxis(){};
 
     void addLinkedTurtle(std::weak_ptr<Turtle> linkedTurtle);
     void removeLinkedTurtle();

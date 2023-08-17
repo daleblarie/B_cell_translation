@@ -28,5 +28,36 @@ const int BCELL_CD21_ACTIVATION_THRESHOLD =101;;
 
 const int PHAG_IL6_BURST=0;
 
+static const int CXCL13_LEVEL_DIFFUSION_FACTOR = 1.0;
+static const int S1P_LEVEL_DIFFUSION_FACTOR = 1.0;
+static const int CCL19_LEVEL_DIFFUSION_FACTOR = 1.0;
+static const int EBI2_LEVEL_DIFFUSION_FACTOR = 1.0;
+static const int IL2_DIFFUSION_FACTOR = 1.0;
+static const int IL4_DIFFUSION_FACTOR = 1.0;
+static const int IL6_DIFFUSION_FACTOR = 1.0;
+static const int IL10_DIFFUSION_FACTOR = 1.0;
+static const int IL12_DIFFUSION_FACTOR = 1.0;
+static const int IL15_DIFFUSION_FACTOR = 1.0;
+static const int IL21_DIFFUSION_FACTOR = 1.0;
+static const int IF_G_DIFFUSION_FACTOR = 1.0;
+static const int IF_A_DIFFUSION_FACTOR = 1.0;
+static const int TNF_A_DIFFUSION_FACTOR = 1.0;
+static const int TGF_B_DIFFUSION_FACTOR = 1.0;
+
+static const double CXCL13_EVAPORATION_FACTOR = 0.9;
+static const double S1P_EVAPORATION_FACTOR = 0.9;
+static const double CCL19_EVAPORATION_FACTOR = 0.9;
+static const double EBI2_EVAPORATION_FACTOR = 0.9;
+static const double IL2_EVAPORATION_FACTOR = 0.9;
+static const double IL4_EVAPORATION_FACTOR = 0.9;
+static const double IL6_EVAPORATION_FACTOR = 0.95;
+static const double IL10_EVAPORATION_FACTOR = 0.95;
+static const double IL12_EVAPORATION_FACTOR = 0.9;
+static const double IL15_EVAPORATION_FACTOR = 0.9;
+static const double IL21_EVAPORATION_FACTOR = 0.9;
+static const double IF_G_EVAPORATION_FACTOR = 0.9;
+static const double IF_A_EVAPORATION_FACTOR = 0.9;
+static const double TNF_A_EVAPORATION_FACTOR = 0.9;
+static const double TGF_B_EVAPORATION_FACTOR = 0.9;
 
 #endif

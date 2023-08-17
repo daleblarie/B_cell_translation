@@ -82,7 +82,7 @@ void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
   bool turn_into_breg = checkBregStatus(mem_b_cell);
   if (turn_into_breg){std::shared_ptr<BregCell> mem_b_cell = turnIntoBreg(mem_b_cell);};
 
-  mem_b_cell->chemotaxis();
+  chemotaxis(mem_b_cell);
   move_turtle(mem_b_cell);
 
 

@@ -16,7 +16,11 @@ private:
     double s1p_level, cxcl13_level, ccl19_level, ebi2_level;
     double il2, il4, il6, il10, il12, il15, il21;
     double if_g, if_a, tnf_a, tgf_b;
+    
     double temp_var; // placeholder for diffusion totals before updating
+    double temp_s1p_level, temp_cxcl13_level, temp_ccl19_level, temp_ebi2_level;
+    double temp_il2, temp_il4, temp_il6, temp_il10, temp_il12, temp_il15, temp_il21;
+    double temp_if_g, temp_if_a, temp_tnf_a, temp_tgf_b;
 
 public:
     Patch():Agent(0,0){setColor("red");}; // base patch color is red
@@ -95,6 +99,66 @@ public:
     void setTgfB(double value) { tgf_b = value; }
     double getTgfB() const { return tgf_b; }
     
+    // Getter and setter functions for temp_s1p_level
+    void setTempS1pLevel(double value) { temp_s1p_level = value; }
+    double getTempS1pLevel() const { return temp_s1p_level; }
+
+    // Getter and setter functions for temp_cxcl13_level
+    void setTempCxcl13Level(double value) { temp_cxcl13_level = value; }
+    double getTempCxcl13Level() const { return temp_cxcl13_level; }
+
+    // Getter and setter functions for temp_ccl19_level
+    void setTempCcl19Level(double value) { temp_ccl19_level = value; }
+    double getTempCcl19Level() const { return temp_ccl19_level; }
+
+    // Getter and setter functions for temp_ebi2_level
+    void setTempEbi2Level(double value) { temp_ebi2_level = value; }
+    double getTempEbi2Level() const { return temp_ebi2_level; }
+
+    // Getter and setter functions for temp_il2
+    void setTempIl2(double value) { temp_il2 = value; }
+    double getTempIl2() const { return temp_il2; }
+
+    // Getter and setter functions for temp_il4
+    void setTempIl4(double value) { temp_il4 = value; }
+    double getTempIl4() const { return temp_il4; }
+
+    // Getter and setter functions for temp_il6
+    void setTempIl6(double value) { temp_il6 = value; }
+    double getTempIl6() const { return temp_il6; }
+
+    // Getter and setter functions for temp_il10
+    void setTempIl10(double value) { temp_il10 = value; }
+    double getTempIl10() const { return temp_il10; }
+
+    // Getter and setter functions for temp_il12
+    void setTempIl12(double value) { temp_il12 = value; }
+    double getTempIl12() const { return temp_il12; }
+
+    // Getter and setter functions for temp_il15
+    void setTempIl15(double value) { temp_il15 = value; }
+    double getTempIl15() const { return temp_il15; }
+
+    // Getter and setter functions for temp_il21
+    void setTempIl21(double value) { temp_il21 = value; }
+    double getTempIl21() const { return temp_il21; }
+
+    // Getter and setter functions for temp_if_g
+    void setTempIfG(double value) { temp_if_g = value; }
+    double getTempIfG() const { return temp_if_g; }
+
+    // Getter and setter functions for temp_if_a
+    void setTempIfA(double value) { temp_if_a = value; }
+    double getTempIfA() const { return temp_if_a; }
+
+    // Getter and setter functions for temp_tnf_a
+    void setTempTnfA(double value) { temp_tnf_a = value; }
+    double getTempTnfA() const { return temp_tnf_a; }
+
+    // Getter and setter functions for temp_tgf_b
+    void setTempTgfB(double value) { temp_tgf_b = value; }
+    double getTempTgfB() const { return temp_tgf_b; }
+
     // patch is the same iff the x and y positions are equal
     bool operator== (Patch& that){return (this->getX()==that.getX() && this->getY()==that.getY());};
 

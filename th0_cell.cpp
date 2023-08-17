@@ -76,7 +76,7 @@ void World::th0CellFunction(std::shared_ptr<Th0Cell> th0_cell) {
         kill_th0 = true;
     }
 
-    th0_cell->chemotaxis();
+    chemotaxis(th0_cell);
     move_turtle(th0_cell);
 
     th0_cell->setTimeAlive(th0_cell->getTimeAlive() + 1);

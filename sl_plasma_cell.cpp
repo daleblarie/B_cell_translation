@@ -18,7 +18,7 @@ void World::sl_plasma_cell_function(std::shared_ptr<SLPlasmaCell> sl_plasma_cell
         bool turn_into_breg = checkBregStatus(sl_plasma_cell);
         if (turn_into_breg){std::shared_ptr<BregCell> sl_plasma_cell = turnIntoBreg(sl_plasma_cell);};
 
-        sl_plasma_cell->chemotaxis();
+        chemotaxis(sl_plasma_cell);
         sl_plasma_cell->move();
     }
 

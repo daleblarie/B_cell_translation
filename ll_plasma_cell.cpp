@@ -22,7 +22,7 @@ void World::ll_plasma_cell_function(std::shared_ptr<LLPlasmaCell> ll_plasma_cell
 
         // ll_plasma_cell->check_breg_status();
 
-        ll_plasma_cell->chemotaxis();
+        chemotaxis(ll_plasma_cell);
         ll_plasma_cell->move();
       
     }

@@ -15,7 +15,7 @@ void World::bregFunction(std::shared_ptr<BregCell> breg_cell) {
     breg_patch.setTgfB(breg_patch.getTgfB() + 1);
 
     // Chemotaxis and move
-    breg_cell->chemotaxis();
+    chemotaxis(breg_cell);
     move_turtle(breg_cell);
 
     // Check TNF status

@@ -28,7 +28,7 @@ void World::activatedBCellFunction(std::shared_ptr<ActivatedBCell> abcell) {
 
         //abcell->checkBregStatus();
 
-        abcell->chemotaxis();
+        chemotaxis(abcell);
         move_turtle(abcell);
     }
 

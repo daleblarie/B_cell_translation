@@ -40,6 +40,28 @@ class Agent: std::enable_shared_from_this<Agent> {
     
     std::weak_ptr<Agent> createWeakPtr() {return shared_from_this();}
 
+    template <typename agent>
+    double angle_to(agent& target){
+      std::cout<<"getting angle"<<std::endl;
+      std::cout<<x<<std::endl;
+      std::cout<<y<<std::endl;
+      int targetx = target.getX();
+      int targety = target.getY();
+      std::cout<<"getting angle2"<<std::endl;
+      std::cout<<targetx<<std::endl;
+      std::cout<<targety<<std::endl;
+      int delta_x = x - targetx;
+      int delta_y = y - targety;
+      std::cout<<"getting angle3"<<std::endl;
+      std::cout<<delta_x<<std::endl;
+      std::cout<<delta_y<<std::endl;
+      
+      double angle_radian = atan(delta_x/delta_y);
+      std::cout<<"getting angle4"<<std::endl;
+
+      return angle_radian * M_PI/180;
+    }
+
 };
 
 
