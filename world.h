@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <memory>
 #include <algorithm>
+#include <random>
+
 
 #include "parameters.h"
 #include "agent.h"
@@ -154,40 +156,29 @@ public:
 
 
 
-  template <typename T>
-  void checkTNFStatus(std::shared_ptr<T> cell) {
-      // Get the patch where the cell is
-      Patch& cell_patch = get_patch(cell->getX(), cell->getY());
-
-      // Represents consumption of TNFa
-      cell_patch.setTnfA(cell_patch.getTnfA() - 0.01);
-
-      // Calculate tnf-a stimulation
-      double tnf_a_stimulation = 100 * cell_patch.getTnfA();
-
-      // Check if the tnf-a stimulation is above the threshold
-      if(tnf_a_stimulation > cell->getTnfaThreshold()) {
-          // Increase total number of apoptosed cells
-          ++total_num_of_apoptosed_cells;
-
-          // Kill the cell
-          kill(cell);
-      }
+  template <typename CellType>
+  bool checkTNFStatus(CellType& cell){
+// if returns true, that means this cell needs to die
+    Patch& current_patch = get_patch(cell->getX(), cell->getY());
+    current_patch.setTnfA(current_patch.getTnfA() - .01);
+    cell->setTnfaStimulation( current_patch.getTnfA() * 100);
+    
+    return (cell->getTnfaStimulation() > cell->getTnfaThreshold());
   }
 
   template <typename CellType>
   bool checkBregStatus(CellType& cell){
     Patch& current_patch = get_patch(cell->getX(), cell->getY());
-    if (cell->getProBreg() > cell.getBregThreshold()){
+    if (cell->getProBreg() > cell->getBregThreshold()){
       return true;
     } else{
-      cell->setProBreg((current_patch.getIl6() + current_patch.getIl21()) * 45);
+      cell->setProBreg(((current_patch.getIl6() + current_patch.getIl21()) * 45));
       return false;
     }
   }
 
   template <typename CellType>
-  void turnIntoBreg(CellType& cell){
+  std::shared_ptr<BregCell> turnIntoBreg(CellType& cell){
     std::shared_ptr<BregCell> breg = std::make_shared<BregCell>(cell->getX(), cell->getY(), cell->getHeading(), global_ID_counter++);
     
     breg->setSize(1);
@@ -201,6 +192,7 @@ public:
     all_turtles.push_back(breg_weak_ptr);
     all_breg_cells.push_back(breg);
     kill(cell);
+    return breg;
   }
 };
 

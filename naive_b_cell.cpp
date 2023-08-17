@@ -76,10 +76,11 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
   move_turtle(naive_b_cell);
 
   // Checks level of stimulation of b-reg differentiation
-  naive_b_cell->check_breg_status();
+  bool turn_into_breg = checkBregStatus(naive_b_cell);
+  if (turn_into_breg){std::shared_ptr<BregCell> naive_b_cell = turnIntoBreg(naive_b_cell);};
 
   // Checks level of TNF-a stimulation for apoptosis
-  naive_b_cell->check_tnf_status();
+  bool die_by_tnf = checkTNFStatus(naive_b_cell);
 
   // this slowly increases the # of s1p receptors (s1pr) in the naive b cell when the b-cell is old enough
   if(naive_b_cell->getAge() > 300)
@@ -90,8 +91,7 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
   naive_b_cell->setAge(naive_b_cell->getAge() + 1);
 
   // Checks if the cell has lived beyond its maximum lifespan, if so, it will be removed
-  if(naive_b_cell->getAge() > 1000)
-  {
+  if((naive_b_cell->getAge() > 1000) || die_by_tnf ) {
       kill(naive_b_cell);
   }
 

@@ -11,13 +11,13 @@ void World::th0CellFunction(std::shared_ptr<Th0Cell> th0_cell) {
     // Get the current patch of the Th0 cell
     Patch& current_patch = get_patch(th0_cell->getX(), th0_cell->getY());
 
-    int pro_TH1 = (current_patch.getIl12() + current_patch.getIfG()) * 100;
-    int pro_TH2 = (current_patch.getIl10() + current_patch.getIl4()) * 100;
-    int pro_TFH = (current_patch.getIl21() + current_patch.getIl12()) * 100;
+    double pro_TH1 = (current_patch.getIl12() + current_patch.getIfG()) * 100;
+    double pro_TH2 = (current_patch.getIl10() + current_patch.getIl4()) * 100;
+    double pro_TFH = (current_patch.getIl21() + current_patch.getIl12()) * 100;
 
-    int rTH1 = RNG_Engine() % pro_TH1;
-    int rTH2 = RNG_Engine() % pro_TH2;
-    int rTFH = RNG_Engine() % pro_TFH;
+    double rTH1 = fmod((double)RNG_Engine(), pro_TH1);
+    double rTH2 = fmod((double)RNG_Engine(), pro_TH2);
+    double rTFH = fmod((double)RNG_Engine(), pro_TFH);
 
     th0_cell->setR1(rTH1);
     th0_cell->setR2(rTH2);

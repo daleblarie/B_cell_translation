@@ -7,6 +7,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <random>
 
 class Agent: std::enable_shared_from_this<Agent> {
   protected:

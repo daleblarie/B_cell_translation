@@ -3,7 +3,6 @@
 #define TURTLE_H
 
 #include "agent.h"
-#include <random>
 
 // Comparator function for std::find with std::weak_ptr
 template <typename T>
@@ -78,8 +77,8 @@ class Turtle : public Agent{
     float get_x_dec() const {return x_dec;}       // already has regular getX() and getY() from agent parent class
     float get_y_dec() const {return y_dec;}
 
-    void check_breg_status(){};
-    void check_tnf_status(){};
+    // void check_breg_status(){};
+    // void check_tnf_status(){};
     void chemotaxis(){};
 
     void addLinkedTurtle(std::weak_ptr<Turtle> linkedTurtle);

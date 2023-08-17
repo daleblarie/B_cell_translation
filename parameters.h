@@ -7,7 +7,7 @@ const bool SAVING_DATA = false;
 const bool TURTLE_CONTINOUS_MOVEMENT = false;
 
 const int RNG_SEED=108;
-const int NUM_STEPS = 2;
+const int NUM_STEPS = 2000;
 
 
 const static int WORLD_WIDTH = 101;

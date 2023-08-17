@@ -34,23 +34,23 @@ int main(int argc, char const *argv[]) {
       engine.renderAllTurtles();
       engine.render();
       SDL_PollEvent(&event);
-      /* will pause every step until ctrl+c is pressed
-      useful for debugging, but tgere is no way to break out of it.
-      kind of annoying, only use it when NUM_STEPS is low*/
-      
-      quit=false;
-      while (!quit) {
-              while (SDL_PollEvent(&event)) {
-                    if (event.type == SDL_QUIT) {
-                          quit = true;
-                      }
-                  }
-              }
+      // /* will pause every step until ctrl+c is pressed
+      // useful for debugging, but tgere is no way to break out of it.
+      // kind of annoying, only use it when NUM_STEPS is low*/
+      // 
+      // quit=false;
+      // while (!quit) {
+      //         while (SDL_PollEvent(&event)) {
+      //               if (event.type == SDL_QUIT) {
+      //                     quit = true;
+      //                 }
+      //             }
+      //         }
       /* will loop through and display every turn until end of NUM_STEPS, can break out with ctrl+c */
-    //   if (event.type == SDL_QUIT) {
-    //     quit = true;
-    //   }
-    //   if(quit){break;}
+      if (event.type == SDL_QUIT) {
+        quit = true;
+      }
+      if(quit){break;}
     }
   }
   auto endTime = std::chrono::high_resolution_clock::now();

@@ -15,7 +15,8 @@ void World::sl_plasma_cell_function(std::shared_ptr<SLPlasmaCell> sl_plasma_cell
         }
 
         // Assuming you have a check_breg_status function
-        sl_plasma_cell->check_breg_status();
+        bool turn_into_breg = checkBregStatus(sl_plasma_cell);
+        if (turn_into_breg){std::shared_ptr<BregCell> sl_plasma_cell = turnIntoBreg(sl_plasma_cell);};
 
         sl_plasma_cell->chemotaxis();
         sl_plasma_cell->move();
@@ -32,11 +33,11 @@ void World::sl_plasma_cell_function(std::shared_ptr<SLPlasmaCell> sl_plasma_cell
         all_antibodies.push_back(antibody);
     }
 
-    // Assuming you have a check_tnf_status function
-    sl_plasma_cell->check_tnf_status();
+    // Checks level of TNF-a stimulation for apoptosis
+    bool die_by_tnf = checkTNFStatus(sl_plasma_cell);
 
     sl_plasma_cell->setTimeAlive(sl_plasma_cell->getTimeAlive() + 1);
-    if(sl_plasma_cell->getTimeAlive() > 240 + (current_patch.getIl6() + current_patch.getIl21()) * 10) {
+    if((sl_plasma_cell->getTimeAlive() > 240 + (current_patch.getIl6() + current_patch.getIl21()) * 10) || die_by_tnf) {
         kill(sl_plasma_cell);
     }
 }

@@ -78,13 +78,14 @@ void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
       std::shared_ptr<ActivatedBCell> mem_b_cell = new_activated_b_cell;
     }
   }
+  // Checks level of stimulation of b-reg differentiation
+  bool turn_into_breg = checkBregStatus(mem_b_cell);
+  if (turn_into_breg){std::shared_ptr<BregCell> mem_b_cell = turnIntoBreg(mem_b_cell);};
 
   mem_b_cell->chemotaxis();
   move_turtle(mem_b_cell);
 
-  // Checks level of stimulation of b-reg differentiation
-  mem_b_cell->check_breg_status();
 
   // Checks level of TNF-a stimulation for apoptosis
-  mem_b_cell->check_tnf_status();
+  if(checkTNFStatus(mem_b_cell)){kill(mem_b_cell);};
 }
