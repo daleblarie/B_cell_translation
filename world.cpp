@@ -105,6 +105,7 @@ void World::move_turtle_random_jump(std::shared_ptr<Turtle> turtle){
   // same as move turtle but instead of turtle-> move() we are using turtle->jumpRandom(RNG_Engine)
   Patch &turtle_current_patch = get_patch(turtle->getX(), turtle->getY());
   std::pair<int,int> new_coords = turtle->jumpRandom(RNG_Engine);
+  
   Patch& target_patch = get_patch(new_coords.first, new_coords.second);
     if (turtle_current_patch == target_patch){
     return;
@@ -133,9 +134,30 @@ void World::kill_turtle(std::shared_ptr<Turtle> turtle){
 //void kill(std::shared_ptr<T> &ptr) <-- templated function that will kill any turtle or subclass of turtle. implemented in header file
 
 void World::updateTurtleVectors(){
+    for(auto& turtle : all_turtles_to_kill){
+      if (std::shared_ptr<Bacteria> bacteria = std::dynamic_pointer_cast<Bacteria>(turtle)) { all_bacterias.erase(std::remove(begin(all_bacterias), end(all_bacterias), bacteria), end(all_bacterias));
+      } else if (std::shared_ptr<Antibodies> antibody = std::dynamic_pointer_cast<Antibodies>(turtle)) { all_antibodies.erase(std::remove(begin(all_antibodies), end(all_antibodies), antibody), end(all_antibodies));
+      } else if (std::shared_ptr<FDCs> fdc = std::dynamic_pointer_cast<FDCs>(turtle)) {all_fdcs.erase(std::remove(begin(all_fdcs), end(all_fdcs), fdc), end(all_fdcs));
+      } else if (std::shared_ptr<NaiveBCell> naive_b_cell = std::dynamic_pointer_cast<NaiveBCell>(turtle)) {all_naive_b_cells.erase(std::remove(begin(all_naive_b_cells), end(all_naive_b_cells), naive_b_cell), end(all_naive_b_cells));
+      } else if (std::shared_ptr<ActivatedBCell> activated_b_cell = std::dynamic_pointer_cast<ActivatedBCell>(turtle)) {all_activated_b_cells.erase(std::remove(begin(all_activated_b_cells), end(all_activated_b_cells), activated_b_cell),end(all_activated_b_cells));
+      } else if (std::shared_ptr<GCBCell> gcb_cell = std::dynamic_pointer_cast<GCBCell>(turtle)) {all_gcb_cells.erase(std::remove(begin(all_gcb_cells), end(all_gcb_cells), gcb_cell), end(all_gcb_cells));
+      } else if (std::shared_ptr<SLPlasmaCell> sl_plasma_cell = std::dynamic_pointer_cast<SLPlasmaCell>(turtle)) {all_sl_plasma_cells.erase(std::remove(begin(all_sl_plasma_cells), end(all_sl_plasma_cells), sl_plasma_cell), end(all_sl_plasma_cells));
+      } else if (std::shared_ptr<LLPlasmaCell> ll_plasma_cell = std::dynamic_pointer_cast<LLPlasmaCell>(turtle)) {all_ll_plasma_cells.erase(std::remove(begin(all_ll_plasma_cells), end(all_ll_plasma_cells), ll_plasma_cell), end(all_ll_plasma_cells));
+      } else if (std::shared_ptr<MemBCell> mem_b_cell = std::dynamic_pointer_cast<MemBCell>(turtle)) {all_mem_b_cells.erase(std::remove(begin(all_mem_b_cells), end(all_mem_b_cells), mem_b_cell), end(all_mem_b_cells));
+      } else if (std::shared_ptr<BregCell> breg_cell = std::dynamic_pointer_cast<BregCell>(turtle)) {all_breg_cells.erase(std::remove(begin(all_breg_cells), end(all_breg_cells), breg_cell), end(all_breg_cells));
+      } else if (std::shared_ptr<TfhCell> tfh_cell = std::dynamic_pointer_cast<TfhCell>(turtle)) {all_tfh_cells.erase(std::remove(begin(all_tfh_cells), end(all_tfh_cells), tfh_cell), end(all_tfh_cells));
+      } else if (std::shared_ptr<Th0Cell> th0_cell = std::dynamic_pointer_cast<Th0Cell>(turtle)) {all_th0_cells.erase(std::remove(begin(all_th0_cells), end(all_th0_cells), th0_cell), end(all_th0_cells));
+      } else if (std::shared_ptr<Th1Cell> th1_cell = std::dynamic_pointer_cast<Th1Cell>(turtle)){all_th1_cells.erase(std::remove(begin(all_th1_cells), end(all_th1_cells), th1_cell), end(all_th1_cells));
+      } else if (std::shared_ptr<Th2Cell> th2_cell = std::dynamic_pointer_cast<Th2Cell>(turtle)) {all_th2_cells.erase(std::remove(begin(all_th2_cells), end(all_th2_cells), th2_cell), end(all_th2_cells));}
+      turtle.reset();
+
+    }
+    all_turtles_to_kill.clear();
+
     // erasing the turtle weak pointers that are now a null pointer because they have been reset
     all_turtles.erase(std::remove_if(all_turtles.begin(), all_turtles.end(),
     [](const std::weak_ptr<Turtle>& wp) {     //lambda function to check if weak pointer is expired (aka killed and reset() has been called)
+        if (wp.expired()){std::cout<<"Deleting expired Turtle"<<std::endl;}
         return wp.expired();
       }),
     all_turtles.end());

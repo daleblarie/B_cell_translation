@@ -27,7 +27,7 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
     if(naive_b_cell->getCd21Level() > BCELL_CD21_ACTIVATION_THRESHOLD){
 
       // creating a new activated_b_cell
-      auto new_activated_b_cell = std::make_shared<ActivatedBCell>(naive_b_cell->getX(), naive_b_cell->getX(), global_ID_counter, naive_b_cell->getID());
+      auto new_activated_b_cell = std::make_shared<ActivatedBCell>(naive_b_cell->getX(), naive_b_cell->getX(), global_ID_counter, naive_b_cell->getHeading());
       global_ID_counter++;
       current_patch.setIl6(current_patch.getIl6() + PHAG_IL6_BURST);
       new_activated_b_cell->setProBreg(0);

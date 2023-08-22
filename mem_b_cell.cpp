@@ -37,7 +37,7 @@ void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
   if((apc != nullptr && apc->getPresentedAntigen() != 0 && apc->getResponsiveness() > random_encounter) || antigen != nullptr){
     if(mem_b_cell->getCd21Level() > BCELL_CD21_ACTIVATION_THRESHOLD){
 
-      auto new_activated_b_cell = std::make_shared<ActivatedBCell>(mem_b_cell->getX(), mem_b_cell->getX(), global_ID_counter, mem_b_cell->getID());
+      auto new_activated_b_cell = std::make_shared<ActivatedBCell>(mem_b_cell->getX(), mem_b_cell->getX(), global_ID_counter, mem_b_cell->getHeading());
       global_ID_counter++;
       current_patch.setIl6(current_patch.getIl6() + PHAG_IL6_BURST);
       new_activated_b_cell->setProBreg(0);

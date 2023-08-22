@@ -68,7 +68,7 @@ class Turtle : public Agent{
     int getID() const {return ID_num;};
     int getType() const {return type;};
     
-    void setHeading(int newHeading){heading = newHeading; std::cout<<"SETTING HEADING"<<std::endl;};
+    void setHeading(int newHeading){heading = newHeading;};
     int getHeading() const {return heading;};
     
     void setAge(int newAge){age=newAge;};

@@ -984,7 +984,7 @@ to chemotaxis
   ifelse x < y
   [ set rt-turn rt-turn + x * s1pr1-weight ]
   [ set lt-turn lt-turn + y * s1pr1-weight ]
-
+l
   let s1pr2-weight s1pr2-level / 100
   let max-s1pr2-patch max-one-of neighbors [s1p-level]  ;; or neighbors4
   let angle-to-s1pr2 (towards max-s1pr2-patch)

@@ -61,6 +61,7 @@ private:
   std::vector<std::shared_ptr<Th0Cell>> all_th0_cells;
   std::vector<std::shared_ptr<Th1Cell>> all_th1_cells;
   std::vector<std::shared_ptr<Th2Cell>> all_th2_cells;
+  std::vector<std::shared_ptr<Turtle>> all_turtles_to_kill;
 
   void set_rng_seed(int newSeed){RNG_Engine.seed(newSeed);}
   void add_patch(int x, int y);
@@ -88,9 +89,10 @@ public:
   // templated function to kill any turtle or agent
   template <typename T>
   void kill(std::shared_ptr<T> &ptr){
+    // std::cout<<"Killing turtle with ID "<<ptr->getID()<<std::endl;
     ptr->removeLinkedTurtle();
+    all_turtles_to_kill.push_back(ptr);
     kill_turtle(ptr);
-    ptr.reset();
   }
 
   void updateTurtleVectors();
@@ -181,7 +183,7 @@ public:
 
   template <typename CellType>
   std::shared_ptr<BregCell> turnIntoBreg(CellType& cell){
-    std::shared_ptr<BregCell> breg = std::make_shared<BregCell>(cell->getX(), cell->getY(), cell->getHeading(), global_ID_counter++);
+    std::shared_ptr<BregCell> breg = std::make_shared<BregCell>(cell->getX(), cell->getY(), global_ID_counter++, cell->getHeading());
     
     breg->setSize(1);
     breg->setShape("circle");
@@ -199,56 +201,86 @@ public:
   
   template <typename CellType>
   void chemotaxis(CellType& cell){
-    std::cout<<"chemotaxing"<<std::endl;
-    std::cout<<"my location" <<cell->getX()<<", "<< cell->getY()<<std::endl;
+    // std::cout<<"chemotaxing"<<std::endl;
+    // std::cout<<"my location" <<cell->getX()<<", "<< cell->getY()<<std::endl;
     Patch& current_patch = get_patch(cell->getX(), cell->getY());
-    double rt_turn = 0.0;
-    double lt_turn = 0.0;
-    double s1pr1_weight = current_patch.getS1pLevel() / 100.0;
+    double final_heading = cell->getHeading();
+    // if (final_heading == 0){std::cout<<"ID "<<cell->getID()<<", HEADING "<<cell->getHeading()<<std::endl;};
+
+    // if (final_heading != 0){std::cout<<"ID "<<cell->getID()<<", HEADING "<<cell->getHeading()<<std::endl;};
     std::vector<Patch> neighbors;
+    int count = 0;
     for (int x = -1; x < 2; x++) {
       for (int y = -1; y < 2; y++) {
         if (x==0 && y==0){continue;}
-        std::cout<<"neighbor location"<<cell->getX() + x<<", "<< cell->getY()+ y <<std::endl;
-
+        // std::cout<<"neighbor "<<count<<" location"<<cell->getX() + x<<", "<< cell->getY()+ y <<std::endl;
+        count ++;
         neighbors.push_back(get_patch(current_patch.getX() + x, current_patch.getY() + y));
       }
     }
-    std::cout<<"chemotaxing2"<<std::endl;
+    // std::cout<<"chemotaxing2"<<std::endl;
     
-    double max_s1p = -1;
-    Patch max_patch;
+    int random_max_patch_ind = RNG_Engine() % neighbors.size();
+    Patch max_patch = neighbors[random_max_patch_ind];
+    
+    double s1pr1_weight = cell->getS1pr1Level() / 100.0;
+    double max_s1p = 0;
     for (auto neighbor_patch: neighbors){
-      std::cout<<neighbor_patch.getX()<<std::endl;
       if (neighbor_patch.getS1pLevel() > max_s1p) {
-        std::cout<<"Changing max patch"<<std::endl;
+        // std::cout<<"Changing max patch"<<std::endl;
         max_s1p = neighbor_patch.getS1pLevel();
         max_patch = get_patch(neighbor_patch.getX(), neighbor_patch.getY());
-        /* code */
       }
     }
-   std::cout<<"chemotaxing3"<<std::endl;
-// Patch max_s1p_patch = std::max_element(neighbors.begin(), neighbors.end(), 
-    //                                          [](const Patch* a, const Patch* b) {
-    //                                              return a.getS1pLevel() < b.getS1pLevel();
-    //                                          });
-    std::cout<<max_patch.getX()<<","<< max_patch.getY()<<std::endl;
-    double angle_to_s1p = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
-    std::cout<<"chemotaxing4"<<std::endl;
+    double angle_absolute_to_s1p = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
+    double angle_relative_to_s1p = cell->getHeading() - angle_absolute_to_s1p;
+    final_heading += angle_relative_to_s1p*s1pr1_weight;
+    
+    
+    
+    double s1pr2_weight = cell->getS1pr2Level() / 100.0;
+    double max_s1pr2 = 0;
+    for (auto neighbor_patch: neighbors){
+        if (neighbor_patch.getS1pLevel() > max_s1pr2) {
+            max_s1pr2 = neighbor_patch.getS1pLevel();
+            max_patch = get_patch(neighbor_patch.getX(), neighbor_patch.getY());
+        }
+    }
+    double angle_absolute_to_s1pr2 = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
+    double angle_relative_to_s1pr2 = cell->getHeading() - angle_absolute_to_s1pr2;
+    final_heading += angle_relative_to_s1pr2*s1pr2_weight;
+    
+     
+    double cxcr5_weight = cell->getCxcr5Level() / 100.0;
+    double max_cxcl13 = 0;
+    for (auto neighbor_patch: neighbors){
+        if (neighbor_patch.getCxcl13Level() > max_cxcl13) {
+            max_cxcl13 = neighbor_patch.getCxcl13Level();
+            max_patch = get_patch(neighbor_patch.getX(), neighbor_patch.getY());
+        }
+    }
+    double angle_absolute_to_cxcl13 = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
+    double angle_relative_to_cxcl13 = cell->getHeading() - angle_absolute_to_cxcl13;
+    final_heading += angle_relative_to_cxcl13*cxcr5_weight;
+    
+    // For ebi2r_level
+    double ebi2r_weight = cell->getEbi2rLevel() / 100.0;
+    double max_ebi2 = 0;
+    for (auto neighbor_patch: neighbors){
+        if (neighbor_patch.getEbi2Level() > max_ebi2) {
+            max_ebi2 = neighbor_patch.getEbi2Level();
+            max_patch = get_patch(neighbor_patch.getX(), neighbor_patch.getY());
+        }
+    }
+    double angle_absolute_to_ebi2 = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
+    double angle_relative_to_ebi2 = cell->getHeading() - angle_absolute_to_ebi2;
+    final_heading += angle_relative_to_ebi2 * ebi2r_weight;
 
-    double cur_angle = cell->getHeading();
-    double x = angle_to_s1p - cur_angle;
-    if (x < 0.0) {
-        x += 360.0;
-    }
-    double y = 360.0 - x;
-    if (x < y) {
-        rt_turn += x * s1pr1_weight;
-    } else {
-        lt_turn += y * s1pr1_weight;
-    }
+
+
+  cell->setHeading((int)final_heading%(360));
+  // std::cout<<"END CHEMOTAXING"<<std::endl;
   }
-  
   
   
 };

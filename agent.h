@@ -8,6 +8,7 @@
 #include <vector>
 #include <algorithm>
 #include <random>
+#include "parameters.h"
 
 class Agent: std::enable_shared_from_this<Agent> {
   protected:
@@ -42,24 +43,45 @@ class Agent: std::enable_shared_from_this<Agent> {
 
     template <typename agent>
     double angle_to(agent& target){
-      std::cout<<"getting angle"<<std::endl;
-      std::cout<<x<<std::endl;
-      std::cout<<y<<std::endl;
+      // std::cout<<"getting angle1"<<std::endl;
+      // std::cout<<"Self Location ("<<x<<", "<<y<<")"<<std::endl;
       int targetx = target.getX();
       int targety = target.getY();
-      std::cout<<"getting angle2"<<std::endl;
-      std::cout<<targetx<<std::endl;
-      std::cout<<targety<<std::endl;
-      int delta_x = x - targetx;
-      int delta_y = y - targety;
-      std::cout<<"getting angle3"<<std::endl;
-      std::cout<<delta_x<<std::endl;
-      std::cout<<delta_y<<std::endl;
+      // std::cout<<"getting angle2"<<std::endl;
+      // std::cout<<"Target Location ("<<targetx<<", "<<targety<<")"<<std::endl;
+      int delta_x = targetx - x;
+      int delta_y = targety - y;
+      // std::cout<<"getting angle3"<<std::endl;
+      // std::cout<<"Delta Positions ("<<delta_x<<", "<<delta_y<<")"<<std::endl;
+      if ((delta_x + WORLD_WIDTH) < abs(delta_x)){
+        delta_x = (delta_x + WORLD_WIDTH)% WORLD_WIDTH;
+      }
+      if ((delta_y + WORLD_HEIGHT) < abs(delta_y)){
+        // delta_x = (delta_x + WORLD_WIDTH)% WORLD_WIDTH;
+        delta_y = (delta_y + WORLD_HEIGHT)% WORLD_HEIGHT;
+      }
       
-      double angle_radian = atan(delta_x/delta_y);
-      std::cout<<"getting angle4"<<std::endl;
-
-      return angle_radian * M_PI/180;
+      if ((abs(delta_x - WORLD_WIDTH)) < abs(delta_x)){
+        delta_x -= WORLD_WIDTH;
+      }
+      if ((abs(delta_y - WORLD_WIDTH)) < abs(delta_y)){
+        delta_y -= WORLD_HEIGHT;
+      }
+      // std::cout<<"getting angle4"<<std::endl;
+      // std::cout<<"Delta Positions ("<<delta_x<<", "<<delta_y<<")"<<std::endl;
+      // std::cout<<"getting angle5"<<std::endl;
+      // std::cout<<"Angle To neighbor 0(degrees)"<<atan2(1,-1) * 180/M_PI<<std::endl;
+      // std::cout<<"Angle To neighbor 1(degrees)"<<atan2(1,0) * 180/M_PI<<std::endl;
+      // std::cout<<"Angle To neighbor 2(degrees)"<<atan2(1,1) * 180/M_PI<<std::endl;
+      // std::cout<<"Angle To neighbor 3(degrees)"<<atan2(0,-1) * 180/M_PI<<std::endl;
+      // std::cout<<"Angle To neighbor 4(degrees)"<<atan2(0,1) * 180/M_PI<<std::endl;
+      // std::cout<<"Angle To neighbor 5(degrees)"<<atan2(-1,-1) * 180/M_PI<<std::endl;
+      // std::cout<<"Angle To neighbor 6(degrees)"<<atan2(-1,0) * 180/M_PI<<std::endl;
+      // std::cout<<"Angle To neighbor 7(degrees)"<<atan2(-1,1) * 180/M_PI<<std::endl;
+      // double angle_radian = atan(delta_x/delta_y);
+      double angle_radian = atan2(delta_y, delta_x);
+      // std::cout<<"Angle To (degrees)"<<angle_radian * 180/M_PI<<std::endl;
+      return angle_radian *  180/M_PI;
     }
 
 };

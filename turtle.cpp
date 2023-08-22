@@ -78,6 +78,7 @@ void Turtle::execute_move(bool didMove){
 
 void Turtle::wiggle(std::mt19937 &RNG_Engine){
   // randomly wiggle heading up to 45 degrees left up to 45 degrees right
+  std::cout<<"WIGGLING TURTLE NOW"<<std::endl;
   int random_left = RNG_Engine()%45;
   int random_right = RNG_Engine()%45;
   this->setHeading(this->getHeading() + random_left - random_right);

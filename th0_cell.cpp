@@ -34,7 +34,7 @@ void World::th0CellFunction(std::shared_ptr<Th0Cell> th0_cell) {
     }
 
     if (th0_cell->getTh1Activation() >= 20) {
-        auto th1_cell = std::make_shared<Th1Cell>(th0_cell->getX(), th0_cell->getY(), global_ID_counter, th0_cell->getID());
+        auto th1_cell = std::make_shared<Th1Cell>(th0_cell->getX(), th0_cell->getY(), global_ID_counter, th0_cell->getHeading());
         global_ID_counter++;
         th1_cell->setColor("blue");
         th1_cell->setTimeAlive(0);
@@ -47,7 +47,7 @@ void World::th0CellFunction(std::shared_ptr<Th0Cell> th0_cell) {
         all_th1_cells.push_back(th1_cell);
         kill_th0 = true;
     } else if (th0_cell->getTh2Activation() >= 20) {
-        auto th2_cell = std::make_shared<Th2Cell>(th0_cell->getX(), th0_cell->getY(), global_ID_counter, th0_cell->getID());
+        auto th2_cell = std::make_shared<Th2Cell>(th0_cell->getX(), th0_cell->getY(), global_ID_counter, th0_cell->getHeading());
         global_ID_counter++;
         th2_cell->setColor("blue");
         th2_cell->setTimeAlive(0);
@@ -61,7 +61,7 @@ void World::th0CellFunction(std::shared_ptr<Th0Cell> th0_cell) {
         all_th2_cells.push_back(th2_cell);
         kill_th0 = true;
     } else if (th0_cell->getTfhActivation() >= 20) {
-        auto tfh_cell = std::make_shared<TfhCell>(th0_cell->getX(), th0_cell->getY(), global_ID_counter, th0_cell->getID());
+        auto tfh_cell = std::make_shared<TfhCell>(th0_cell->getX(), th0_cell->getY(), global_ID_counter, th0_cell->getHeading());
         global_ID_counter++;
         tfh_cell->setCxcr5Level(10);
         tfh_cell->setColor("cyan");
@@ -81,6 +81,7 @@ void World::th0CellFunction(std::shared_ptr<Th0Cell> th0_cell) {
 
     th0_cell->setTimeAlive(th0_cell->getTimeAlive() + 1);
     if (th0_cell->getTimeAlive() > 300 || kill_th0) {
+      std::cout <<"killing th0 cell "<<th0_cell->getID()<<std::endl;
         kill(th0_cell);
     }
 }
