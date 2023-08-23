@@ -3,6 +3,8 @@
 #include "world.h"
 
 #include <chrono>
+#include <thread>
+
 // https://github.com/haotian-liu/LLaVA#llava-weights
 int main(int argc, char const *argv[]) {
   std::cout<<"starting main"<<std::endl;
@@ -52,6 +54,8 @@ int main(int argc, char const *argv[]) {
       }
       if(quit){break;}
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
   }
   auto endTime = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);

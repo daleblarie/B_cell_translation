@@ -86,6 +86,7 @@ void World::add_turtle(int x, int y, int id, int heading){
 
 void World::move_turtle(std::shared_ptr<Turtle> turtle, float distance){
   // moves the turtle but asking the turtle to calculate its movement, and if there is space on the target_patch, the world executes the move
+  turtle->wiggle(RNG_Engine);
   Patch &turtle_current_patch = get_patch(turtle->getX(), turtle->getY());
   std::pair<int,int> new_coords = turtle->move(distance); //moving along turtle.heading for the default value of 1 unit
   Patch& target_patch = get_patch(new_coords.first, new_coords.second);
@@ -370,8 +371,8 @@ void World::setup(){
 
 
 void World::go() {
-  // calculate_incoming_tnfa_il6_level();
-  // simulate_background_inflammation();
+  calculateIncomingTNFaIL6Level();
+  simulateBackgroundInflammation();
 
   // Update days_passed based on the step value.
   setDaysPassed(step / 48);
@@ -444,7 +445,7 @@ void World::go() {
 
 
   update_chemokine_gradient();
-  // check_overall_cd21_expression();
+  check_overall_cd21_expression();
 
   // Check if autoinoculate is active
   // if(autoinoculate) {
@@ -458,6 +459,46 @@ void World::go() {
 
   // end of go
   updateTurtleVectors(); // need to update turtle positions/delete dead turtles
+}
+
+void World::check_overall_cd21_expression() {
+    if (step % 20 == 0) {   // Only calculating avg CD21 expression every 20 ticks to increase run speed
+        double total_cd21_expression = 0;
+
+        for (const auto& cell : all_naive_b_cells) {
+            total_cd21_expression += cell->getCd21Level();
+        }
+
+        for (const auto& cell : all_mem_b_cells) {
+            total_cd21_expression += cell->getCd21Level();
+        }
+
+        int total_cell_count = all_naive_b_cells.size() + all_mem_b_cells.size();
+
+        if (total_cell_count != 0) {
+            average_cd21_expression = total_cd21_expression / total_cell_count;
+        } else {
+            average_cd21_expression = 0;
+        }
+    }
+}
+void World::calculateIncomingTNFaIL6Level() {
+    for (auto& patchRow : all_patches) {
+      for (auto& patch : patchRow){
+        patch.setTnfA(patch.getTnfA() + (countCells<Bacteria>(patch.getX(), patch.getY()) / 500.0));
+        
+        patch.setIl6(patch.getIl6() + (countCells<Bacteria>(patch.getX(), patch.getY()) / 500.0));
+      }
+    }
+}
+
+void World::simulateBackgroundInflammation() {
+    for (auto& patchRow : all_patches) {
+      for (auto& patch : patchRow){
+        patch.setTnfA(patch.getTnfA() + BACKGROUND_TNFA);
+        patch.setIl6(patch.getIl6() + BACKGROUND_IL6);
+      }
+    }
 }
 void World::update_chemokine_gradient(){
   diffuse();

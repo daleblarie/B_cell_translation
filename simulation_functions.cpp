@@ -4,14 +4,15 @@
 
 void World::spawnBCell() {
   if(step % 10 == 0) {
+    std::cout<<"SPAWNING B CELL"<<std::endl;
       // Position of the new Naive B-cell
-      int cell_x = std::floor(WORLD_WIDTH / 2); //I added std::floor()
-      int cell_y = 0;
+      int cell_x = WORLD_WIDTH -2; //I added std::floor()
+      int cell_y = std::floor(WORLD_HEIGHT / 2);
       // Increase global ID counter
       global_ID_counter++;
 
       // Create a new Naive B-cell
-      auto b_cell = std::make_shared<NaiveBCell>(cell_x, cell_y, global_ID_counter);
+      auto b_cell = std::make_shared<NaiveBCell>(cell_x, cell_y, global_ID_counter, 180);
       std::weak_ptr<Turtle> b_cell_weak_ptr = b_cell;
       // Set the properties of the new Naive B-cell
       b_cell->setShape("circle");
@@ -74,7 +75,6 @@ void World::spawnTh0Cell() {
         all_turtles.push_back(th0_cell_weak_ptr);
     }
 }
-
 
 // Function to randomly return an antibody on a specific patch
 

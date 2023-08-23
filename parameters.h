@@ -28,6 +28,9 @@ const int BCELL_CD21_ACTIVATION_THRESHOLD =101;;
 
 const int PHAG_IL6_BURST=0;
 
+const int BACKGROUND_TNFA = 0;
+const int BACKGROUND_IL6 = 0;
+
 static const int CXCL13_LEVEL_DIFFUSION_FACTOR = 1.0;
 static const int S1P_LEVEL_DIFFUSION_FACTOR = 1.0;
 static const int CCL19_LEVEL_DIFFUSION_FACTOR = 1.0;

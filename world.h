@@ -100,6 +100,9 @@ public:
   void setup();
   void go();
 
+  void check_overall_cd21_expression();
+  void calculateIncomingTNFaIL6Level();
+  void simulateBackgroundInflammation();
   void update_chemokine_gradient();
 
   void diffuse();
@@ -124,7 +127,7 @@ public:
   void th1CellFunction(std::shared_ptr<Th1Cell> th1_cell);
   void th2CellFunction(std::shared_ptr<Th2Cell> th2_cell);
   void bacteriaFunction(std::shared_ptr<Bacteria> bacteria);
-
+  
   std::shared_ptr<Antibodies> getOneAntibodyHere(int xPos, int yPos);
   std::shared_ptr<FDCs> getOneFDCHere(int patchX, int patchY);
   std::shared_ptr<Bacteria> getOneBacteriaHere(int patchX, int patchY);
@@ -157,6 +160,20 @@ public:
 
 
 
+  template <typename CellType>
+  int countCells(int patchX, int patchY){
+    int total_count = 0;
+    Patch& current_patch = get_patch(patchX, patchY);
+    std::vector<std::shared_ptr<Turtle>> turtles_on_patch = current_patch.getTurtlesHere();
+    
+    for (const auto& turtle : turtles_on_patch){
+      if (std::dynamic_pointer_cast<CellType>(turtle)) {
+        // The turtle is of type we are looking for, increment count
+        total_count++;
+      }
+    }
+    return total_count;
+  }
 
 
 

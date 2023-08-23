@@ -18,6 +18,7 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
   // If naive B cell is in the follicle, it dies
   if (current_patch.getPatchType() == 2) {
     kill(naive_b_cell);
+    return;
   }
   auto apc = getOneFDCHere(naive_b_cell->getX(), naive_b_cell->getY());
   int random_encounter = RNG_Engine() % 100;
