@@ -78,9 +78,10 @@ void Turtle::execute_move(bool didMove){
 
 void Turtle::wiggle(std::mt19937 &RNG_Engine){
   // randomly wiggle heading up to 45 degrees left up to 45 degrees right
-  // std::cout<<"WIGGLING TURTLE NOW"<<std::endl;
   int random_left = RNG_Engine()%45;
   int random_right = RNG_Engine()%45;
+  
+  // std::cout<<"WIGGLING TURTLE NOW. new heading is "<<this->getHeading() + random_left - random_right<<std::endl;
   this->setHeading(this->getHeading() + random_left - random_right);
 }
 
@@ -92,3 +93,29 @@ void Turtle::display() {
 }
 
 // add more turtle specific functions below. These are functions that will apply to all turtle types, not a single breed
+
+void Turtle::copy_other_turtle_attributes(std::shared_ptr<Turtle> otherTurtle){
+  this->setHeading(otherTurtle->getHeading());
+  this->setTimeAlive(otherTurtle->getTimeAlive());
+  // Copying the additional attributes
+  this->x_dec = otherTurtle->get_x_dec();
+  this->y_dec = otherTurtle->get_y_dec();
+  this->temp_x = otherTurtle->get_temp_x();
+  this->temp_y = otherTurtle->get_temp_y();
+  this->setInBlood(otherTurtle->getInBlood());
+  this->setBcr(otherTurtle->getBcr());
+  this->setIsotype(otherTurtle->getIsotype());
+  this->setCsrBool(otherTurtle->getCsrBool());
+  this->setTnfaThreshold(otherTurtle->getTnfaThreshold());
+  this->setBregThreshold(otherTurtle->getBregThreshold());
+  this->setCd21Level(otherTurtle->getCd21Level());
+  this->setS1pr1Level(otherTurtle->getS1pr1Level());
+  this->setS1pr2Level(otherTurtle->getS1pr2Level());
+  this->setCxcr5Level(otherTurtle->getCxcr5Level());
+  this->setCcr7Level(otherTurtle->getCcr7Level());
+  this->setEbi2rLevel(otherTurtle->getEbi2rLevel());
+  this->setProBreg(otherTurtle->getProBreg());
+  this->setLevelOfActivation(otherTurtle->getLevelOfActivation());
+  this->setTnfaStimulation(otherTurtle->getTnfaStimulation());
+  this->setExposureNumber(otherTurtle->getExposureNumber());
+}

@@ -8,11 +8,9 @@ void World::spawnBCell() {
       // Position of the new Naive B-cell
       int cell_x = WORLD_WIDTH -2; //I added std::floor()
       int cell_y = std::floor(WORLD_HEIGHT / 2);
-      // Increase global ID counter
-      global_ID_counter++;
 
       // Create a new Naive B-cell
-      auto b_cell = std::make_shared<NaiveBCell>(cell_x, cell_y, global_ID_counter, 180);
+      auto b_cell = std::make_shared<NaiveBCell>(cell_x, cell_y, global_ID_counter++, 180);
       std::weak_ptr<Turtle> b_cell_weak_ptr = b_cell;
       // Set the properties of the new Naive B-cell
       b_cell->setShape("circle");
@@ -36,12 +34,16 @@ void World::spawnBCell() {
       // Add the new Naive B-cell to the list
       all_naive_b_cells.push_back(b_cell);
       all_turtles.push_back(b_cell_weak_ptr);
+      get_patch(b_cell->getX(), b_cell->getY()).add_turtle(b_cell);
+
   }
 }
 
 
 void World::spawnTh0Cell() {
     if(step % 20 == 0) {
+      std::cout<<"SPAWNING TH0 CELL"<<std::endl;
+
         // Position of the new Th0-cell
         int cell_x, cell_y;
 
@@ -73,6 +75,9 @@ void World::spawnTh0Cell() {
 
         // Also add it to the list of all Turtles
         all_turtles.push_back(th0_cell_weak_ptr);
+        
+        get_patch(th0_cell->getX(), th0_cell->getY()).add_turtle(th0_cell);
+
     }
 }
 

@@ -11,7 +11,7 @@ private:
     // Time presenting
     int time_presenting;
     // Type of presented antigen
-    std::string presented_antigen_type;
+    int presented_antigen_type;
     // Responsiveness
     int responsiveness;
     
@@ -34,10 +34,10 @@ public:
     void setTimePresenting(int time_presenting) { this->time_presenting = time_presenting; }
 
     // Getter for presented antigen type
-    std::string getPresentedAntigenType() const { return presented_antigen_type; }
+    int getPresentedAntigenType() const { return presented_antigen_type; }
 
     // Setter for presented antigen type
-    void setPresentedAntigenType(const std::string& presented_antigen_type) { this->presented_antigen_type = presented_antigen_type; }
+    void setPresentedAntigenType(int presented_antigen_type) { this->presented_antigen_type = presented_antigen_type; }
 
     // Getter for responsiveness
     int getResponsiveness() const { return responsiveness; }

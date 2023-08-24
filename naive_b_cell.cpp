@@ -18,18 +18,19 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
   // If naive B cell is in the follicle, it dies
   if (current_patch.getPatchType() == 2) {
     kill(naive_b_cell);
-    return;
+    // return;
   }
   auto apc = getOneFDCHere(naive_b_cell->getX(), naive_b_cell->getY());
   int random_encounter = RNG_Engine() % 100;
   auto antigen = getOneBacteriaHere(naive_b_cell->getX(), naive_b_cell->getY());
 
   if ((apc != nullptr && apc->getPresentedAntigen() != 0 && apc->getResponsiveness() > random_encounter) || antigen != nullptr){
+    std::cout<<"STEPPING INTO NAIVE_B_CELL FUNCTION"<<std::endl;
     if(naive_b_cell->getCd21Level() > BCELL_CD21_ACTIVATION_THRESHOLD){
 
       // creating a new activated_b_cell
-      auto new_activated_b_cell = std::make_shared<ActivatedBCell>(naive_b_cell->getX(), naive_b_cell->getX(), global_ID_counter, naive_b_cell->getHeading());
-      global_ID_counter++;
+      auto new_activated_b_cell = std::make_shared<ActivatedBCell>(naive_b_cell->getX(), naive_b_cell->getX(), global_ID_counter++, naive_b_cell->getHeading());
+      new_activated_b_cell->copy_other_turtle_attributes(naive_b_cell);
       current_patch.setIl6(current_patch.getIl6() + PHAG_IL6_BURST);
       new_activated_b_cell->setProBreg(0);
       new_activated_b_cell->setShape("circle");
@@ -65,9 +66,10 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
       std::weak_ptr<Turtle> new_activated_b_cell_weak_ptr = new_activated_b_cell;
       all_turtles.push_back(new_activated_b_cell_weak_ptr);
       all_activated_b_cells.push_back(new_activated_b_cell);
+      current_patch.add_turtle(new_activated_b_cell);
 
       kill(naive_b_cell);
-      std::shared_ptr<ActivatedBCell> naive_b_cell = new_activated_b_cell;
+      std::shared_ptr<ActivatedBCell> naive_b_cell = new_activated_b_cell; // renaming naive_b_Cell so the rest of the function still works as expected
     }
   }
 
@@ -84,15 +86,15 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
   bool die_by_tnf = checkTNFStatus(naive_b_cell);
 
   // this slowly increases the # of s1p receptors (s1pr) in the naive b cell when the b-cell is old enough
-  if(naive_b_cell->getAge() > 300)
+  if(naive_b_cell->getTimeAlive() > 300)
   {
       naive_b_cell->setS1pr1Level(naive_b_cell->getS1pr1Level() + 0.5);
   }
 
-  naive_b_cell->setAge(naive_b_cell->getAge() + 1);
+  naive_b_cell->setTimeAlive(naive_b_cell->getTimeAlive() + 1);
 
   // Checks if the cell has lived beyond its maximum lifespan, if so, it will be removed
-  if((naive_b_cell->getAge() > 1000) || die_by_tnf ) {
+  if((naive_b_cell->getTimeAlive() > 1000) || die_by_tnf ) {
       kill(naive_b_cell);
   }
 

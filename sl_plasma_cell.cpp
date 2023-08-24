@@ -11,7 +11,7 @@ void World::sl_plasma_cell_function(std::shared_ptr<SLPlasmaCell> sl_plasma_cell
 
         if(current_patch.getPatchType() == 2) {
             sl_plasma_cell->setInBlood(true);
-            // sl_plasma_cell->hide_turtle();
+            sl_plasma_cell->setVisible(false);
         }
 
         // Assuming you have a check_breg_status function
@@ -22,15 +22,17 @@ void World::sl_plasma_cell_function(std::shared_ptr<SLPlasmaCell> sl_plasma_cell
         sl_plasma_cell->move();
     }
 
-    if(sl_plasma_cell->getAge() % 50 == 0) {
+    if(sl_plasma_cell->getTimeAlive() % 50 == 0) {
         auto antibody = std::make_shared<Antibodies>(sl_plasma_cell->getX(), sl_plasma_cell->getX(), global_ID_counter++, sl_plasma_cell->getHeading());
-        antibody->setAge(0);
+        antibody->copy_other_turtle_attributes(sl_plasma_cell);
+        antibody->setTimeAlive(0);
         antibody->setAntibodyType(sl_plasma_cell->getIsotype());
-        // antibody->setHidden(true);
+        antibody->setVisible(false);
         
         std::weak_ptr<Turtle> antibody_weak_ptr = antibody;
         all_turtles.push_back(antibody_weak_ptr);
         all_antibodies.push_back(antibody);
+        current_patch.add_turtle(antibody);
     }
 
     // Checks level of TNF-a stimulation for apoptosis

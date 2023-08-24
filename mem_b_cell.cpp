@@ -15,6 +15,7 @@ void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
 
   // If the memory B cell is in the follicle
   if(current_patch.getPatchType() == 2) {
+    place_turtle(WORLD_WIDTH, std::ceil(WORLD_HEIGHT/2), mem_b_cell);
     mem_b_cell->setProBreg(0);
     mem_b_cell->setS1pr1Level(0);
     mem_b_cell->setTimeInFollicle(0);
@@ -37,8 +38,8 @@ void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
   if((apc != nullptr && apc->getPresentedAntigen() != 0 && apc->getResponsiveness() > random_encounter) || antigen != nullptr){
     if(mem_b_cell->getCd21Level() > BCELL_CD21_ACTIVATION_THRESHOLD){
 
-      auto new_activated_b_cell = std::make_shared<ActivatedBCell>(mem_b_cell->getX(), mem_b_cell->getX(), global_ID_counter, mem_b_cell->getHeading());
-      global_ID_counter++;
+      auto new_activated_b_cell = std::make_shared<ActivatedBCell>(mem_b_cell->getX(), mem_b_cell->getX(), global_ID_counter++, mem_b_cell->getHeading());
+      new_activated_b_cell->copy_other_turtle_attributes(mem_b_cell);
       current_patch.setIl6(current_patch.getIl6() + PHAG_IL6_BURST);
       new_activated_b_cell->setProBreg(0);
       new_activated_b_cell->setShape("circle");
@@ -46,10 +47,11 @@ void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
       new_activated_b_cell->setCsrBool(false);
       new_activated_b_cell->setTimeAlive(100);
 
+
       int rTI = RNG_Engine() % 100;
       int rTD = RNG_Engine() % 100;
-
       if(antigen != nullptr){
+        
         if(rTI > rTD){
           new_activated_b_cell->setResponseType(1); // TI response
         } else{
@@ -73,9 +75,10 @@ void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
       std::weak_ptr<Turtle> new_activated_b_cell_weak_ptr = new_activated_b_cell;
       all_turtles.push_back(new_activated_b_cell_weak_ptr);
       all_activated_b_cells.push_back(new_activated_b_cell);
+      current_patch.add_turtle(new_activated_b_cell);
 
-      kill(mem_b_cell);
-      std::shared_ptr<ActivatedBCell> mem_b_cell = new_activated_b_cell;
+      kill(mem_b_cell); // kill old memory b cell because its not an activated b cell
+      std::shared_ptr<ActivatedBCell> mem_b_cell = new_activated_b_cell;  //renaming mem_b_cell so rest of the function still works on the new cell
     }
   }
   // Checks level of stimulation of b-reg differentiation

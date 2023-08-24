@@ -31,7 +31,8 @@ class Turtle : public Agent{
     int type =0;  //agent type, will be used for the get-one-of functions 
     int ID_num;
     int heading;
-    int age;
+    // int age;
+    int time_alive;
     float x_dec; //x and y decimal coordinates
     float y_dec;
     float temp_x; // temporary coords for turtle move, before actual turtle coords are moved in case destination patch is full.
@@ -42,7 +43,6 @@ class Turtle : public Agent{
     int bcr;
     std::string isotype;
     bool csr_bool;
-    int time_alive;
     float tnfa_threshold;
     float breg_threshold;
     float cd21_level;
@@ -64,23 +64,25 @@ class Turtle : public Agent{
     void execute_move(bool didMove);
     void wiggle(std::mt19937 &RNG_Engine);
     void display();
-
+    void copy_other_turtle_attributes(std::shared_ptr<Turtle> otherTurtle); // meant to be used when netlogo sets breed, cause this will copy values from original cell to new cell
+    
     int getID() const {return ID_num;};
     int getType() const {return type;};
     
     void setHeading(int newHeading){heading = newHeading;};
     int getHeading() const {return heading;};
     
-    void setAge(int newAge){age=newAge;};
-    int getAge() const { return age;};
-    
     float get_x_dec() const {return x_dec;}       // already has regular getX() and getY() from agent parent class
     float get_y_dec() const {return y_dec;}
-
-    // void check_breg_status(){};
-    // void check_tnf_status(){};
-    // void chemotaxis(){};
-
+    void set_x_dec(double new_x_dec) {x_dec = new_x_dec;}
+    void set_y_dec(double new_y_dec) {y_dec = new_y_dec;}
+    
+    float get_temp_x() const {return temp_x;}
+    float get_temp_y() const {return temp_y;}
+    void set_temp_x(double new_temp_x) {temp_x = new_temp_x;}
+    void set_temp_y(double new_temp_y) {temp_y = new_temp_y;}
+    
+    
     void addLinkedTurtle(std::weak_ptr<Turtle> linkedTurtle);
     void removeLinkedTurtle();
     std::vector<std::weak_ptr<Turtle>>& getLinkedTurtles();

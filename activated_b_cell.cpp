@@ -32,10 +32,10 @@ void World::activatedBCellFunction(std::shared_ptr<ActivatedBCell> abcell) {
         move_turtle(abcell);
     }
 
-    checkTNFStatus(abcell);
+    bool die_by_tnf = checkTNFStatus(abcell);
 
-    abcell->setAge(abcell->getAge() + 1);
-    if (abcell->getAge() > 300) {
+    abcell->setTimeAlive(abcell->getTimeAlive() + 1);
+    if ((abcell->getTimeAlive() > 300) || die_by_tnf) {
         kill(abcell);
     }
 }
@@ -79,6 +79,7 @@ void World::tdResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
     // If a Tfh cell is found, create a new GcB cell and link it with the Tfh cell
     if (tfh) {
         auto new_gc_b_cell = std::make_shared<GCBCell>(activated_b_cell->getX(), activated_b_cell->getY(), global_ID_counter++, activated_b_cell->getHeading());
+        new_gc_b_cell->copy_other_turtle_attributes(activated_b_cell);
         new_gc_b_cell->setProBreg(0);
         new_gc_b_cell->setColor("orange");
         new_gc_b_cell->setShape("circle");
@@ -88,6 +89,7 @@ void World::tdResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
         std::weak_ptr<Turtle> new_gc_b_cell_weak_ptr = new_gc_b_cell;
         all_turtles.push_back(new_gc_b_cell_weak_ptr);
         all_gcb_cells.push_back(new_gc_b_cell);
+        get_patch(activated_b_cell->getX(), activated_b_cell->getY()).add_turtle(new_gc_b_cell);
 
         // createLinkWith(new_gc_b_cell, tfh);
         new_gc_b_cell->addLinkedTurtle(tfh);
@@ -103,6 +105,7 @@ void World::tdResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
         // If a Th2 cell is found, create a new GcB cell and link it with the Th2 cell
         if (th2) {
             auto new_gc_b_cell = std::make_shared<GCBCell>(activated_b_cell->getX(), activated_b_cell->getY(), global_ID_counter++, activated_b_cell->getHeading());
+            new_gc_b_cell->copy_other_turtle_attributes(activated_b_cell);
             new_gc_b_cell->setProBreg(0);
             new_gc_b_cell->setColor("orange");
             new_gc_b_cell->setShape("circle");
@@ -112,6 +115,7 @@ void World::tdResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
             std::weak_ptr<Turtle> new_gc_b_cell_weak_ptr = new_gc_b_cell;
             all_turtles.push_back(new_gc_b_cell_weak_ptr);
             all_gcb_cells.push_back(new_gc_b_cell);
+            get_patch(activated_b_cell->getX(), activated_b_cell->getY()).add_turtle(new_gc_b_cell);
 
             // createLinkWith(new_gc_b_cell, th2);
             new_gc_b_cell->addLinkedTurtle(th2);
@@ -136,9 +140,10 @@ void World::tiResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
         if (proPC > proMem) {
             // Create a new SL Plasma Cell and add it to the corresponding containers
             auto new_sl_plasma_cell = std::make_shared<SLPlasmaCell>(activated_b_cell->getX(), activated_b_cell->getY(), global_ID_counter++);
-            new_sl_plasma_cell->setAge(0);
+            new_sl_plasma_cell->copy_other_turtle_attributes(activated_b_cell);
+            new_sl_plasma_cell->setTimeAlive(0);
             // Set color, shape, size, etc. as required
-            // new_sl_plasma_cell->setColor("lime + 3");
+            new_sl_plasma_cell->setColor("lime");
             new_sl_plasma_cell->setShape("circle");
             new_sl_plasma_cell->setSize(1);
 
@@ -146,13 +151,16 @@ void World::tiResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
             std::weak_ptr<Turtle> new_sl_plasma_cell_weak_ptr = new_sl_plasma_cell;
             all_turtles.push_back(new_sl_plasma_cell_weak_ptr);
             all_sl_plasma_cells.push_back(new_sl_plasma_cell);
+            current_patch.add_turtle(new_sl_plasma_cell);
+
         } else {
             if (step < 2800) {
                 // Create a new Memory B Cell and add it to the corresponding containers
                 auto new_mem_b_cell = std::make_shared<MemBCell>(activated_b_cell->getX(), activated_b_cell->getY(), global_ID_counter++);
+                new_mem_b_cell->copy_other_turtle_attributes(activated_b_cell);
 
                 new_mem_b_cell->setExposureNumber(1);
-                new_mem_b_cell->setAge(0);
+                new_mem_b_cell->setTimeAlive(0);
                 // Set color, shape, size, etc. as required
                 new_mem_b_cell->setColor("white");
                 new_mem_b_cell->setShape("target");
@@ -165,12 +173,15 @@ void World::tiResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
                 std::weak_ptr<Turtle> new_mem_b_cell_weak_ptr = new_mem_b_cell;
                 all_turtles.push_back(new_mem_b_cell_weak_ptr);
                 all_mem_b_cells.push_back(new_mem_b_cell);
+                current_patch.add_turtle(new_mem_b_cell);
+                
             } else {
                 // Create a new Memory B Cell and add it to the corresponding containers
                 auto new_mem_b_cell = std::make_shared<MemBCell>(activated_b_cell->getX(), activated_b_cell->getY(), global_ID_counter++);
+                new_mem_b_cell->copy_other_turtle_attributes(activated_b_cell);
 
                 new_mem_b_cell->setExposureNumber(2);
-                new_mem_b_cell->setAge(0);
+                new_mem_b_cell->setTimeAlive(0);
                 // Set color, shape, size, etc. as required
                 new_mem_b_cell->setColor("white");
                 new_mem_b_cell->setShape("target");
@@ -183,6 +194,8 @@ void World::tiResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
                 std::weak_ptr<Turtle> new_mem_b_cell_weak_ptr = new_mem_b_cell;
                 all_turtles.push_back(new_mem_b_cell_weak_ptr);
                 all_mem_b_cells.push_back(new_mem_b_cell);
+                current_patch.add_turtle(new_mem_b_cell);
+
             }
         }
     }

@@ -84,6 +84,20 @@ void World::add_turtle(int x, int y, int id, int heading){
   all_turtles.emplace_back(new_turtle);
 }
 
+void World::place_turtle(int x, int y, std::shared_ptr<Turtle> turtle){
+  Patch& original_patch = get_patch(turtle->getX(), turtle->getY());
+  Patch& new_patch = get_patch(x, y);
+  turtle->setX(x);
+  turtle->setY(y);
+  turtle->set_x_dec(x);
+  turtle->set_y_dec(y);
+  turtle->set_temp_x(x);
+  turtle->set_temp_y(y);
+  
+  original_patch.remove_turtle(turtle);
+  new_patch.add_turtle(turtle);
+}
+
 void World::move_turtle(std::shared_ptr<Turtle> turtle, float distance){
   // moves the turtle but asking the turtle to calculate its movement, and if there is space on the target_patch, the world executes the move
   turtle->wiggle(RNG_Engine);
@@ -249,12 +263,10 @@ void World::setup(){
 
   // using the above command, I told gpt to recreate the pmn example from the general world.h example, but doing a different initialization command
   for (int i = 0; i < FDCcoordinates.size(); i++) {
-      global_ID_counter++; // increment global ID counter to give to the new cell
       int x = FDCcoordinates[i].first;  // x-coordinate of the FDC
       int y = FDCcoordinates[i].second; // y-coordinate of the FDC
-      auto fdc = std::make_shared<FDCs>(x, y, global_ID_counter); // creating the actual FDC turtle
+      auto fdc = std::make_shared<FDCs>(x, y, global_ID_counter++); // creating the actual FDC turtle
       Patch& patch = get_patch(x, y); // get patch to add the turtle to
-      patch.add_turtle(fdc); // add turtle to patch
 
       // Set shape and color for the FDC
       fdc->setShape("square");
@@ -265,11 +277,11 @@ void World::setup(){
       // adding new turtle to all turtles vector, and specific type vector
       all_turtles.push_back(fdc_weak_ptr);
       all_fdcs.push_back(fdc);
+      patch.add_turtle(fdc); // add turtle to patch
   }
 
   int NUM_TFH_CELLS_TO_ADD = 50;
   for (int i = 0; i < NUM_TFH_CELLS_TO_ADD; i++) {
-      global_ID_counter++; // increment global ID counter to give to the new cell
       // generate a new coordinate and verify if the patch at the coordinate is of type 1
       std::pair<int, int> coord;
       // do while loop. executes the codeblock once, then checks. while condition, it executes the block again then checks. Same thing as a normal while loop, but it will always do it at least once
@@ -280,9 +292,8 @@ void World::setup(){
       } while (get_patch(coord.first, coord.second).getPatchType() != 1);
       std::cout<<coord.first<<", "<<coord.second<< ", "<< get_patch(coord.first, coord.second).getPatchType()<<std::endl;
 
-      auto tfhCell = std::make_shared<TfhCell>(coord.first, coord.second, global_ID_counter); // create the TfhCell
+      auto tfhCell = std::make_shared<TfhCell>(coord.first, coord.second, global_ID_counter++); // create the TfhCell
       Patch& patch = get_patch(coord.first, coord.second); // get patch to add the turtle to
-      patch.add_turtle(tfhCell); // add turtle to patch
 
       // Set cell variables
       tfhCell->setTimeAlive(-1000);
@@ -298,11 +309,11 @@ void World::setup(){
       // adding new turtle to all turtles vector, and specific type vector
       all_turtles.push_back(tfhCell_weak_ptr);
       all_tfh_cells.push_back(tfhCell);
+      patch.add_turtle(tfhCell); // add turtle to patch
   }
 
   int NUM_TH1_CELLS_TO_ADD = 10;
   for (int i = 0; i < NUM_TH1_CELLS_TO_ADD; i++) {
-      global_ID_counter++; // increment global ID counter to give to the new cell
       std::pair<int, int> coord;
       do {
           int random_x = RNG_Engine() % WORLD_WIDTH; //random X and Y position
@@ -310,9 +321,8 @@ void World::setup(){
           coord = std::make_pair(random_x, random_y);
       } while (get_patch(coord.first, coord.second).getPatchType() != 1);
 
-      auto th1Cell = std::make_shared<Th1Cell>(coord.first, coord.second, global_ID_counter); // create the Th1Cell
+      auto th1Cell = std::make_shared<Th1Cell>(coord.first, coord.second, global_ID_counter++); // create the Th1Cell
       Patch& patch = get_patch(coord.first, coord.second); // get patch to add the turtle to
-      patch.add_turtle(th1Cell); // add turtle to patch
 
       // Set cell variables
       th1Cell->setTimeAlive(-1000);
@@ -328,11 +338,11 @@ void World::setup(){
       // adding new turtle to all turtles vector, and specific type vector
       all_turtles.push_back(th1Cell_weak_ptr);
       all_th1_cells.push_back(th1Cell);
+      patch.add_turtle(th1Cell); // add turtle to patch
   }
 
   int NUM_TH2_CELLS_TO_ADD = 50;
   for (int i = 0; i < NUM_TH2_CELLS_TO_ADD; i++) {
-      global_ID_counter++; // increment global ID counter to give to the new cell
       std::pair<int, int> coord;
       do {
           int random_x = RNG_Engine() % WORLD_WIDTH; //random X and Y position
@@ -340,9 +350,8 @@ void World::setup(){
           coord = std::make_pair(random_x, random_y);
       } while (get_patch(coord.first, coord.second).getPatchType() != 1);
 
-      auto th2Cell = std::make_shared<Th2Cell>(coord.first, coord.second, global_ID_counter); // create the Th2Cell
+      auto th2Cell = std::make_shared<Th2Cell>(coord.first, coord.second, global_ID_counter++); // create the Th2Cell
       Patch& patch = get_patch(coord.first, coord.second); // get patch to add the turtle to
-      patch.add_turtle(th2Cell); // add turtle to patch
 
       // Set cell variables
       th2Cell->setTimeAlive(-1000);
@@ -358,6 +367,7 @@ void World::setup(){
       // adding new turtle to all turtles vector, and specific type vector
       all_turtles.push_back(th2Cell_weak_ptr);
       all_th2_cells.push_back(th2Cell);
+      patch.add_turtle(th2Cell); // add turtle to patch
   }
 
 
@@ -378,7 +388,7 @@ void World::go() {
   setDaysPassed(step / 48);
 
   spawnBCell();
-  spawnTh0Cell();
+  // spawnTh0Cell();
 
   // Cytokine release from paracortex
   for (int x = 0; x < WORLD_WIDTH; x++) {
@@ -387,6 +397,8 @@ void World::go() {
           if (p.getPatchType() == 1) {
               p.setCcl19Level(p.getCcl19Level() + 2);
               p.setEbi2Level(p.getEbi2Level() + 2);
+              // std::cout<<"Releasing CCL19 and EBI2 from paracortex"<<std::endl;
+              
           }
       }
   }
@@ -397,6 +409,7 @@ void World::go() {
           Patch& p = get_patch(x, y);
           if (p.getPatchType() == 2) {
               p.setS1pLevel(p.getS1pLevel() + 2);
+              // std::cout<<"Releasing S1p from follicle exit"<<std::endl;
           }
       }
   }
@@ -429,37 +442,33 @@ void World::go() {
   for (auto& th2Cell : all_th2_cells){th2CellFunction(th2Cell);}
   
   for (auto& bacteria : all_bacterias){bacteriaFunction(bacteria);}
-  //
+  
+  update_chemokine_gradient();
+  check_overall_cd21_expression();
+  
   // Check if autoinoculate is active
   if(AUTOINOCULATE) {
-      if(step == AUTIINOCULATE_FIRST_TIME) {
-          // auto_inoculate(first_exposure_amt);  // Call your inoculation function
+      if(step == AUTOINOCULATE_FIRST_TIME) {
+        std::cout<<"INNOCULATING FOR THE FIRST TIME NOWWWWWW"<<std::endl;
+          auto_inoculate(FIRST_EXPOSURE_AMOUNT);
       }
-      else if(step == AUTIINOCULATE_SECOND_TIME) {
-          // auto_inoculate(second_exposure_amt);  // Call your inoculation function
+      else if(step == AUTOINOCULATE_SECOND_TIME) {
+        std::cout<<"INNOCULATING FOR THE SECONDDDDDDDDDD TIME NOWWWWWW"<<std::endl;
+          auto_inoculate(SECOND_EXPOSURE_AMOUNT);
       }
       else if(step == STOP_EXPOSURE_TIME) {
           // stop();  // You might want to stop the simulation
       }
   }
 
-
-  update_chemokine_gradient();
-  check_overall_cd21_expression();
-
-  // Check if autoinoculate is active
-  // if(autoinoculate) {
-      // Specific actions based on current step value
-  // }
-
   // Increase the step (equivalent to NetLogo's tick)
   step++;
-
-
-
   // end of go
   updateTurtleVectors(); // need to update turtle positions/delete dead turtles
 }
+
+
+
 
 void World::check_overall_cd21_expression() {
     if (step % 20 == 0) {   // Only calculating avg CD21 expression every 20 ticks to increase run speed
@@ -504,6 +513,51 @@ void World::update_chemokine_gradient(){
   diffuse();
   evaporate();
 }
+
+void World::auto_inoculate(int numBac) {
+
+    int numPhagocytosedBac = std::min(static_cast<int>(round(numBac * 0.8)), 100);
+    int numFreeBac = numBac - numPhagocytosedBac;
+
+    // Simulating the "ask up-to-n-of num-phagocytosed-bac fdcs" 
+    // Let's say all_fdcs is your list of FDCs
+    for (int i = 0; i < std::min(numPhagocytosedBac, static_cast<int>(all_fdcs.size())); i++) {
+        int random_FDC_index = RNG_Engine() % all_fdcs.size();
+        all_fdcs[random_FDC_index]->setResponsiveness(std::min(all_fdcs[random_FDC_index]->getResponsiveness() + 50, 100));
+        all_fdcs[random_FDC_index]->setTimePresenting(0);
+        all_fdcs[random_FDC_index]->setPresentedAntigen(BACTERIA_EPITOPE_TYPE); 
+        all_fdcs[random_FDC_index]->setColor("red");  // Assuming you have some way to represent color in your FDC class
+
+        int rTI = RNG_Engine() % NUMBER_OF_TI_EPITOPES;
+        int rTD = RNG_Engine() % NUMBER_OF_TD_EPITOPES;
+
+        if (rTI > rTD) {
+            all_fdcs[random_FDC_index]->setPresentedAntigenType(1); // 1 is TI
+        } else {
+            all_fdcs[random_FDC_index]->setPresentedAntigenType(2); // 2 is TD
+        }
+    }
+
+    // Now simulating the "create-bacteria num-free-bac" 
+    for (int i = 0; i < numFreeBac; i++) {
+        std::shared_ptr<Bacteria> new_bacteria = std::make_shared<Bacteria>(WORLD_WIDTH-1, std::ceil(WORLD_HEIGHT/2), global_ID_counter++);
+
+        new_bacteria->setColor("red");
+        new_bacteria->setShape("bug");
+        new_bacteria->setSize(2);
+        new_bacteria->setTimeAlive(0);
+        new_bacteria->setInBlood(false);
+        new_bacteria->setEpitopeType(BACTERIA_EPITOPE_TYPE);
+        new_bacteria->setNumTIep(NUMBER_OF_TI_EPITOPES);
+        new_bacteria->setNumTDep(NUMBER_OF_TD_EPITOPES);
+
+        std::weak_ptr<Turtle> new_bacteria_weak_ptr = new_bacteria;
+        all_bacterias.push_back(new_bacteria);  // Assuming you have a list named all_bacteria
+        all_turtles.push_back(new_bacteria_weak_ptr);
+        get_patch(new_bacteria->getX(), new_bacteria->getY()).add_turtle(new_bacteria);
+    }
+}
+
 
 void World::diffuse(){
   // need to diffuse values from patches out to neighboring patches

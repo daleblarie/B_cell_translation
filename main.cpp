@@ -26,7 +26,9 @@ int main(int argc, char const *argv[]) {
   // main loop
   std::cout<<"STARTING GO"<<std::endl;
   for (size_t i = 0; i < NUM_STEPS; i++) {
-    std::cout<<"beginning step number " <<i<<std::endl;
+    if (i%10==0){
+      std::cout<<"beginning step number " <<i<<std::endl;
+    }
     world.go();
     
     // rendering loop

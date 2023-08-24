@@ -6,13 +6,13 @@ Antibodies::Antibodies(int x, int y, int id, int heading) : Turtle(x, y, id, hea
 }
 
 
-void World::antibodiesFunction(std::shared_ptr<Antibodies> antibodies) {
+void World::antibodiesFunction(std::shared_ptr<Antibodies> antibody) {
     // Increase the time alive of the antibody
-    antibodies->setTimeAlive(antibodies->getTimeAlive() + 1);
+    antibody->setTimeAlive(antibody->getTimeAlive() + 1);
 
     // Check if the antibody has exceeded its lifespan
-    if (antibodies->getTimeAlive() > 900) {
+    if (antibody->getTimeAlive() > 900) {
         // If it has, kill the antibody
-        kill(antibodies);
+        kill(antibody);
     }
 }

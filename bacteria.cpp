@@ -12,22 +12,21 @@ void World::bacteriaFunction(std::shared_ptr<Bacteria> bacteria) {
     if (current_patch.getPatchType() == 2) {
         int x = rand() % 2; // Randomly generate 0 or 1
         if (x == 0) {
-            bacteria->setX(49);
-            bacteria->setY(0);
+            place_turtle(WORLD_WIDTH-2, std::ceil(WORLD_HEIGHT/2), bacteria);
             bacteria->setS1pr1Level(0);
         } else {
             auto available_fdcs = get_fdcs_with_no_presented_antigen(bacteria->getX(), bacteria->getY());
             if (!available_fdcs.empty()) {
-                auto fdc = available_fdcs[rand() % available_fdcs.size()];
+                auto fdc = available_fdcs[RNG_Engine() % available_fdcs.size()];
                 fdc->setTimePresenting(0);
                 fdc->setPresentedAntigen(bacteria->getEpitopeType());
                 fdc->setColor("red");
-                int rTI = rand() % bacteria->getNumTIep();
-                int rTD = rand() % bacteria->getNumTDep();
+                int rTI = RNG_Engine() % bacteria->getNumTIep();
+                int rTD = RNG_Engine() % bacteria->getNumTDep();
                 if (rTI > rTD) {
-                    fdc->setPresentedAntigen(1);
+                    fdc->setPresentedAntigenType(1);
                 } else {
-                    fdc->setPresentedAntigen(2);
+                    fdc->setPresentedAntigenType(2);
                 }
                 kill(bacteria);
             }

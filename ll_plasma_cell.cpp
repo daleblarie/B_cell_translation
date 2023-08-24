@@ -13,7 +13,7 @@ void World::ll_plasma_cell_function(std::shared_ptr<LLPlasmaCell> ll_plasma_cell
 
         if(current_patch.getPatchType() == 2) {
             ll_plasma_cell->setInBlood(true);
-            // ll_plasma_cell->hide_turtle();
+            ll_plasma_cell->setVisible(false);
         }
 
         // Assuming you have a check_breg_status function
@@ -29,13 +29,16 @@ void World::ll_plasma_cell_function(std::shared_ptr<LLPlasmaCell> ll_plasma_cell
     else {
         if(ll_plasma_cell->getTimeAlive() % 200 == 0) {
             auto antibody = std::make_shared<Antibodies>(ll_plasma_cell->getX(), ll_plasma_cell->getX(), global_ID_counter++, ll_plasma_cell->getHeading());
+            antibody->copy_other_turtle_attributes(ll_plasma_cell);
             antibody->setTimeAlive(0);
             antibody->setAntibodyType(ll_plasma_cell->getIsotype());
             // antibody->setHidden(true);
             
             std::weak_ptr<Turtle> antibody_weak_ptr = antibody;
             all_turtles.push_back(antibody_weak_ptr);
-            all_antibodies.push_back(antibody);        }
+            all_antibodies.push_back(antibody);
+            current_patch.add_turtle(antibody);
+        }
     }
 
 

@@ -18,9 +18,15 @@ const int MAX_RANDOM_DISTANCE = 100;
 // this netlgoo implementation specific variables
 const bool RandomRuns = false;
 const bool AUTOINOCULATE = false;
-const int AUTIINOCULATE_FIRST_TIME = 480;
-const int AUTIINOCULATE_SECOND_TIME = 2880;
+const int AUTOINOCULATE_FIRST_TIME = 480;
+const int AUTOINOCULATE_SECOND_TIME = 2880;
 const int STOP_EXPOSURE_TIME = 4800;
+const int FIRST_EXPOSURE_AMOUNT = 50;
+const int SECOND_EXPOSURE_AMOUNT = 50;
+
+const int BACTERIA_EPITOPE_TYPE = 30;
+const int NUMBER_OF_TI_EPITOPES = 10;
+const int NUMBER_OF_TD_EPITOPES = 10;
 
 const int BCELL_TNFA_APOP_THRESHOLD = 0;
 const int BCELL_BREG_DIFF_THRESHOLD = 0;

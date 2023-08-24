@@ -80,6 +80,7 @@ public:
   void display_patches();
 
   void add_turtle(int x, int y, int id, int heading=0);
+  void place_turtle(int x, int y, std::shared_ptr<Turtle> turtle);
   void move_turtle(std::shared_ptr<Turtle> turtle, float distance=1);
   void move_turtle_random_jump(std::shared_ptr<Turtle> turtle);
   void turtle_wiggle(std::shared_ptr<Turtle> turtle);
@@ -104,6 +105,7 @@ public:
   void calculateIncomingTNFaIL6Level();
   void simulateBackgroundInflammation();
   void update_chemokine_gradient();
+  void auto_inoculate(int numBac);
 
   void diffuse();
   void evaporate();
@@ -182,7 +184,7 @@ public:
 // if returns true, that means this cell needs to die
     Patch& current_patch = get_patch(cell->getX(), cell->getY());
     current_patch.setTnfA(current_patch.getTnfA() - .01);
-    cell->setTnfaStimulation( current_patch.getTnfA() * 100);
+    cell->setTnfaStimulation(current_patch.getTnfA() * 100);
     
     return (cell->getTnfaStimulation() > cell->getTnfaThreshold());
   }
@@ -200,8 +202,9 @@ public:
 
   template <typename CellType>
   std::shared_ptr<BregCell> turnIntoBreg(CellType& cell){
+    std::cout<<"turning into breg"<<std::endl;
     std::shared_ptr<BregCell> breg = std::make_shared<BregCell>(cell->getX(), cell->getY(), global_ID_counter++, cell->getHeading());
-    
+    breg->copy_other_turtle_attributes(cell);
     breg->setSize(1);
     breg->setShape("circle");
     breg->setColor("violet");
@@ -212,6 +215,7 @@ public:
     std::weak_ptr<Turtle> breg_weak_ptr = breg;
     all_turtles.push_back(breg_weak_ptr);
     all_breg_cells.push_back(breg);
+    get_patch(cell->getX(), cell->getY()).add_turtle(breg);
     kill(cell);
     return breg;
   }

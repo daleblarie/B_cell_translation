@@ -19,13 +19,13 @@ void World::bregFunction(std::shared_ptr<BregCell> breg_cell) {
     move_turtle(breg_cell);
 
     // Check TNF status
-    checkTNFStatus(breg_cell);
+    bool die_by_tnf = checkTNFStatus(breg_cell);
 
     // Increase the time alive
     breg_cell->setTimeAlive(breg_cell->getTimeAlive() + 1);
 
     // Kill if the time alive exceeds 300
-    if(breg_cell->getTimeAlive() > 300) {
+    if((breg_cell->getTimeAlive() > 300)|| die_by_tnf) {
         kill(breg_cell);
     }
 }

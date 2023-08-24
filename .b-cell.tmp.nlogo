@@ -1094,23 +1094,6 @@ ticks
 30.0
 
 BUTTON
-0
-0
-0
-0
-NIL
-NIL
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
 13
 11
 70
@@ -1600,6 +1583,23 @@ background-il6
 1
 0
 Number
+
+BUTTON
+280
+773
+376
+806
+one step
+go\n
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## Description of the model

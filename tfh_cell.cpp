@@ -8,7 +8,7 @@ TfhCell::TfhCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) 
 void World::tfhCellFunction(std::shared_ptr<TfhCell> tfh_cell) {
     Patch& current_patch = get_patch(tfh_cell->getX(), tfh_cell->getY());
 
-    if (calculateDistance(tfh_cell->getX(), tfh_cell->getY(), WORLD_WIDTH / 2, WORLD_HEIGHT / 2) > 20 || !tfh_cell->getBcellBindingStatus()) {
+    if (calculateDistance(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, tfh_cell->getX(), tfh_cell->getY()) > 20 || !tfh_cell->getBcellBindingStatus()) {
         chemotaxis(tfh_cell);
         move_turtle(tfh_cell);
     }
