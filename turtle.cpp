@@ -40,16 +40,22 @@ std::pair<int,int> Turtle::move(float distance) {
     temp_x = x_dec;   //placeholders in case we are not able to actually execute the move. In that case, these will reset x/y decimal values
     temp_y = y_dec;
     float d_x = cos(heading * M_PI/180) * distance;   // converting degrees to radians and getting delta x and delta y
-    float d_y = sin(heading * M_PI/180) * distance;
+    float d_y = -1 * sin(heading * M_PI/180) * distance;
     if (!TURTLE_CONTINOUS_MOVEMENT) {   //ie discrete movement, turtles always land on the middle of patches
       d_x = round(d_x);
       d_y = round(d_y);
     }
     x_dec += d_x;
     y_dec += d_y;
-    
-    x_dec = fmod(fmod(x_dec, WORLD_WIDTH) +WORLD_WIDTH, WORLD_WIDTH);              // wrapping around world with modulo
-    y_dec = fmod(fmod(y_dec, WORLD_HEIGHT) +WORLD_HEIGHT, WORLD_HEIGHT);           // taking double mod to make sure that a positive number for grid coordinates
+    if (TOROIDAL_WORLD){
+      x_dec = fmod(fmod(x_dec, WORLD_WIDTH) +WORLD_WIDTH, WORLD_WIDTH);              // wrapping around world with modulo
+      y_dec = fmod(fmod(y_dec, WORLD_HEIGHT) +WORLD_HEIGHT, WORLD_HEIGHT);           // taking double mod to make sure that a positive number for grid coordinates
+    } else{
+      if (x_dec > WORLD_WIDTH){x_dec = WORLD_WIDTH-1;}
+      if (y_dec > WORLD_HEIGHT){y_dec = WORLD_HEIGHT-1;}
+      if (x_dec < 0){x_dec = 0;}
+      if (y_dec < 0){y_dec = 0;}
+    }
     int newx, newy;
     newx = trunc(x_dec);    // truncating decimal coords to get int coords
     newy = trunc(y_dec);

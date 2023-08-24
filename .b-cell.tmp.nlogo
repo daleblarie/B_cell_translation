@@ -218,7 +218,7 @@ to naive-b-cell-function
   set cd21-level 300 - (il6 * 50 + il10 * 0)     ; Calculates CD21 exppression based off of il6 and il10 levels (scaled) in current patch
 
   if patch-type = 2 [         ; Represents naive b cell exiting the follicle
-    ;die
+    die
   ]
 
   ;; Checks if naive b-cell is in contact with an antigen-bound APC or free-floating antigen
@@ -314,7 +314,7 @@ to activated-b-cell-function
     ; Only performs the following commands if currently inside the follicle, and NOT in the blood/lymph
     if patch-type = 2 [   ; If the cell reaches the follicle exit (patch-type 2)
       set in-blood true
-      ;hide-turtle
+      hide-turtle
     ]
 
     isotype-switch   ; Determines which isotype to switch to
@@ -454,7 +454,7 @@ to gc-b-cell-function
   if in-blood = false [
     if patch-type = 2 [
       set in-blood true
-      ;hide-turtle
+      hide-turtle
     ]
 
     ; Downregulates ebi2r and ccr7 so it can localize to follicle center again
@@ -511,7 +511,7 @@ to sl-plasma-cell-function
   if in-blood = false [
     if patch-type = 2 [
       set in-blood true
-      ;hide-turtle
+      hide-turtle
     ]
     check-breg-status
     chemotaxis
@@ -535,7 +535,7 @@ to ll-plasma-cell-function
   ifelse in-blood = false [
     if patch-type = 2 [
       set in-blood true
-      ;hide-turtle
+      hide-turtle
     ]
 
     check-breg-status
@@ -565,7 +565,7 @@ to mem-b-cell-function
   set cd21-level 300 - (il6 * 50 + il10 * 0)
 
   if patch-type = 2 [
-    ;setxy 49 0
+    setxy 49 0
     set pro-breg 0
     set s1pr1-level 0
     set time-in-follicle 0

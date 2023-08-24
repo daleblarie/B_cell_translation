@@ -10,7 +10,7 @@ void World::spawnBCell() {
       int cell_y = std::floor(WORLD_HEIGHT / 2);
 
       // Create a new Naive B-cell
-      auto b_cell = std::make_shared<NaiveBCell>(cell_x, cell_y, global_ID_counter++, 180);
+      auto b_cell = std::make_shared<NaiveBCell>(cell_x, cell_y, global_ID_counter++);
       std::weak_ptr<Turtle> b_cell_weak_ptr = b_cell;
       // Set the properties of the new Naive B-cell
       b_cell->setShape("circle");

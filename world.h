@@ -226,20 +226,30 @@ public:
     // std::cout<<"my location" <<cell->getX()<<", "<< cell->getY()<<std::endl;
     Patch& current_patch = get_patch(cell->getX(), cell->getY());
     double final_heading = cell->getHeading();
-    // if (final_heading == 0){std::cout<<"ID "<<cell->getID()<<", HEADING "<<cell->getHeading()<<std::endl;};
+    bool print_test = std::dynamic_pointer_cast<NaiveBCell>(cell);
+    if (print_test){
+      print_test = (cell->getX() == WORLD_WIDTH);
+    }
+    if(print_test){std::cout<<"1st time: ID "<<cell->getID()<<", HEADING "<<cell->getHeading()<<std::endl;};
 
-    // if (final_heading != 0){std::cout<<"ID "<<cell->getID()<<", HEADING "<<cell->getHeading()<<std::endl;};
     std::vector<Patch> neighbors;
     int count = 0;
     for (int x = -1; x < 2; x++) {
       for (int y = -1; y < 2; y++) {
         if (x==0 && y==0){continue;}
+        
+        if (!TOROIDAL_WORLD){
+          if ((current_patch.getX() + x) > WORLD_WIDTH){continue;}
+          if ((current_patch.getX() + x) < 0){continue;}
+          if ((current_patch.getY() + y) > WORLD_HEIGHT){continue;}
+          if ((current_patch.getY() + x) < 0){continue;}
+        }
         // std::cout<<"neighbor "<<count<<" location"<<cell->getX() + x<<", "<< cell->getY()+ y <<std::endl;
         count ++;
         neighbors.push_back(get_patch(current_patch.getX() + x, current_patch.getY() + y));
       }
     }
-    // std::cout<<"chemotaxing2"<<std::endl;
+    if (print_test){std::cout<<"chemotaxing2:    "<<count<<std::endl;}
     
     int random_max_patch_ind = RNG_Engine() % neighbors.size();
     Patch max_patch = neighbors[random_max_patch_ind];
@@ -255,8 +265,13 @@ public:
     }
     double angle_absolute_to_s1p = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
     double angle_relative_to_s1p = cell->getHeading() - angle_absolute_to_s1p;
+    if(print_test){
+      std::cout<<"2nd  time: ID "<<cell->getID()<<", HEADING "<< final_heading<<std::endl;
+      std::cout<<"angle_absolute_to_s1p  "<<angle_absolute_to_s1p<<std::endl;
+      std::cout<<"angle_relative_to_s1p  "<<angle_relative_to_s1p<<std::endl;
+    };
     final_heading += angle_relative_to_s1p*s1pr1_weight;
-    
+
     
     
     double s1pr2_weight = cell->getS1pr2Level() / 100.0;
@@ -270,7 +285,8 @@ public:
     double angle_absolute_to_s1pr2 = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
     double angle_relative_to_s1pr2 = cell->getHeading() - angle_absolute_to_s1pr2;
     final_heading += angle_relative_to_s1pr2*s1pr2_weight;
-    
+    if(print_test){std::cout<<"3rd time: ID "<<cell->getID()<<", HEADING "<< final_heading<<std::endl;};
+
      
     double cxcr5_weight = cell->getCxcr5Level() / 100.0;
     double max_cxcl13 = 0;
@@ -283,7 +299,8 @@ public:
     double angle_absolute_to_cxcl13 = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
     double angle_relative_to_cxcl13 = cell->getHeading() - angle_absolute_to_cxcl13;
     final_heading += angle_relative_to_cxcl13*cxcr5_weight;
-    
+    if(print_test){std::cout<<"4th time: ID "<<cell->getID()<<", HEADING "<< final_heading<<std::endl;};
+
     // For ebi2r_level
     double ebi2r_weight = cell->getEbi2rLevel() / 100.0;
     double max_ebi2 = 0;
@@ -296,10 +313,14 @@ public:
     double angle_absolute_to_ebi2 = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
     double angle_relative_to_ebi2 = cell->getHeading() - angle_absolute_to_ebi2;
     final_heading += angle_relative_to_ebi2 * ebi2r_weight;
+    if(print_test){std::cout<<"5th time: ID "<<cell->getID()<<", HEADING "<< final_heading<<std::endl;};
 
 
 
   cell->setHeading((int)final_heading%(360));
+  cell->setHeading(90);
+  if(print_test){std::cout<<"FINAL TIME: ID "<<cell->getID()<<", HEADING "<<std::endl;};
+
   // std::cout<<"END CHEMOTAXING"<<std::endl;
   }
   
