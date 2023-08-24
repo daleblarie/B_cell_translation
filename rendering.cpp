@@ -68,7 +68,7 @@ std::tuple<int, int, int> RenderingEngine::getColor(const std::string& color){
     blue = 255;
   }
   else if (color =="brown"){
-    red = 165;
+    red = 85;
     green = 42;
     blue = 42;
   }
@@ -153,6 +153,16 @@ void RenderingEngine::renderAllTurtles(){
     y = agent.lock()->getY() * GRID_SIZE;
     std::string color = agent.lock()->getColor();
     int opacity = agent.lock()->getOpacity();
-    drawCircle(x,y,(GRID_SIZE/2)-2, color, opacity);
+    std::string shape = agent.lock()->getShape();
+    if (shape=="square"){
+      drawSquare(x,y,(GRID_SIZE-1) * agent.lock()->getSize(), color, opacity);
+    }else if(shape=="target"){
+      drawSquare(x,y,(GRID_SIZE-1) * agent.lock()->getSize(), color, opacity);
+      drawCircle(x,y,(((GRID_SIZE/2)*agent.lock()->getSize())-2), "black", opacity);
+
+    }else{
+      drawCircle(x,y,((GRID_SIZE/2)), color, opacity);
+      
+    }
   }
 }

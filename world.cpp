@@ -526,7 +526,7 @@ void World::auto_inoculate(int numBac) {
         all_fdcs[random_FDC_index]->setResponsiveness(std::min(all_fdcs[random_FDC_index]->getResponsiveness() + 50, 100));
         all_fdcs[random_FDC_index]->setTimePresenting(0);
         all_fdcs[random_FDC_index]->setPresentedAntigen(BACTERIA_EPITOPE_TYPE); 
-        all_fdcs[random_FDC_index]->setColor("red");  // Assuming you have some way to represent color in your FDC class
+        // all_fdcs[random_FDC_index]->setColor("red");  // Assuming you have some way to represent color in your FDC class
 
         int rTI = RNG_Engine() % NUMBER_OF_TI_EPITOPES;
         int rTD = RNG_Engine() % NUMBER_OF_TD_EPITOPES;
@@ -539,6 +539,7 @@ void World::auto_inoculate(int numBac) {
     }
 
     // Now simulating the "create-bacteria num-free-bac" 
+    std::cout<<"IN AUTOINOCULATE, ADDING NEW BACTERIA. TOTAL ADDED IS "<<numFreeBac<<std::endl;
     for (int i = 0; i < numFreeBac; i++) {
         std::shared_ptr<Bacteria> new_bacteria = std::make_shared<Bacteria>(WORLD_WIDTH-1, std::ceil(WORLD_HEIGHT/2), global_ID_counter++);
 

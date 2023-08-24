@@ -17,7 +17,6 @@ void World::fdcFunction(std::shared_ptr<FDCs> fdc) {
 
     // If FDC is presenting antigen, determines when it will stop presenting it
     if(fdc->getPresentedAntigen() != 0) {
-      std::cout<<"Presenting Antigen"<<std::endl;
         fdc->setTimePresenting(fdc->getTimePresenting() + 1);
     }
     if(fdc->getTimePresenting() == 300) {

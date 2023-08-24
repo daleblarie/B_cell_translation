@@ -17,7 +17,7 @@ const int MAX_RANDOM_DISTANCE = 100;
 
 // this netlgoo implementation specific variables
 const bool RandomRuns = false;
-const bool AUTOINOCULATE = false;
+const bool AUTOINOCULATE = true;
 const int AUTOINOCULATE_FIRST_TIME = 480;
 const int AUTOINOCULATE_SECOND_TIME = 2880;
 const int STOP_EXPOSURE_TIME = 4800;

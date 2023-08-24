@@ -1080,8 +1080,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-0
-0
+1
+1
 1
 -50
 50
@@ -1168,7 +1168,7 @@ bacteria-epitope-type
 bacteria-epitope-type
 1
 30
-30.0
+15.0
 1
 1
 NIL
@@ -1584,6 +1584,23 @@ background-il6
 0
 Number
 
+BUTTON
+280
+773
+376
+806
+one step
+go\n
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
 @#$#@#$#@
 ## Description of the model
 
@@ -1940,7 +1957,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.2.2
+NetLogo 6.3.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

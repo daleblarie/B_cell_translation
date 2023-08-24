@@ -20,6 +20,7 @@ void World::bacteriaFunction(std::shared_ptr<Bacteria> bacteria) {
                 auto fdc = available_fdcs[RNG_Engine() % available_fdcs.size()];
                 fdc->setTimePresenting(0);
                 fdc->setPresentedAntigen(bacteria->getEpitopeType());
+                std::cout<<"BACTERIA SETTING FDC COLOR TO RED"<<std::endl;
                 fdc->setColor("red");
                 int rTI = RNG_Engine() % bacteria->getNumTIep();
                 int rTD = RNG_Engine() % bacteria->getNumTDep();
