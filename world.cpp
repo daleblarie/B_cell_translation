@@ -93,14 +93,14 @@ void World::place_turtle(int x, int y, std::shared_ptr<Turtle> turtle){
   turtle->set_y_dec(y);
   turtle->set_temp_x(x);
   turtle->set_temp_y(y);
-  
+
   original_patch.remove_turtle(turtle);
   new_patch.add_turtle(turtle);
 }
 
 void World::move_turtle(std::shared_ptr<Turtle> turtle, float distance){
   // moves the turtle but asking the turtle to calculate its movement, and if there is space on the target_patch, the world executes the move
-  turtle->wiggle(RNG_Engine);
+  // turtle->wiggle(RNG_Engine);
   Patch &turtle_current_patch = get_patch(turtle->getX(), turtle->getY());
   std::pair<int,int> new_coords = turtle->move(distance); //moving along turtle.heading for the default value of 1 unit
   Patch& target_patch = get_patch(new_coords.first, new_coords.second);
@@ -120,7 +120,7 @@ void World::move_turtle_random_jump(std::shared_ptr<Turtle> turtle){
   // same as move turtle but instead of turtle-> move() we are using turtle->jumpRandom(RNG_Engine)
   Patch &turtle_current_patch = get_patch(turtle->getX(), turtle->getY());
   std::pair<int,int> new_coords = turtle->jumpRandom(RNG_Engine);
-  
+
   Patch& target_patch = get_patch(new_coords.first, new_coords.second);
     if (turtle_current_patch == target_patch){
     return;
@@ -401,9 +401,18 @@ void World::go() {
               p.setCcl19Level(p.getCcl19Level() + 2);
               p.setEbi2Level(p.getEbi2Level() + 2);
               // std::cout<<"Releasing CCL19 and EBI2 from paracortex"<<std::endl;
-              
+
           }
       }
+  }
+  for (int x = 0; x < WORLD_WIDTH; x++) {
+    for (int y = 0; y < WORLD_HEIGHT; y++) {
+      Patch& p = get_patch(x, y);
+      if (p.getPatchType() == 1) {
+        // p.setS1pLevel(p.getS1pLevel() + 2);
+        std::cout<<"just checking ccl19 from follicle exit "<<p.getCcl19Level()<<std::endl;
+      }
+    }
   }
 
   // Cytokine release from follicle exit
@@ -412,7 +421,7 @@ void World::go() {
           Patch& p = get_patch(x, y);
           if (p.getPatchType() == 2) {
               p.setS1pLevel(p.getS1pLevel() + 2);
-              // std::cout<<"Releasing S1p from follicle exit"<<std::endl;
+              std::cout<<"Releasing S1p from follicle exit "<<p.getS1pLevel()<<std::endl;
           }
       }
   }
@@ -421,34 +430,34 @@ void World::go() {
   for (auto& fdc : all_fdcs){fdcFunction(fdc);}
   //
   for (auto& naiveBCell : all_naive_b_cells){naiveBCellFunction(naiveBCell);}
-  
+
   for (auto& activatedBCell : all_activated_b_cells){activatedBCellFunction(activatedBCell);}
-  
+
   for (auto& gcbCell : all_gcb_cells){gc_b_cell_function(gcbCell);}
-  
+
   for (auto& llPlasmaCell : all_ll_plasma_cells){ll_plasma_cell_function(llPlasmaCell);}
-  
+
   for (auto& slPlasmaCell : all_sl_plasma_cells){sl_plasma_cell_function(slPlasmaCell);}
-  
+
   for (auto& memBCell : all_mem_b_cells){memBCellFunction(memBCell);}
-  
+
   for (auto& antibody : all_antibodies){antibodiesFunction(antibody);}
-  
+
   for (auto& bregCell : all_breg_cells){bregFunction(bregCell);}
-  
+
   for (auto& tfhCell : all_tfh_cells){tfhCellFunction(tfhCell);}
-  
+
   for (auto& th0Cell : all_th0_cells){th0CellFunction(th0Cell);}
-  
+
   for (auto& th1Cell : all_th1_cells){th1CellFunction(th1Cell);}
-  
+
   for (auto& th2Cell : all_th2_cells){th2CellFunction(th2Cell);}
-  
+
   for (auto& bacteria : all_bacterias){bacteriaFunction(bacteria);}
-  
+
   update_chemokine_gradient();
   check_overall_cd21_expression();
-  
+
   // Check if autoinoculate is active
   if(AUTOINOCULATE) {
       if(step == AUTOINOCULATE_FIRST_TIME) {
@@ -498,7 +507,7 @@ void World::calculateIncomingTNFaIL6Level() {
     for (auto& patchRow : all_patches) {
       for (auto& patch : patchRow){
         patch.setTnfA(patch.getTnfA() + (countCells<Bacteria>(patch.getX(), patch.getY()) / 500.0));
-        
+
         patch.setIl6(patch.getIl6() + (countCells<Bacteria>(patch.getX(), patch.getY()) / 500.0));
       }
     }
@@ -522,13 +531,13 @@ void World::auto_inoculate(int numBac) {
     int numPhagocytosedBac = std::min(static_cast<int>(round(numBac * 0.8)), 100);
     int numFreeBac = numBac - numPhagocytosedBac;
 
-    // Simulating the "ask up-to-n-of num-phagocytosed-bac fdcs" 
+    // Simulating the "ask up-to-n-of num-phagocytosed-bac fdcs"
     // Let's say all_fdcs is your list of FDCs
     for (int i = 0; i < std::min(numPhagocytosedBac, static_cast<int>(all_fdcs.size())); i++) {
         int random_FDC_index = RNG_Engine() % all_fdcs.size();
         all_fdcs[random_FDC_index]->setResponsiveness(std::min(all_fdcs[random_FDC_index]->getResponsiveness() + 50, 100));
         all_fdcs[random_FDC_index]->setTimePresenting(0);
-        all_fdcs[random_FDC_index]->setPresentedAntigen(BACTERIA_EPITOPE_TYPE); 
+        all_fdcs[random_FDC_index]->setPresentedAntigen(BACTERIA_EPITOPE_TYPE);
         // all_fdcs[random_FDC_index]->setColor("red");  // Assuming you have some way to represent color in your FDC class
 
         int rTI = RNG_Engine() % NUMBER_OF_TI_EPITOPES;
@@ -541,7 +550,7 @@ void World::auto_inoculate(int numBac) {
         }
     }
 
-    // Now simulating the "create-bacteria num-free-bac" 
+    // Now simulating the "create-bacteria num-free-bac"
     std::cout<<"IN AUTOINOCULATE, ADDING NEW BACTERIA. TOTAL ADDED IS "<<numFreeBac<<std::endl;
     for (int i = 0; i < numFreeBac; i++) {
         std::shared_ptr<Bacteria> new_bacteria = std::make_shared<Bacteria>(WORLD_WIDTH-1, std::ceil(WORLD_HEIGHT/2), global_ID_counter++);
@@ -565,7 +574,7 @@ void World::auto_inoculate(int numBac) {
 
 void World::diffuse(){
   // need to diffuse values from patches out to neighboring patches
-  float factor_for_neighbors = 1/8; //eight neighbors in a 2D grid
+  double factor_for_neighbors = 1.0/8; //normally eight neighbors in a 2D grid
 
   // follow this example format for each diffusing variable
   for (auto& patch_row : all_patches) {  // reset temp_var
@@ -593,6 +602,13 @@ void World::diffuse(){
     for (auto& center_patch : patch_row){
       int center_patch_x_pos = center_patch.getX();
       int center_patch_y_pos = center_patch.getY();
+      if (!TOROIDAL_WORLD){
+        bool x_edge = (center_patch_x_pos==0 || center_patch_x_pos==(WORLD_WIDTH-1));
+        bool y_edge = (center_patch_y_pos==0|| center_patch_y_pos==(WORLD_HEIGHT-1));
+        if(x_edge && y_edge){factor_for_neighbors = (1.0/3);}
+        else if (x_edge || y_edge){factor_for_neighbors=(1.0/5);}
+        else{factor_for_neighbors=(1.0/8);}
+      }
       for (int i=-1; i<2; i++){
         for (int j=-1; j<2; j++){
           if (i==0 && j==0) { // skipping center cell
@@ -610,23 +626,23 @@ void World::diffuse(){
             if ((neighbor_x > WORLD_WIDTH) || (neighbor_x < 0)){continue;}
           }
           auto& neighbor_patch = get_patch(neighbor_x, neighbor_y);
-          
+
           // evenly adding the amount diffused out from the center patch to neighbor patches
-          neighbor_patch.setTempCxcl13Level(neighbor_patch.getTempCxcl13Level() + center_patch.getTempCxcl13Level() * factor_for_neighbors * CXCL13_LEVEL_DIFFUSION_FACTOR);
-          neighbor_patch.setTempCcl19Level(neighbor_patch.getTempCcl19Level() + center_patch.getTempCcl19Level() * factor_for_neighbors * CCL19_LEVEL_DIFFUSION_FACTOR);
-          neighbor_patch.setTempEbi2Level(neighbor_patch.getTempEbi2Level() + center_patch.getTempEbi2Level() * factor_for_neighbors * EBI2_LEVEL_DIFFUSION_FACTOR);
-          neighbor_patch.setTempS1pLevel(neighbor_patch.getTempS1pLevel() + center_patch.getTempS1pLevel() * factor_for_neighbors * S1P_LEVEL_DIFFUSION_FACTOR);
-          neighbor_patch.setTempIl2(neighbor_patch.getTempIl2() + center_patch.getTempIl2() * factor_for_neighbors * IL2_DIFFUSION_FACTOR);
-          neighbor_patch.setTempIl4(neighbor_patch.getTempIl4() + center_patch.getTempIl4() * factor_for_neighbors * IL4_DIFFUSION_FACTOR);
-          neighbor_patch.setTempIl6(neighbor_patch.getTempIl6() + center_patch.getTempIl6() * factor_for_neighbors * IL6_DIFFUSION_FACTOR);
-          neighbor_patch.setTempIl10(neighbor_patch.getTempIl10() + center_patch.getTempIl10() * factor_for_neighbors * IL10_DIFFUSION_FACTOR);
-          neighbor_patch.setTempIl12(neighbor_patch.getTempIl12() + center_patch.getTempIl12() * factor_for_neighbors * IL12_DIFFUSION_FACTOR);
-          neighbor_patch.setTempIl15(neighbor_patch.getTempIl15() + center_patch.getTempIl15() * factor_for_neighbors * IL15_DIFFUSION_FACTOR);
-          neighbor_patch.setTempIl21(neighbor_patch.getTempIl21() + center_patch.getTempIl21() * factor_for_neighbors * IL21_DIFFUSION_FACTOR);
-          neighbor_patch.setTempIfG(neighbor_patch.getTempIfG() + center_patch.getTempIfG() * factor_for_neighbors * IF_G_DIFFUSION_FACTOR);
-          neighbor_patch.setTempIfA(neighbor_patch.getTempIfA() + center_patch.getTempIfA() * factor_for_neighbors * IF_A_DIFFUSION_FACTOR);
-          neighbor_patch.setTempTnfA(neighbor_patch.getTempTnfA() + center_patch.getTempTnfA() * factor_for_neighbors * TNF_A_DIFFUSION_FACTOR);
-          neighbor_patch.setTempTgfB(neighbor_patch.getTempTgfB() + center_patch.getTempTgfB() * factor_for_neighbors * TGF_B_DIFFUSION_FACTOR);
+          neighbor_patch.setTempCxcl13Level(neighbor_patch.getTempCxcl13Level() + center_patch.getCxcl13Level() * factor_for_neighbors * CXCL13_LEVEL_DIFFUSION_FACTOR);
+          neighbor_patch.setTempCcl19Level(neighbor_patch.getTempCcl19Level() + center_patch.getCcl19Level() * factor_for_neighbors * CCL19_LEVEL_DIFFUSION_FACTOR);
+          neighbor_patch.setTempEbi2Level(neighbor_patch.getTempEbi2Level() + center_patch.getEbi2Level() * factor_for_neighbors * EBI2_LEVEL_DIFFUSION_FACTOR);
+          neighbor_patch.setTempS1pLevel(neighbor_patch.getTempS1pLevel() + center_patch.getS1pLevel() * factor_for_neighbors * S1P_LEVEL_DIFFUSION_FACTOR);
+          neighbor_patch.setTempIl2(neighbor_patch.getTempIl2() + center_patch.getIl2() * factor_for_neighbors * IL2_DIFFUSION_FACTOR);
+          neighbor_patch.setTempIl4(neighbor_patch.getTempIl4() + center_patch.getIl4() * factor_for_neighbors * IL4_DIFFUSION_FACTOR);
+          neighbor_patch.setTempIl6(neighbor_patch.getTempIl6() + center_patch.getIl6() * factor_for_neighbors * IL6_DIFFUSION_FACTOR);
+          neighbor_patch.setTempIl10(neighbor_patch.getTempIl10() + center_patch.getIl10() * factor_for_neighbors * IL10_DIFFUSION_FACTOR);
+          neighbor_patch.setTempIl12(neighbor_patch.getTempIl12() + center_patch.getIl12() * factor_for_neighbors * IL12_DIFFUSION_FACTOR);
+          neighbor_patch.setTempIl15(neighbor_patch.getTempIl15() + center_patch.getIl15() * factor_for_neighbors * IL15_DIFFUSION_FACTOR);
+          neighbor_patch.setTempIl21(neighbor_patch.getTempIl21() + center_patch.getIl21() * factor_for_neighbors * IL21_DIFFUSION_FACTOR);
+          neighbor_patch.setTempIfG(neighbor_patch.getTempIfG() + center_patch.getIfG() * factor_for_neighbors * IF_G_DIFFUSION_FACTOR);
+          neighbor_patch.setTempIfA(neighbor_patch.getTempIfA() + center_patch.getIfA() * factor_for_neighbors * IF_A_DIFFUSION_FACTOR);
+          neighbor_patch.setTempTnfA(neighbor_patch.getTempTnfA() + center_patch.getTnfA() * factor_for_neighbors * TNF_A_DIFFUSION_FACTOR);
+          neighbor_patch.setTempTgfB(neighbor_patch.getTempTgfB() + center_patch.getTgfB() * factor_for_neighbors * TGF_B_DIFFUSION_FACTOR);
         }
       }
     }
@@ -636,47 +652,48 @@ void World::diffuse(){
     for (auto& patch : patch_row){
       // new total is starting amount minus the amount that diffused out, plus the amount that diffused in from neighbors
       patch.setS1pLevel((patch.getS1pLevel() * (1 - S1P_LEVEL_DIFFUSION_FACTOR)) + patch.getTempS1pLevel());
+      // std::cout<<"S1p level in diffusion: "<<patch.getTempS1pLevel()<<std::endl;
       patch.setTempS1pLevel(0); // resetting
-      
+
       patch.setCxcl13Level((patch.getCxcl13Level() * (1 - CXCL13_LEVEL_DIFFUSION_FACTOR)) + patch.getTempCxcl13Level());
       patch.setTempCxcl13Level(0); // resetting
-      
+
       patch.setCcl19Level((patch.getCcl19Level() * (1 - CCL19_LEVEL_DIFFUSION_FACTOR)) + patch.getTempCcl19Level());
       patch.setTempCcl19Level(0); // resetting
-      
+
       patch.setEbi2Level((patch.getEbi2Level() * (1 - EBI2_LEVEL_DIFFUSION_FACTOR)) + patch.getTempEbi2Level());
       patch.setTempEbi2Level(0); // resetting
-      
+
       patch.setIl2((patch.getIl2() * (1 - IL2_DIFFUSION_FACTOR)) + patch.getTempIl2());
       patch.setTempIl2(0); // resetting
-      
+
       patch.setIl4((patch.getIl4() * (1 - IL4_DIFFUSION_FACTOR)) + patch.getTempIl4());
       patch.setTempIl4(0); // resetting
-      
+
       patch.setIl6((patch.getIl6() * (1 - IL6_DIFFUSION_FACTOR)) + patch.getTempIl6());
       patch.setTempIl6(0); // resetting
-      
+
       patch.setIl10((patch.getIl10() * (1 - IL10_DIFFUSION_FACTOR)) + patch.getTempIl10());
       patch.setTempIl10(0); // resetting
-      
+
       patch.setIl12((patch.getIl12() * (1 - IL12_DIFFUSION_FACTOR)) + patch.getTempIl12());
       patch.setTempIl12(0); // resetting
-      
+
       patch.setIl15((patch.getIl15() * (1 - IL15_DIFFUSION_FACTOR)) + patch.getTempIl15());
       patch.setTempIl15(0); // resetting
-      
+
       patch.setIl21((patch.getIl21() * (1 - IL21_DIFFUSION_FACTOR)) + patch.getTempIl21());
       patch.setTempIl21(0); // resetting
-      
+
       patch.setIfG((patch.getIfG() * (1 - IF_G_DIFFUSION_FACTOR)) + patch.getTempIfG());
       patch.setTempIfG(0); // resetting
-      
+
       patch.setIfA((patch.getIfA() * (1 - IF_A_DIFFUSION_FACTOR)) + patch.getTempIfA());
       patch.setTempIfA(0); // resetting
-      
+
       patch.setTnfA((patch.getTnfA() * (1 - TNF_A_DIFFUSION_FACTOR)) + patch.getTempTnfA());
       patch.setTempTnfA(0); // resetting
-      
+
       patch.setTgfB((patch.getTgfB() * (1 - TGF_B_DIFFUSION_FACTOR)) + patch.getTempTgfB());
       patch.setTempTgfB(0); // resetting
     }
