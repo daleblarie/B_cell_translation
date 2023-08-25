@@ -16,13 +16,14 @@ private:
     double s1p_level, cxcl13_level, ccl19_level, ebi2_level;
     double il2, il4, il6, il10, il12, il15, il21;
     double if_g, if_a, tnf_a, tgf_b;
-    
+
     double temp_var; // placeholder for diffusion totals before updating
     double temp_s1p_level, temp_cxcl13_level, temp_ccl19_level, temp_ebi2_level;
     double temp_il2, temp_il4, temp_il6, temp_il10, temp_il12, temp_il15, temp_il21;
     double temp_if_g, temp_if_a, temp_tnf_a, temp_tgf_b;
 
 public:
+    virtual ~Patch() = default;
     Patch():Agent(0,0){setColor("red");}; // base patch color is red
     Patch(int xCoord, int yCoord) : Agent(xCoord, yCoord) {setColor("red");};
 
@@ -98,7 +99,7 @@ public:
     // tgf_b
     void setTgfB(double value) { tgf_b = value; }
     double getTgfB() const { return tgf_b; }
-    
+
     // Getter and setter functions for temp_s1p_level
     void setTempS1pLevel(double value) { temp_s1p_level = value; }
     double getTempS1pLevel() const { return temp_s1p_level; }
