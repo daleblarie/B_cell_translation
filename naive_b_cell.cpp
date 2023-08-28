@@ -8,6 +8,9 @@ NaiveBCell::NaiveBCell(int x, int y, int id, int heading) : Turtle(x, y, id, hea
 
 
 void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
+  bool print_test = false;
+
+  // std::cout<<"naive_b_cellfunction for ID number "<<naive_b_cell->getID()<<"Ebi2rLevel "<<naive_b_cell->getEbi2rLevel()<<std::endl;
   // Get the current patch of the naive B cell
   Patch& current_patch = get_patch(naive_b_cell->getX(), naive_b_cell->getY());
 
@@ -25,9 +28,9 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
   auto antigen = getOneBacteriaHere(naive_b_cell->getX(), naive_b_cell->getY());
 
   if ((apc != nullptr && apc->getPresentedAntigen() != 0 && apc->getResponsiveness() > random_encounter) || antigen != nullptr){
-    std::cout<<"STEPPING INTO NAIVE_B_CELL FUNCTION"<<std::endl;
+    if (print_test){std::cout<<"STEPPING INTO NAIVE_B_CELL FUNCTION"<<std::endl;}
     if(naive_b_cell->getCd21Level() > BCELL_CD21_ACTIVATION_THRESHOLD){
-
+      if(print_test){std::cout<<"becoming activated B_cell"<<std::endl;}
       // creating a new activated_b_cell
       auto new_activated_b_cell = std::make_shared<ActivatedBCell>(naive_b_cell->getX(), naive_b_cell->getX(), global_ID_counter++, naive_b_cell->getHeading());
       new_activated_b_cell->copy_other_turtle_attributes(naive_b_cell);
@@ -74,7 +77,7 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
   }
 
 
-
+  if(print_test){std::cout<<"chomtaxin naive_b_cell"<<std::endl;}
   chemotaxis(naive_b_cell);
   move_turtle(naive_b_cell);
 

@@ -5,6 +5,7 @@ FDCs::FDCs(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
 }
 void World::fdcFunction(std::shared_ptr<FDCs> fdc) {
+  // std::cout<<"Doing FDC Function!"<<std::endl;
     // Get the patch where the FDC is
     Patch& fdc_patch = get_patch(fdc->getX(), fdc->getY());
 

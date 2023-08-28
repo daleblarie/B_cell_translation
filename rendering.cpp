@@ -82,7 +82,7 @@ std::tuple<int, int, int> RenderingEngine::getColor(const std::string& color){
     green = 128;
     blue = 128;
   }
-  
+
   else {
       red = 255;
       green = 16;
@@ -146,6 +146,19 @@ void RenderingEngine::renderAllPatches(){
   }
 }
 
+void RenderingEngine::renderPatchMode(){
+  for (int x = 0; x < WORLD_WIDTH; x++){
+    for (int y = 0; y < WORLD_HEIGHT; y++){
+      auto& patch = myWorld->get_patch(x,y);
+      int patch_x = patch.getX() * GRID_SIZE;
+      int patch_y = patch.getY() * GRID_SIZE;
+      std::string color = patch.getModeColor();
+      int opacity = patch.getModeOpacity();
+      drawSquare(patch_x,patch_y,GRID_SIZE, color, opacity);
+    }
+  }
+}
+
 void RenderingEngine::renderAllTurtles(){
   int x, y;
   for (auto& agent : myWorld->all_turtles){
@@ -162,7 +175,7 @@ void RenderingEngine::renderAllTurtles(){
 
     }else{
       drawCircle(x,y,((GRID_SIZE/2)), color, opacity);
-      
+
     }
   }
 }

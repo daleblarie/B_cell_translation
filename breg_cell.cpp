@@ -7,6 +7,8 @@ BregCell::BregCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading
 
 
 void World::bregFunction(std::shared_ptr<BregCell> breg_cell) {
+    std::cout<<"breg_function for ID number "<<breg_cell->getID()<<std::endl;
+
     // Get the patch where the BReg cell is
     Patch& breg_patch = get_patch(breg_cell->getX(), breg_cell->getY());
 

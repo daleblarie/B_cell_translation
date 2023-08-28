@@ -23,7 +23,7 @@ void Turtle::removeLinkedTurtle(){
      } else {
          std::cout << "Linked turtle not found in the neighbors vector. 1 ERRORRRR" << std::endl;
      }
-     
+
      iter = std::find_if(this->getLinkedTurtles().begin(), this->getLinkedTurtles().end(), WeakPtrComparator<Turtle>(neighbor.lock()->getID()));
      if (iter != this->getLinkedTurtles().end()) {
           this->getLinkedTurtles().erase(iter);
@@ -51,8 +51,8 @@ std::pair<int,int> Turtle::move(float distance) {
       x_dec = fmod(fmod(x_dec, WORLD_WIDTH) +WORLD_WIDTH, WORLD_WIDTH);              // wrapping around world with modulo
       y_dec = fmod(fmod(y_dec, WORLD_HEIGHT) +WORLD_HEIGHT, WORLD_HEIGHT);           // taking double mod to make sure that a positive number for grid coordinates
     } else{
-      if (x_dec > WORLD_WIDTH){x_dec = WORLD_WIDTH-1;}
-      if (y_dec > WORLD_HEIGHT){y_dec = WORLD_HEIGHT-1;}
+      if (x_dec >= WORLD_WIDTH){x_dec = WORLD_WIDTH-1;}
+      if (y_dec >= WORLD_HEIGHT){y_dec = WORLD_HEIGHT-1;}
       if (x_dec < 0){x_dec = 0;}
       if (y_dec < 0){y_dec = 0;}
     }
@@ -66,7 +66,7 @@ std::pair<int,int> Turtle::jumpRandom(std::mt19937 &RNG_Engine) {
   // get a random direction, then a random distance, then return the coordinates that we jumped to
     int random_heading = RNG_Engine()%360;
     int random_distance = RNG_Engine()%MAX_RANDOM_DISTANCE;
-    
+
     this->setHeading(random_heading);
     return this->move(random_distance);
 }
@@ -86,7 +86,7 @@ void Turtle::wiggle(std::mt19937 &RNG_Engine){
   // randomly wiggle heading up to 45 degrees left up to 45 degrees right
   int random_left = RNG_Engine()%45;
   int random_right = RNG_Engine()%45;
-  
+
   // std::cout<<"WIGGLING TURTLE NOW. new heading is "<<this->getHeading() + random_left - random_right<<std::endl;
   this->setHeading(this->getHeading() + random_left - random_right);
 }

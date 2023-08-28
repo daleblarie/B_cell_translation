@@ -8,7 +8,7 @@ const bool TURTLE_CONTINOUS_MOVEMENT = false;
 const bool TOROIDAL_WORLD = false;
 
 const int RNG_SEED=108;
-const int NUM_STEPS = 2000;
+const int NUM_STEPS = 200;
 
 
 const static int WORLD_WIDTH = 101;

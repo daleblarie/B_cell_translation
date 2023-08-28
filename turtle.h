@@ -21,14 +21,14 @@ struct WeakPtrComparator {
 
 class Turtle : public Agent{
   public :
-    Turtle(int x, int y, int ID_num, int heading=0) : Agent(x, y), ID_num(ID_num), heading(heading) {x_dec=x; y_dec=y;};
+    Turtle(int x, int y, int ID_num, int heading=90) : Agent(x, y), ID_num(ID_num), heading(heading) {x_dec=x; y_dec=y;};
     virtual ~Turtle() = default;
 
   private:
     std::vector<std::weak_ptr<Turtle>> linkedTurtles;
 
-    
-    int type =0;  //agent type, will be used for the get-one-of functions 
+
+    int type =0;  //agent type, will be used for the get-one-of functions
     int ID_num;
     int heading;
     // int age;
@@ -37,7 +37,7 @@ class Turtle : public Agent{
     float y_dec;
     float temp_x; // temporary coords for turtle move, before actual turtle coords are moved in case destination patch is full.
     float temp_y; // Turtle cant know about the world cause circular dependency in #include, so world will handle turtle movement between patches
-    
+
     // added turtles-own variables
     bool in_blood;
     int bcr;
@@ -65,24 +65,24 @@ class Turtle : public Agent{
     void wiggle(std::mt19937 &RNG_Engine);
     void display();
     void copy_other_turtle_attributes(std::shared_ptr<Turtle> otherTurtle); // meant to be used when netlogo sets breed, cause this will copy values from original cell to new cell
-    
+
     int getID() const {return ID_num;};
     int getType() const {return type;};
-    
+
     void setHeading(int newHeading){heading = newHeading;};
     int getHeading() const {return heading;};
-    
+
     float get_x_dec() const {return x_dec;}       // already has regular getX() and getY() from agent parent class
     float get_y_dec() const {return y_dec;}
     void set_x_dec(double new_x_dec) {x_dec = new_x_dec;}
     void set_y_dec(double new_y_dec) {y_dec = new_y_dec;}
-    
+
     float get_temp_x() const {return temp_x;}
     float get_temp_y() const {return temp_y;}
     void set_temp_x(double new_temp_x) {temp_x = new_temp_x;}
     void set_temp_y(double new_temp_y) {temp_y = new_temp_y;}
-    
-    
+
+
     void addLinkedTurtle(std::weak_ptr<Turtle> linkedTurtle);
     void removeLinkedTurtle();
     std::vector<std::weak_ptr<Turtle>>& getLinkedTurtles();
@@ -163,7 +163,7 @@ class Turtle : public Agent{
     bool operator== (const Turtle& turt2){return this->ID_num==turt2.ID_num;};
     bool operator== (const Turtle* turt2){return this->ID_num==turt2->ID_num;};
     bool operator== (const std::weak_ptr<Turtle> turt2){return this->ID_num==turt2.lock()->ID_num;};
-    
+
     // add more turtle specific functions below. These are functions that will apply to all turtle types, not a single breed
 
 };

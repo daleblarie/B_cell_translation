@@ -10,7 +10,7 @@ int main(int argc, char const *argv[]) {
   std::cout<<"starting main"<<std::endl;
   World world = World();
   World* worldptr = &world; // pointer to give to rendering engine
-  
+
   // setting up world
   world.setup();
   // world.injure_sterile(INJURY_NUMBER);
@@ -30,18 +30,19 @@ int main(int argc, char const *argv[]) {
       std::cout<<"beginning step number " <<i<<std::endl;
     }
     world.go();
-    
+
     // rendering loop
     if (RENDERING){
       engine.setBackgroundColor("black");
       engine.renderAllPatches();
       engine.renderAllTurtles();
+      engine.renderPatchMode();
       engine.render();
       SDL_PollEvent(&event);
       // /* will pause every step until ctrl+c is pressed
       // useful for debugging, but tgere is no way to break out of it.
       // kind of annoying, only use it when NUM_STEPS is low*/
-      // 
+      //
       // quit=false;
       // while (!quit) {
       //         while (SDL_PollEvent(&event)) {

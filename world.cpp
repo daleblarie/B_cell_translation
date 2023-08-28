@@ -100,7 +100,7 @@ void World::place_turtle(int x, int y, std::shared_ptr<Turtle> turtle){
 
 void World::move_turtle(std::shared_ptr<Turtle> turtle, float distance){
   // moves the turtle but asking the turtle to calculate its movement, and if there is space on the target_patch, the world executes the move
-  // turtle->wiggle(RNG_Engine);
+  turtle->wiggle(RNG_Engine);
   Patch &turtle_current_patch = get_patch(turtle->getX(), turtle->getY());
   std::pair<int,int> new_coords = turtle->move(distance); //moving along turtle.heading for the default value of 1 unit
   Patch& target_patch = get_patch(new_coords.first, new_coords.second);
@@ -153,7 +153,8 @@ void World::updateTurtleVectors(){
       if (std::shared_ptr<Bacteria> bacteria = std::dynamic_pointer_cast<Bacteria>(turtle)) { all_bacterias.erase(std::remove(begin(all_bacterias), end(all_bacterias), bacteria), end(all_bacterias));
       } else if (std::shared_ptr<Antibodies> antibody = std::dynamic_pointer_cast<Antibodies>(turtle)) { all_antibodies.erase(std::remove(begin(all_antibodies), end(all_antibodies), antibody), end(all_antibodies));
       } else if (std::shared_ptr<FDCs> fdc = std::dynamic_pointer_cast<FDCs>(turtle)) {all_fdcs.erase(std::remove(begin(all_fdcs), end(all_fdcs), fdc), end(all_fdcs));
-      } else if (std::shared_ptr<NaiveBCell> naive_b_cell = std::dynamic_pointer_cast<NaiveBCell>(turtle)) {all_naive_b_cells.erase(std::remove(begin(all_naive_b_cells), end(all_naive_b_cells), naive_b_cell), end(all_naive_b_cells));
+      } else if (std::shared_ptr<NaiveBCell> naive_b_cell = std::dynamic_pointer_cast<NaiveBCell>(turtle)) {        std::cout<<"killed naiveBCell "<<turtle->getID()<<std::endl;
+all_naive_b_cells.erase(std::remove(begin(all_naive_b_cells), end(all_naive_b_cells), naive_b_cell), end(all_naive_b_cells));
       } else if (std::shared_ptr<ActivatedBCell> activated_b_cell = std::dynamic_pointer_cast<ActivatedBCell>(turtle)) {all_activated_b_cells.erase(std::remove(begin(all_activated_b_cells), end(all_activated_b_cells), activated_b_cell),end(all_activated_b_cells));
       } else if (std::shared_ptr<GCBCell> gcb_cell = std::dynamic_pointer_cast<GCBCell>(turtle)) {all_gcb_cells.erase(std::remove(begin(all_gcb_cells), end(all_gcb_cells), gcb_cell), end(all_gcb_cells));
       } else if (std::shared_ptr<SLPlasmaCell> sl_plasma_cell = std::dynamic_pointer_cast<SLPlasmaCell>(turtle)) {all_sl_plasma_cells.erase(std::remove(begin(all_sl_plasma_cells), end(all_sl_plasma_cells), sl_plasma_cell), end(all_sl_plasma_cells));
@@ -405,15 +406,6 @@ void World::go() {
           }
       }
   }
-  for (int x = 0; x < WORLD_WIDTH; x++) {
-    for (int y = 0; y < WORLD_HEIGHT; y++) {
-      Patch& p = get_patch(x, y);
-      if (p.getPatchType() == 1) {
-        // p.setS1pLevel(p.getS1pLevel() + 2);
-        std::cout<<"just checking ccl19 from follicle exit "<<p.getCcl19Level()<<std::endl;
-      }
-    }
-  }
 
   // Cytokine release from follicle exit
   for (int x = 0; x < WORLD_WIDTH; x++) {
@@ -421,7 +413,7 @@ void World::go() {
           Patch& p = get_patch(x, y);
           if (p.getPatchType() == 2) {
               p.setS1pLevel(p.getS1pLevel() + 2);
-              std::cout<<"Releasing S1p from follicle exit "<<p.getS1pLevel()<<std::endl;
+              // std::cout<<"Releasing S1p from follicle exit "<<p.getS1pLevel()<<std::endl;
           }
       }
   }
@@ -622,13 +614,18 @@ void World::diffuse(){
             neighbor_x = center_patch_x_pos + i;
             neighbor_y = center_patch_y_pos + j;
             // if not toroidal world and neighbor is out of bounds (ie we are on the edge) then continue
-            if ((neighbor_y > WORLD_HEIGHT) || (neighbor_y < 0)){continue;}
-            if ((neighbor_x > WORLD_WIDTH) || (neighbor_x < 0)){continue;}
+            if ((neighbor_y >= WORLD_HEIGHT) || (neighbor_y < 0)){continue;}
+            if ((neighbor_x >= WORLD_WIDTH) || (neighbor_x < 0)){continue;}
           }
           auto& neighbor_patch = get_patch(neighbor_x, neighbor_y);
 
           // evenly adding the amount diffused out from the center patch to neighbor patches
           neighbor_patch.setTempCxcl13Level(neighbor_patch.getTempCxcl13Level() + center_patch.getCxcl13Level() * factor_for_neighbors * CXCL13_LEVEL_DIFFUSION_FACTOR);
+          //
+          // std::cout<<"Cxcl13 level is "<<neighbor_patch.getTempCxcl13Level()<<"at location "<< neighbor_x<<", "<<neighbor_y<<std::endl;
+
+
+
           neighbor_patch.setTempCcl19Level(neighbor_patch.getTempCcl19Level() + center_patch.getCcl19Level() * factor_for_neighbors * CCL19_LEVEL_DIFFUSION_FACTOR);
           neighbor_patch.setTempEbi2Level(neighbor_patch.getTempEbi2Level() + center_patch.getEbi2Level() * factor_for_neighbors * EBI2_LEVEL_DIFFUSION_FACTOR);
           neighbor_patch.setTempS1pLevel(neighbor_patch.getTempS1pLevel() + center_patch.getS1pLevel() * factor_for_neighbors * S1P_LEVEL_DIFFUSION_FACTOR);

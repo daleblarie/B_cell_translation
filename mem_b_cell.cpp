@@ -6,6 +6,8 @@ MemBCell::MemBCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading
 }
 
 void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
+  std::cout<<"memory_b_cellfunction for ID number "<<mem_b_cell->getID()<<std::endl;
+
   // Get the current patch of the Memory B cell
   Patch& current_patch = get_patch(mem_b_cell->getX(), mem_b_cell->getY());
 
@@ -51,7 +53,7 @@ void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
       int rTI = RNG_Engine() % 100;
       int rTD = RNG_Engine() % 100;
       if(antigen != nullptr){
-        
+
         if(rTI > rTD){
           new_activated_b_cell->setResponseType(1); // TI response
         } else{

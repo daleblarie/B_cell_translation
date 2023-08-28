@@ -15,6 +15,7 @@ class Agent: std::enable_shared_from_this<Agent> {
     Agent(int x, int y) : x(x), y(y) {}
   private:
     std::string color = "";
+    std::string secondaryColor = "";
     std::string shape = "";
     int size=1;
     int alpha = 255;
@@ -28,6 +29,8 @@ class Agent: std::enable_shared_from_this<Agent> {
     virtual void setY(int newY){y=newY;};
     void setColor(std::string newColor){color = newColor;};
     std::string getColor() const {return color;};
+    void setSecondaryColor(std::string newColor){secondaryColor = newColor;};
+    std::string getSecondaryColor() const {return secondaryColor;};
     void setShape(std::string newShape){shape = newShape;};
     std::string getShape() const {return shape;};
     void setOpacity(int newAlpha){alpha = newAlpha;};
@@ -38,7 +41,7 @@ class Agent: std::enable_shared_from_this<Agent> {
 
     void setVisible(bool status){visible = status;}
     bool getVisible() const {return visible;}
-    
+
     std::weak_ptr<Agent> createWeakPtr() {return shared_from_this();}
 
     template <typename agent>
@@ -60,7 +63,7 @@ class Agent: std::enable_shared_from_this<Agent> {
         // delta_x = (delta_x + WORLD_WIDTH)% WORLD_WIDTH;
         delta_y = (delta_y + WORLD_HEIGHT)% WORLD_HEIGHT;
       }
-      
+
       if ((abs(delta_x - WORLD_WIDTH)) < abs(delta_x)){
         delta_x -= WORLD_WIDTH;
       }
@@ -70,16 +73,18 @@ class Agent: std::enable_shared_from_this<Agent> {
       // std::cout<<"getting angle4"<<std::endl;
       // std::cout<<"Delta Positions ("<<delta_x<<", "<<delta_y<<")"<<std::endl;
       // std::cout<<"getting angle5"<<std::endl;
-      // std::cout<<"Angle To neighbor 0(degrees)"<<atan2(1,-1) * 180/M_PI<<std::endl;
-      // std::cout<<"Angle To neighbor 1(degrees)"<<atan2(1,0) * 180/M_PI<<std::endl;
-      // std::cout<<"Angle To neighbor 2(degrees)"<<atan2(1,1) * 180/M_PI<<std::endl;
-      // std::cout<<"Angle To neighbor 3(degrees)"<<atan2(0,-1) * 180/M_PI<<std::endl;
-      // std::cout<<"Angle To neighbor 4(degrees)"<<atan2(0,1) * 180/M_PI<<std::endl;
-      // std::cout<<"Angle To neighbor 5(degrees)"<<atan2(-1,-1) * 180/M_PI<<std::endl;
-      // std::cout<<"Angle To neighbor 6(degrees)"<<atan2(-1,0) * 180/M_PI<<std::endl;
-      // std::cout<<"Angle To neighbor 7(degrees)"<<atan2(-1,1) * 180/M_PI<<std::endl;
+      // std::cout<<"Angle To neighbor 0-TL(degrees)"<<atan2(1,-1) * 180/M_PI<<std::endl;
+      // std::cout<<"Angle To neighbor 1-T(degrees)"<<atan2(1,0) * 180/M_PI<<std::endl;
+      // std::cout<<"Angle To neighbor 2-TR(degrees)"<<atan2(1,1) * 180/M_PI<<std::endl;
+      // std::cout<<"Angle To neighbor 3-L(degrees)"<<atan2(0,-1) * 180/M_PI<<std::endl;
+      // std::cout<<"Angle To neighbor 4-R(degrees)"<<atan2(0,1) * 180/M_PI<<std::endl;
+      // std::cout<<"Angle To neighbor 5-BL(degrees)"<<atan2(-1,-1) * 180/M_PI<<std::endl;
+      // std::cout<<"Angle To neighbor 6-B(degrees)"<<atan2(-1,0) * 180/M_PI<<std::endl;
+      // std::cout<<"Angle To neighbor 7-BR(degrees)"<<atan2(-1,1) * 180/M_PI<<std::endl;
       // double angle_radian = atan(delta_x/delta_y);
       double angle_radian = atan2(delta_y, delta_x);
+      if (angle_radian<0){angle_radian+=2*M_PI;}
+      // if (angle_radian<-1*M_PI){angle_radian+=2*M_PI;}
       // std::cout<<"Angle To (degrees)"<<angle_radian * 180/M_PI<<std::endl;
       return angle_radian *  180/M_PI;
     }

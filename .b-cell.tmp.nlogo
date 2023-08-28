@@ -855,6 +855,15 @@ to update-chemokine-gradient
       if cytokine-to-visualize = "s1p" [
         set pcolor scale-color green s1p-level 0.01 3  ;;used to visualize cxcl13 or ccl19 gradient
       ]
+      if cytokine-to-visualize = "ebi2" [
+        set pcolor scale-color green ebi2-level 0.01 3  ;;used to visualize cxcl13 or ccl19 gradient
+      ]
+      if cytokine-to-visualize = "cxcl13" [
+        set pcolor scale-color green cxcl13-level 0.01 3  ;;used to visualize cxcl13 or ccl19 gradient
+      ]
+      if cytokine-to-visualize = "ccl19" [
+        set pcolor scale-color green ccl19-level 0.01 3  ;;used to visualize cxcl13 or ccl19 gradient
+      ]
     ]
   ]
 end
@@ -1268,8 +1277,7 @@ CHOOSER
 963
 526
 cytokine-to-visualize
-cytokine-to-visualize
-"none" "tnf-a" "il6" "il10" "s1p"
+"none" "tnf-a" "il6" "il10" "s1p" "ebi2" "cxcl13" "ccl19
 0
 
 MONITOR
@@ -1614,7 +1622,7 @@ NIL
 - Each bacteria is simplified to express only a single epitope
 - Each antibody can bind to a single bacterial epitope
 
- 
+
 
 ## How the model works
 

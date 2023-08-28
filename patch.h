@@ -24,8 +24,15 @@ private:
 
 public:
     virtual ~Patch() = default;
-    Patch():Agent(0,0){setColor("red");}; // base patch color is red
-    Patch(int xCoord, int yCoord) : Agent(xCoord, yCoord) {setColor("red");};
+    Patch():Agent(0,0){setColor("red");setModeColor("green");}; // base patch color is red
+    Patch(int xCoord, int yCoord) : Agent(xCoord, yCoord) {setColor("red");setModeColor("green");};
+
+    void setModeColor(std::string newColor){setSecondaryColor(newColor);}
+    std::string getModeColor(){return getSecondaryColor();}
+
+// In order to view a cytokine layer on top of everything,
+// specify what mode to view here by putting a patch variable, otherwise return 0
+    double getModeOpacity(){return cxcl13_level*100;}
 
     void add_turtle(std::shared_ptr<Turtle> turtle_to_add);
     void remove_turtle(std::shared_ptr<Turtle> turtle_to_remove);

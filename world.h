@@ -129,7 +129,7 @@ public:
   void th1CellFunction(std::shared_ptr<Th1Cell> th1_cell);
   void th2CellFunction(std::shared_ptr<Th2Cell> th2_cell);
   void bacteriaFunction(std::shared_ptr<Bacteria> bacteria);
-  
+
   std::shared_ptr<Antibodies> getOneAntibodyHere(int xPos, int yPos);
   std::shared_ptr<FDCs> getOneFDCHere(int patchX, int patchY);
   std::shared_ptr<Bacteria> getOneBacteriaHere(int patchX, int patchY);
@@ -167,7 +167,7 @@ public:
     int total_count = 0;
     Patch& current_patch = get_patch(patchX, patchY);
     std::vector<std::shared_ptr<Turtle>> turtles_on_patch = current_patch.getTurtlesHere();
-    
+
     for (const auto& turtle : turtles_on_patch){
       if (std::dynamic_pointer_cast<CellType>(turtle)) {
         // The turtle is of type we are looking for, increment count
@@ -185,7 +185,7 @@ public:
     Patch& current_patch = get_patch(cell->getX(), cell->getY());
     current_patch.setTnfA(current_patch.getTnfA() - .01);
     cell->setTnfaStimulation(current_patch.getTnfA() * 100);
-    
+
     return (cell->getTnfaStimulation() > cell->getTnfaThreshold());
   }
 
@@ -211,7 +211,7 @@ public:
     breg->setS1pr1Level(0);
     breg->setCxcr5Level(10);
     breg->setTimeAlive(0);
-    
+
     std::weak_ptr<Turtle> breg_weak_ptr = breg;
     all_turtles.push_back(breg_weak_ptr);
     all_breg_cells.push_back(breg);
@@ -219,17 +219,19 @@ public:
     kill(cell);
     return breg;
   }
-  
+
   template <typename CellType>
   void chemotaxis(CellType& cell){
     // std::cout<<"chemotaxing"<<std::endl;
     // std::cout<<"my location" <<cell->getX()<<", "<< cell->getY()<<std::endl;
     Patch& current_patch = get_patch(cell->getX(), cell->getY());
     double final_heading = cell->getHeading();
-    bool print_test = std::dynamic_pointer_cast<NaiveBCell>(cell);
-    if (print_test){
-      print_test = (cell->getX() == WORLD_WIDTH);
-    }
+    std::shared_ptr<NaiveBCell> b_cell = std::dynamic_pointer_cast<NaiveBCell>(cell);
+    // bool print_test = (b_cell != NULL);
+    bool print_test = false;
+    // if (print_test){
+    //   print_test = (cell->getX() == WORLD_WIDTH);
+    // }
     if(print_test){std::cout<<"1st time: ID "<<cell->getID()<<", HEADING "<<cell->getHeading()<<std::endl;};
 
     std::vector<Patch> neighbors;
@@ -237,11 +239,11 @@ public:
     for (int x = -1; x < 2; x++) {
       for (int y = -1; y < 2; y++) {
         if (x==0 && y==0){continue;}
-        
+
         if (!TOROIDAL_WORLD){
-          if ((current_patch.getX() + x) > WORLD_WIDTH){continue;}
+          if ((current_patch.getX() + x) >= WORLD_WIDTH){continue;}
           if ((current_patch.getX() + x) < 0){continue;}
-          if ((current_patch.getY() + y) > WORLD_HEIGHT){continue;}
+          if ((current_patch.getY() + y) >= WORLD_HEIGHT){continue;}
           if ((current_patch.getY() + x) < 0){continue;}
         }
         // std::cout<<"neighbor "<<count<<" location"<<cell->getX() + x<<", "<< cell->getY()+ y <<std::endl;
@@ -250,10 +252,10 @@ public:
       }
     }
     if (print_test){std::cout<<"chemotaxing2:    "<<count<<std::endl;}
-    
+
     int random_max_patch_ind = RNG_Engine() % neighbors.size();
     Patch max_patch = neighbors[random_max_patch_ind];
-    
+
     double s1pr1_weight = cell->getS1pr1Level() / 100.0;
     double max_s1p = 0;
     for (auto neighbor_patch: neighbors){
@@ -264,16 +266,18 @@ public:
       }
     }
     double angle_absolute_to_s1p = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
-    double angle_relative_to_s1p = cell->getHeading() - angle_absolute_to_s1p;
+    double angle_relative_to_s1p = angle_absolute_to_s1p - cell->getHeading();
+    angle_relative_to_s1p = fmod(angle_relative_to_s1p,360);
     if(print_test){
-      std::cout<<"2nd  time: ID "<<cell->getID()<<", HEADING "<< final_heading<<std::endl;
+      std::cout<<"2nd  time: ID "<<cell->getID()<<", HEADING "<< final_heading;
+      std::cout<<" s1pr1_weight "<<s1pr1_weight<<std::endl;
       std::cout<<"angle_absolute_to_s1p  "<<angle_absolute_to_s1p<<std::endl;
       std::cout<<"angle_relative_to_s1p  "<<angle_relative_to_s1p<<std::endl;
     };
     final_heading += angle_relative_to_s1p*s1pr1_weight;
 
-    
-    
+
+
     double s1pr2_weight = cell->getS1pr2Level() / 100.0;
     double max_s1pr2 = 0;
     for (auto neighbor_patch: neighbors){
@@ -283,11 +287,16 @@ public:
         }
     }
     double angle_absolute_to_s1pr2 = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
-    double angle_relative_to_s1pr2 = cell->getHeading() - angle_absolute_to_s1pr2;
-    final_heading += angle_relative_to_s1pr2*s1pr2_weight;
-    if(print_test){std::cout<<"3rd time: ID "<<cell->getID()<<", HEADING "<< final_heading<<std::endl;};
+    double angle_relative_to_s1pr2 = angle_absolute_to_s1pr2 - cell->getHeading();
+    angle_relative_to_s1pr2 = fmod(angle_relative_to_s1pr2,360);
 
-     
+    final_heading += angle_relative_to_s1pr2*s1pr2_weight;
+    if(print_test){std::cout<<"3rd time: ID "<<cell->getID()<<", HEADING "<<final_heading<<" s1pr2_weight "<<s1pr2_weight<<std::endl;
+    std::cout<<"angle_absolute_to_s1pr2  "<<angle_absolute_to_s1pr2<<std::endl;
+    std::cout<<"angle_relative_to_s1pr2  "<<angle_relative_to_s1pr2<<std::endl;
+    };
+
+
     double cxcr5_weight = cell->getCxcr5Level() / 100.0;
     double max_cxcl13 = 0;
     for (auto neighbor_patch: neighbors){
@@ -297,9 +306,16 @@ public:
         }
     }
     double angle_absolute_to_cxcl13 = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
-    double angle_relative_to_cxcl13 = cell->getHeading() - angle_absolute_to_cxcl13;
+    double angle_relative_to_cxcl13 = angle_absolute_to_cxcl13 - cell->getHeading();
+
+    angle_relative_to_cxcl13 = fmod(angle_relative_to_cxcl13,360);
+
+
     final_heading += angle_relative_to_cxcl13*cxcr5_weight;
-    if(print_test){std::cout<<"4th time: ID "<<cell->getID()<<", HEADING "<< final_heading<<std::endl;};
+    if(print_test){std::cout<<"4th time: ID "<<cell->getID()<<", HEADING "<< final_heading<<" CXCR5 weight "<<cxcr5_weight<<std::endl;
+    std::cout<<"angle_absolute_to_cxcl13  "<<angle_absolute_to_cxcl13<<std::endl;
+    std::cout<<"angle_relative_to_cxcl13  "<<angle_relative_to_cxcl13<<std::endl;
+    };
 
     // For ebi2r_level
     double ebi2r_weight = cell->getEbi2rLevel() / 100.0;
@@ -311,20 +327,22 @@ public:
         }
     }
     double angle_absolute_to_ebi2 = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
-    double angle_relative_to_ebi2 = cell->getHeading() - angle_absolute_to_ebi2;
+    double angle_relative_to_ebi2 = angle_absolute_to_ebi2 - cell->getHeading();
+    angle_relative_to_ebi2 = fmod(angle_relative_to_ebi2,360);
+
     final_heading += angle_relative_to_ebi2 * ebi2r_weight;
-    if(print_test){std::cout<<"5th time: ID "<<cell->getID()<<", HEADING "<< final_heading<<std::endl;};
+    if(print_test){std::cout<<"5th time: ID "<<cell->getID()<<", HEADING "<< final_heading<<" ebi2r_weight"<<ebi2r_weight<<std::endl;};
 
 
 
   cell->setHeading((int)final_heading%(360));
-  cell->setHeading(90);
+  // cell->setHeading(180);
   if(print_test){std::cout<<"FINAL TIME: ID "<<cell->getID()<<", HEADING "<<std::endl;};
 
   // std::cout<<"END CHEMOTAXING"<<std::endl;
   }
-  
-  
+
+
 };
 
 

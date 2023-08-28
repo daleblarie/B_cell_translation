@@ -6,7 +6,7 @@
 class GCBCell : public Turtle {
 public:
     // You can add specific methods and properties for this subclass
-    GCBCell(int x, int y, int id, int heading=0);
+    GCBCell(int x, int y, int id, int heading=90);
 
     // Override Turtle methods if needed
 };

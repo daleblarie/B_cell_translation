@@ -10,7 +10,7 @@ void World::spawnBCell() {
       int cell_y = std::floor(WORLD_HEIGHT / 2);
 
       // Create a new Naive B-cell
-      auto b_cell = std::make_shared<NaiveBCell>(cell_x, cell_y, global_ID_counter++);
+      auto b_cell = std::make_shared<NaiveBCell>(cell_x, cell_y, global_ID_counter++, 180);
       std::weak_ptr<Turtle> b_cell_weak_ptr = b_cell;
       // Set the properties of the new Naive B-cell
       b_cell->setShape("circle");
@@ -75,7 +75,7 @@ void World::spawnTh0Cell() {
 
         // Also add it to the list of all Turtles
         all_turtles.push_back(th0_cell_weak_ptr);
-        
+
         get_patch(th0_cell->getX(), th0_cell->getY()).add_turtle(th0_cell);
 
     }
@@ -217,6 +217,3 @@ std::vector<std::shared_ptr<FDCs>> World::get_fdcs_with_no_presented_antigen(int
   }
   return FDCs_with_no_anitigen;
 }
-
-
-
