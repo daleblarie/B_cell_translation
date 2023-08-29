@@ -83,7 +83,15 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
 
   // Checks level of stimulation of b-reg differentiation
   bool turn_into_breg = checkBregStatus(naive_b_cell);
-  if (turn_into_breg){std::shared_ptr<BregCell> naive_b_cell = turnIntoBreg(naive_b_cell);};
+  if (turn_into_breg){
+    std::cout<<"naive_b cell ID "<<naive_b_cell->getID()<<"turning into Breg"<<std::endl;
+    // cant do it like below, leads to weird error where orignal cell is overwritten in templated turnIntoBreg function.
+    // std::shared_ptr<BregCell> naive_b_cell = turnIntoBreg(naive_b_cell);
+    // need to do it like this instead
+    std::shared_ptr<BregCell> output_b_cell = turnIntoBreg(naive_b_cell);
+    std::shared_ptr<BregCell> naive_b_Cell;
+    naive_b_Cell = output_b_cell;
+  };
 
   // Checks level of TNF-a stimulation for apoptosis
   bool die_by_tnf = checkTNFStatus(naive_b_cell);
