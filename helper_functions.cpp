@@ -9,7 +9,7 @@ double calculateDistance(int x1, int y1, int x2, int y2) {
 
 // Function to generate coordinates within a radius without buffer zone
 std::vector<std::pair<int, int>> generateCoordinates(int number_to_generate, int center_x, int center_y, int radius_from_center, int buffer_zone_between_points) {
-  int n = number_to_generate;
+  std::size_t n = number_to_generate;
   int x = center_x;
   int y = center_y;
   int r = radius_from_center;
@@ -21,13 +21,14 @@ std::vector<std::pair<int, int>> generateCoordinates(int number_to_generate, int
     while (coordinates.size() < n) {
         int newX = std::rand() % (2 * r + 1) + (x - r);
         int newY = std::rand() % (2 * r + 1) + (y - r);
-
+        
         bool isValid = true;
+        if (calculateDistance(newX, newY, x, y) > r){isValid=false;}
         for (const auto& coord : coordinates) {
             // Check if the new coordinate is within the buffer zone
+            if (!isValid){break;}
             if (calculateDistance(newX, newY, coord.first, coord.second) <= b) {
                 isValid = false;
-                break;
             }
         }
 

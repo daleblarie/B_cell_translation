@@ -8,7 +8,7 @@ NaiveBCell::NaiveBCell(int x, int y, int id, int heading) : Turtle(x, y, id, hea
 
 
 void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
-  bool print_test = false;
+  bool print_test = true;
 
   // std::cout<<"naive_b_cellfunction for ID number "<<naive_b_cell->getID()<<"Ebi2rLevel "<<naive_b_cell->getEbi2rLevel()<<std::endl;
   // Get the current patch of the naive B cell
@@ -77,14 +77,14 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
   }
 
 
-  if(print_test){std::cout<<"chomtaxin naive_b_cell"<<std::endl;}
+  // if(print_test){std::cout<<"chomtaxin naive_b_cell"<<std::endl;}
   chemotaxis(naive_b_cell);
   move_turtle(naive_b_cell);
 
   // Checks level of stimulation of b-reg differentiation
   bool turn_into_breg = checkBregStatus(naive_b_cell);
   if (turn_into_breg){
-    std::cout<<"naive_b cell ID "<<naive_b_cell->getID()<<"turning into Breg"<<std::endl;
+    // std::cout<<"naive_b cell ID "<<naive_b_cell->getID()<<"turning into Breg"<<std::endl;
     // cant do it like below, leads to weird error where orignal cell is overwritten in templated turnIntoBreg function.
     // std::shared_ptr<BregCell> naive_b_cell = turnIntoBreg(naive_b_cell);
     // need to do it like this instead

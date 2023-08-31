@@ -32,7 +32,7 @@ public:
 
 // In order to view a cytokine layer on top of everything,
 // specify what mode to view here by putting a patch variable, otherwise return 0
-    double getModeOpacity(){return cxcl13_level*100;}
+    double getModeOpacity(){return ccl19_level;}
 
     void add_turtle(std::shared_ptr<Turtle> turtle_to_add);
     void remove_turtle(std::shared_ptr<Turtle> turtle_to_remove);

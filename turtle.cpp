@@ -7,6 +7,7 @@
 #include "parameters.h"
 
 void Turtle::addLinkedTurtle(std::weak_ptr<Turtle> linkedTurtle) {
+  std::cout<<"LINKING TURTLE NOW "<<std::endl<<"OTHER TURLTE ID IS "<<linkedTurtle.lock()->getID()<<"MY ID IS "<<this->getID()<<std::endl;
     linkedTurtles.push_back(linkedTurtle);
     linkedTurtle.lock()->getLinkedTurtles().push_back(this->createWeakTurtlePtr());
 }
@@ -88,7 +89,7 @@ void Turtle::wiggle(std::mt19937 &RNG_Engine){
   int random_right = RNG_Engine()%45;
 
   // std::cout<<"WIGGLING TURTLE NOW. new heading is "<<this->getHeading() + random_left - random_right<<std::endl;
-  this->setHeading(this->getHeading() + random_left - random_right);
+  this->setHeading(this->getHeading() + (random_left - random_right));
 }
 
 void Turtle::display() {

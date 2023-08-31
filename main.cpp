@@ -35,8 +35,8 @@ int main(int argc, char const *argv[]) {
     if (RENDERING){
       engine.setBackgroundColor("black");
       engine.renderAllPatches();
-      engine.renderAllTurtles();
       engine.renderPatchMode();
+      engine.renderAllTurtles();
       engine.render();
       SDL_PollEvent(&event);
       // /* will pause every step until ctrl+c is pressed
@@ -65,4 +65,4 @@ int main(int argc, char const *argv[]) {
   std::cout << "Program duration: " << duration.count() << " milliseconds" << std::endl;
 
   return 0;
-};
+}

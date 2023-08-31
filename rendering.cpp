@@ -153,7 +153,16 @@ void RenderingEngine::renderPatchMode(){
       int patch_x = patch.getX() * GRID_SIZE;
       int patch_y = patch.getY() * GRID_SIZE;
       std::string color = patch.getModeColor();
-      int opacity = patch.getModeOpacity();
+      int opacity = patch.getModeOpacity() * (255/3);
+      if (opacity > 255){opacity=255;}
+      // if (opacity>0){std::cout<<opacity<<std::endl;}
+      // std::cout<<"opacity "<<opacity<<std::endl;
+      // 
+      // float opacity_scaling_value = (opacity - 0.001) / (3-0.001);
+      // if (opacity_scaling_value>1){opacity_scaling_value=1;}
+      // if (opacity_scaling_value<0){opacity_scaling_value=0;}
+      // opacity = opacity / (3/2);
+      // opacity = opacity_scaling_value * 255;
       drawSquare(patch_x,patch_y,GRID_SIZE, color, opacity);
     }
   }
@@ -172,6 +181,13 @@ void RenderingEngine::renderAllTurtles(){
     }else if(shape=="target"){
       drawSquare(x,y,(GRID_SIZE-1) * agent.lock()->getSize(), color, opacity);
       drawCircle(x,y,(((GRID_SIZE/2)*agent.lock()->getSize())-2), "black", opacity);
+    }else if (shape=="bug"){
+      int angle = agent.lock()->getHeading();
+      float x_offset = sin(angle) * (GRID_SIZE/2);
+      float y_offset = cos(angle) * (GRID_SIZE/2);
+      
+      drawSquare(x,y,(GRID_SIZE-3) * agent.lock()->getSize(), color, opacity);
+      drawCircle(x + x_offset,y + y_offset,(((GRID_SIZE/2)*agent.lock()->getSize())-2), color, opacity);
 
     }else{
       drawCircle(x,y,((GRID_SIZE/2)), color, opacity);

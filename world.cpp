@@ -153,8 +153,8 @@ void World::updateTurtleVectors(){
       if (std::shared_ptr<Bacteria> bacteria = std::dynamic_pointer_cast<Bacteria>(turtle)) { all_bacterias.erase(std::remove(begin(all_bacterias), end(all_bacterias), bacteria), end(all_bacterias));
       } else if (std::shared_ptr<Antibodies> antibody = std::dynamic_pointer_cast<Antibodies>(turtle)) { all_antibodies.erase(std::remove(begin(all_antibodies), end(all_antibodies), antibody), end(all_antibodies));
       } else if (std::shared_ptr<FDCs> fdc = std::dynamic_pointer_cast<FDCs>(turtle)) {all_fdcs.erase(std::remove(begin(all_fdcs), end(all_fdcs), fdc), end(all_fdcs));
-      } else if (std::shared_ptr<NaiveBCell> naive_b_cell = std::dynamic_pointer_cast<NaiveBCell>(turtle)) {        std::cout<<"killed naiveBCell "<<turtle->getID()<<std::endl;
-all_naive_b_cells.erase(std::remove(begin(all_naive_b_cells), end(all_naive_b_cells), naive_b_cell), end(all_naive_b_cells));
+      } else if (std::shared_ptr<NaiveBCell> naive_b_cell = std::dynamic_pointer_cast<NaiveBCell>(turtle)) {
+      all_naive_b_cells.erase(std::remove(begin(all_naive_b_cells), end(all_naive_b_cells), naive_b_cell), end(all_naive_b_cells));
       } else if (std::shared_ptr<ActivatedBCell> activated_b_cell = std::dynamic_pointer_cast<ActivatedBCell>(turtle)) {all_activated_b_cells.erase(std::remove(begin(all_activated_b_cells), end(all_activated_b_cells), activated_b_cell),end(all_activated_b_cells));
       } else if (std::shared_ptr<GCBCell> gcb_cell = std::dynamic_pointer_cast<GCBCell>(turtle)) {all_gcb_cells.erase(std::remove(begin(all_gcb_cells), end(all_gcb_cells), gcb_cell), end(all_gcb_cells));
       } else if (std::shared_ptr<SLPlasmaCell> sl_plasma_cell = std::dynamic_pointer_cast<SLPlasmaCell>(turtle)) {all_sl_plasma_cells.erase(std::remove(begin(all_sl_plasma_cells), end(all_sl_plasma_cells), sl_plasma_cell), end(all_sl_plasma_cells));
@@ -173,7 +173,7 @@ all_naive_b_cells.erase(std::remove(begin(all_naive_b_cells), end(all_naive_b_ce
     // erasing the turtle weak pointers that are now a null pointer because they have been reset
     all_turtles.erase(std::remove_if(all_turtles.begin(), all_turtles.end(),
     [](const std::weak_ptr<Turtle>& wp) {     //lambda function to check if weak pointer is expired (aka killed and reset() has been called)
-        if (wp.expired()){std::cout<<"Deleting expired Turtle"<<std::endl;}
+        // if (wp.expired()){std::cout<<"Deleting expired Turtle"<<std::endl;}
         return wp.expired();
       }),
     all_turtles.end());
@@ -249,6 +249,26 @@ void World::setup(){
   get_patch(0,WORLD_HEIGHT-1).setColor("green");
   get_patch(WORLD_WIDTH-1,0).setColor("yellow");
   get_patch(WORLD_WIDTH-1,WORLD_HEIGHT-1).setColor("orange");
+  
+  std::cout<<"Angle To neighbor 0-TL(degrees)"<<atan2(1,-1) * 180/M_PI<<std::endl;
+  std::cout<<"Angle To neighbor 1-T(degrees)"<<atan2(1,0) * 180/M_PI<<std::endl;
+  std::cout<<"Angle To neighbor 2-TR(degrees)"<<atan2(1,1) * 180/M_PI<<std::endl;
+  std::cout<<"Angle To neighbor 3-L(degrees)"<<atan2(0,-1) * 180/M_PI<<std::endl;
+  std::cout<<"Angle To neighbor 4-R(degrees)"<<atan2(0,1) * 180/M_PI<<std::endl;
+  std::cout<<"Angle To neighbor 5-BL(degrees)"<<atan2(-1,-1) * 180/M_PI<<std::endl;
+  std::cout<<"Angle To neighbor 6-B(degrees)"<<atan2(-1,0) * 180/M_PI<<std::endl;
+  std::cout<<"Angle To neighbor 7-BR(degrees)"<<atan2(-1,1) * 180/M_PI<<std::endl;
+  
+  get_patch(0,0).setColor("pink");
+  get_patch(1,0).setColor("blue");
+  get_patch(2,0).setColor("green");
+  get_patch(0,1).setColor("black");
+  get_patch(1,1).setColor("white");
+  get_patch(2,1).setColor("brown");
+  get_patch(0,2).setColor("yellow");
+  get_patch(1,2).setColor("orange");
+  get_patch(2,2).setColor("cyan");
+  
   // Exit from follicle
   for (int y = center_y - 5; y <= center_y + 5; y++) {
       if (y >= 0 && y < WORLD_HEIGHT) {
@@ -296,7 +316,7 @@ void World::setup(){
       } while (get_patch(coord.first, coord.second).getPatchType() != 1);
       std::cout<<coord.first<<", "<<coord.second<< ", "<< get_patch(coord.first, coord.second).getPatchType()<<std::endl;
 
-      auto tfhCell = std::make_shared<TfhCell>(coord.first, coord.second, global_ID_counter++); // create the TfhCell
+      auto tfhCell = std::make_shared<TfhCell>(coord.first, coord.second, global_ID_counter++, RNG_Engine()%360); // create the TfhCell
       Patch& patch = get_patch(coord.first, coord.second); // get patch to add the turtle to
 
       // Set cell variables
@@ -325,7 +345,7 @@ void World::setup(){
           coord = std::make_pair(random_x, random_y);
       } while (get_patch(coord.first, coord.second).getPatchType() != 1);
 
-      auto th1Cell = std::make_shared<Th1Cell>(coord.first, coord.second, global_ID_counter++); // create the Th1Cell
+      auto th1Cell = std::make_shared<Th1Cell>(coord.first, coord.second, global_ID_counter++, RNG_Engine()%360); // create the Th1Cell
       Patch& patch = get_patch(coord.first, coord.second); // get patch to add the turtle to
 
       // Set cell variables
@@ -354,7 +374,7 @@ void World::setup(){
           coord = std::make_pair(random_x, random_y);
       } while (get_patch(coord.first, coord.second).getPatchType() != 1);
 
-      auto th2Cell = std::make_shared<Th2Cell>(coord.first, coord.second, global_ID_counter++); // create the Th2Cell
+      auto th2Cell = std::make_shared<Th2Cell>(coord.first, coord.second, global_ID_counter++, RNG_Engine()%360); // create the Th2Cell
       Patch& patch = get_patch(coord.first, coord.second); // get patch to add the turtle to
 
       // Set cell variables

@@ -85,7 +85,10 @@ void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
   }
   // Checks level of stimulation of b-reg differentiation
   bool turn_into_breg = checkBregStatus(mem_b_cell);
-  if (turn_into_breg){std::shared_ptr<BregCell> mem_b_cell = turnIntoBreg(mem_b_cell);};
+  if (turn_into_breg){
+    std::cout<<"Mem B ID "<<mem_b_cell->getID()<<"turning into Breg"<<std::endl;
+    std::shared_ptr<BregCell> mem_b_cell = turnIntoBreg(mem_b_cell);
+  };
 
   chemotaxis(mem_b_cell);
   move_turtle(mem_b_cell);

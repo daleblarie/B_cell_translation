@@ -8,12 +8,12 @@ const bool TURTLE_CONTINOUS_MOVEMENT = false;
 const bool TOROIDAL_WORLD = false;
 
 const int RNG_SEED=108;
-const int NUM_STEPS = 200;
+const int NUM_STEPS = 2000;
 
 
 const static int WORLD_WIDTH = 101;
 const static int WORLD_HEIGHT = 101;
-const int PATCH_MAX_CAPACITY = 10;
+const int PATCH_MAX_CAPACITY = 10000;
 const int MAX_RANDOM_DISTANCE = 100;
 
 // this netlgoo implementation specific variables
@@ -29,9 +29,9 @@ const int BACTERIA_EPITOPE_TYPE = 30;
 const int NUMBER_OF_TI_EPITOPES = 10;
 const int NUMBER_OF_TD_EPITOPES = 10;
 
-const int BCELL_TNFA_APOP_THRESHOLD = 0;
-const int BCELL_BREG_DIFF_THRESHOLD = 0;
-const int BCELL_CD21_ACTIVATION_THRESHOLD =101;;
+const int BCELL_CD21_ACTIVATION_THRESHOLD =101;
+const int BCELL_TNFA_APOP_THRESHOLD = 277;
+const int BCELL_BREG_DIFF_THRESHOLD = 181;
 
 const int PHAG_IL6_BURST=0;
 

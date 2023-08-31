@@ -90,7 +90,7 @@ public:
   // templated function to kill any turtle or agent
   template <typename T>
   void kill(std::shared_ptr<T> &ptr){
-    // std::cout<<"Killing turtle with ID "<<ptr->getID()<<std::endl;
+    std::cout<<"Killing turtle with ID "<<ptr->getID()<<std::endl;
     ptr->removeLinkedTurtle();
     all_turtles_to_kill.push_back(ptr);
     kill_turtle(ptr);
@@ -202,8 +202,24 @@ public:
 
   template <typename CellType>
   std::shared_ptr<BregCell> turnIntoBreg(CellType& cell){
-    std::cout<<"turning into breg"<<std::endl;
+    // std::cout<<std::endl<<std::endl<<std::endl<<std::endl;
+    // std::cout<<"turning into breg"<<std::endl;
+    // std::cout<<"original cell ID "<<cell->getID()<< " and location "<<cell<<std::endl;
+    CellType placeholder = cell;
+    // std::cout<<"placeholder cell ID "<<placeholder->getID()<<" and location "<<placeholder<<std::endl;
+
     std::shared_ptr<BregCell> breg = std::make_shared<BregCell>(cell->getX(), cell->getY(), global_ID_counter++, cell->getHeading());
+    // std::shared_ptr<BregCell> breg = std::make_shared<BregCell>(0, 0, 99,0);
+    // std::cout<<"breg ID "<<breg->getID()<<" and location "<<breg<<std::endl;
+    // std::cout<<"original cell ID "<<cell->getID()<< " and location "<<cell<<std::endl;
+    // std::cout<<"placeholder cell ID "<<placeholder->getID()<<" and location "<<placeholder<<std::endl;
+    // global_ID_counter++;
+    // std::cout<<"breg ID "<<breg->getID()<<" and location "<<breg<<std::endl;
+    // std::cout<<"original cell ID "<<cell->getID()<< " and location "<<cell<<std::endl;
+    // std::cout<<"placeholder cell ID "<<placeholder->getID()<<" and location "<<placeholder<<std::endl;
+
+    
+    
     breg->copy_other_turtle_attributes(cell);
     breg->setSize(1);
     breg->setShape("circle");
@@ -216,6 +232,8 @@ public:
     all_turtles.push_back(breg_weak_ptr);
     all_breg_cells.push_back(breg);
     get_patch(cell->getX(), cell->getY()).add_turtle(breg);
+    // std::cout<<"breg ID "<<breg->getID()<<std::endl;
+    // std::cout<<"original cell ID "<<cell->getID()<<std::endl;
     kill(cell);
     return breg;
   }
@@ -226,8 +244,10 @@ public:
     // std::cout<<"my location" <<cell->getX()<<", "<< cell->getY()<<std::endl;
     Patch& current_patch = get_patch(cell->getX(), cell->getY());
     double final_heading = cell->getHeading();
-    std::shared_ptr<NaiveBCell> b_cell = std::dynamic_pointer_cast<NaiveBCell>(cell);
+    std::shared_ptr<TfhCell> b_cell = std::dynamic_pointer_cast<TfhCell>(cell);
     // bool print_test = (b_cell != NULL);
+    // if (print_test){print_test = bool(b_cell->getID() == 120);}
+    // if (print_test){b_cell->setColor("orange"); b_cell->setShape("bug");}
     bool print_test = false;
     // if (print_test){
     //   print_test = (cell->getX() == WORLD_WIDTH);
@@ -267,7 +287,14 @@ public:
     }
     double angle_absolute_to_s1p = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
     double angle_relative_to_s1p = angle_absolute_to_s1p - cell->getHeading();
+    if (angle_relative_to_s1p<-180){angle_relative_to_s1p+=360;}
+    if (angle_relative_to_s1p>180){angle_relative_to_s1p-=360;}
     angle_relative_to_s1p = fmod(angle_relative_to_s1p,360);
+    
+    if (print_test){std::cout<<"my current position is "<<b_cell->getX()<<", "<<b_cell->getY()<<std::endl;
+      std::cout<<"Max Patch position is "<<max_patch.getX()<<", "<<max_patch.getY()<<std::endl;}
+
+
     if(print_test){
       std::cout<<"2nd  time: ID "<<cell->getID()<<", HEADING "<< final_heading;
       std::cout<<" s1pr1_weight "<<s1pr1_weight<<std::endl;
@@ -277,7 +304,8 @@ public:
     final_heading += angle_relative_to_s1p*s1pr1_weight;
 
 
-
+    // random_max_patch_ind = RNG_Engine() % neighbors.size();
+    // max_patch = neighbors[random_max_patch_ind];
     double s1pr2_weight = cell->getS1pr2Level() / 100.0;
     double max_s1pr2 = 0;
     for (auto neighbor_patch: neighbors){
@@ -288,7 +316,13 @@ public:
     }
     double angle_absolute_to_s1pr2 = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
     double angle_relative_to_s1pr2 = angle_absolute_to_s1pr2 - cell->getHeading();
+    if (angle_relative_to_s1pr2<-180){angle_relative_to_s1pr2+=360;}
+    if (angle_relative_to_s1pr2>180){angle_relative_to_s1pr2-=360;}
     angle_relative_to_s1pr2 = fmod(angle_relative_to_s1pr2,360);
+
+    if (print_test){std::cout<<"my current position is "<<b_cell->getX()<<", "<<b_cell->getY()<<std::endl;
+      std::cout<<"Max Patch position is "<<max_patch.getX()<<", "<<max_patch.getY()<<std::endl;}
+
 
     final_heading += angle_relative_to_s1pr2*s1pr2_weight;
     if(print_test){std::cout<<"3rd time: ID "<<cell->getID()<<", HEADING "<<final_heading<<" s1pr2_weight "<<s1pr2_weight<<std::endl;
@@ -297,6 +331,9 @@ public:
     };
 
 
+    //for CxCR5/cxcl13
+    // random_max_patch_ind = RNG_Engine() % neighbors.size();
+    // max_patch = neighbors[random_max_patch_ind];
     double cxcr5_weight = cell->getCxcr5Level() / 100.0;
     double max_cxcl13 = 0;
     for (auto neighbor_patch: neighbors){
@@ -307,37 +344,80 @@ public:
     }
     double angle_absolute_to_cxcl13 = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
     double angle_relative_to_cxcl13 = angle_absolute_to_cxcl13 - cell->getHeading();
-
+    if (angle_relative_to_cxcl13<-180){angle_relative_to_cxcl13+=360;}
+    if (angle_relative_to_cxcl13>180){angle_relative_to_cxcl13-=360;}
     angle_relative_to_cxcl13 = fmod(angle_relative_to_cxcl13,360);
 
+    if (print_test){std::cout<<"my current position is "<<b_cell->getX()<<", "<<b_cell->getY()<<std::endl;
+      std::cout<<"Max Patch position is "<<max_patch.getX()<<", "<<max_patch.getY()<<std::endl;}
 
     final_heading += angle_relative_to_cxcl13*cxcr5_weight;
     if(print_test){std::cout<<"4th time: ID "<<cell->getID()<<", HEADING "<< final_heading<<" CXCR5 weight "<<cxcr5_weight<<std::endl;
     std::cout<<"angle_absolute_to_cxcl13  "<<angle_absolute_to_cxcl13<<std::endl;
     std::cout<<"angle_relative_to_cxcl13  "<<angle_relative_to_cxcl13<<std::endl;
     };
+    
+    // for ccr7/ccl19
+    // random_max_patch_ind = RNG_Engine() % neighbors.size();
+    // max_patch = neighbors[random_max_patch_ind];
+    double cccl7_weight = cell->getCcr7Level() / 100.0;
+    double max_ccl19 = 0;
+    for (auto neighbor_patch: neighbors){      
+        if (neighbor_patch.getCcl19Level() > max_ccl19) {
+            max_ccl19 = neighbor_patch.getCcl19Level();
+            max_patch = get_patch(neighbor_patch.getX(), neighbor_patch.getY());
+        }
+    }
+    double angle_absolute_to_ccl19 = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
+    double angle_relative_to_ccl19 = angle_absolute_to_ccl19 - cell->getHeading();
+    if (angle_relative_to_ccl19<-180){angle_relative_to_ccl19+=360;}
+    if (angle_relative_to_ccl19>180){angle_relative_to_ccl19-=360;}
+    angle_relative_to_ccl19 = fmod(angle_relative_to_ccl19,360);
+
+    if (print_test){std::cout<<"my current position is "<<b_cell->getX()<<", "<<b_cell->getY()<<std::endl;
+      std::cout<<"Max Patch position is "<<max_patch.getX()<<", "<<max_patch.getY()<<std::endl;}
+
+    final_heading += angle_relative_to_ccl19*cccl7_weight;
+    if(print_test){std::cout<<"5th time: ID "<<cell->getID()<<", HEADING "<< final_heading<<" CCcL7 weight "<<cccl7_weight<<std::endl;
+    std::cout<<"angle_absolute_to_ccl19  "<<angle_absolute_to_ccl19<<std::endl;
+    std::cout<<"angle_relative_to_ccl19  "<<angle_relative_to_ccl19<<std::endl;
+    };
 
     // For ebi2r_level
+    // random_max_patch_ind = RNG_Engine() % neighbors.size();
+    // max_patch = neighbors[random_max_patch_ind];
     double ebi2r_weight = cell->getEbi2rLevel() / 100.0;
     double max_ebi2 = 0;
-    for (auto neighbor_patch: neighbors){
+    for (auto neighbor_patch: neighbors){    
         if (neighbor_patch.getEbi2Level() > max_ebi2) {
+          
             max_ebi2 = neighbor_patch.getEbi2Level();
             max_patch = get_patch(neighbor_patch.getX(), neighbor_patch.getY());
         }
     }
     double angle_absolute_to_ebi2 = cell->angle_to(get_patch(max_patch.getX(), max_patch.getY()));
     double angle_relative_to_ebi2 = angle_absolute_to_ebi2 - cell->getHeading();
+    if (angle_relative_to_ebi2<-180){angle_relative_to_ebi2+=360;}
+    if (angle_relative_to_ebi2>180){angle_relative_to_ebi2-=360;}
     angle_relative_to_ebi2 = fmod(angle_relative_to_ebi2,360);
 
+    if (print_test){std::cout<<"my current position is "<<b_cell->getX()<<", "<<b_cell->getY()<<std::endl;
+      std::cout<<"Max Patch position is "<<max_patch.getX()<<", "<<max_patch.getY()<<std::endl;}
+
+
+
     final_heading += angle_relative_to_ebi2 * ebi2r_weight;
-    if(print_test){std::cout<<"5th time: ID "<<cell->getID()<<", HEADING "<< final_heading<<" ebi2r_weight"<<ebi2r_weight<<std::endl;};
+    if(print_test){std::cout<<"6th time: ID "<<cell->getID()<<", HEADING "<< final_heading<<" ebi2r_weight"<<ebi2r_weight<<std::endl;
+    std::cout<<"angle_absolute_to_ebi2  "<<angle_absolute_to_ebi2<<std::endl;
+    std::cout<<"angle_relative_to_ebi2  "<<angle_relative_to_ebi2<<std::endl;
+    };
 
 
-
+    if (final_heading > 180){final_heading-=360;}
+    if (final_heading < -180){final_heading+=360;}
   cell->setHeading((int)final_heading%(360));
   // cell->setHeading(180);
-  if(print_test){std::cout<<"FINAL TIME: ID "<<cell->getID()<<", HEADING "<<std::endl;};
+  if(print_test){std::cout<<"FINAL TIME: ID "<<cell->getID()<<", HEADING "<<cell->getHeading()<<std::endl<<std::endl<<std::endl<<std::endl;};
 
   // std::cout<<"END CHEMOTAXING"<<std::endl;
   }

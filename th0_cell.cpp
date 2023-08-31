@@ -6,6 +6,7 @@ Th0Cell::Th0Cell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) 
 }
 
 void World::th0CellFunction(std::shared_ptr<Th0Cell> th0_cell) {
+  std::cout<<"TH 0 function"<<std::endl;
     // Get the current patch of the Th0 cell
     Patch& current_patch = get_patch(th0_cell->getX(), th0_cell->getY());
 
@@ -83,7 +84,7 @@ void World::th0CellFunction(std::shared_ptr<Th0Cell> th0_cell) {
         std::shared_ptr<TfhCell> th0_cell = tfh_cell;
         
     }
-
+    std::cout<<"chemotaxin from TH0 "<<std::endl;
     chemotaxis(th0_cell);
     move_turtle(th0_cell);
 

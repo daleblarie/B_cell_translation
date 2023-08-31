@@ -18,7 +18,10 @@ void World::ll_plasma_cell_function(std::shared_ptr<LLPlasmaCell> ll_plasma_cell
 
         // Assuming you have a check_breg_status function
         turn_into_breg = checkBregStatus(ll_plasma_cell);
-        if (turn_into_breg){std::shared_ptr<BregCell> ll_plasma_cell = turnIntoBreg(ll_plasma_cell);};
+        if (turn_into_breg){
+          std::cout<<"ll_plasma ID "<<ll_plasma_cell->getID()<<"turning into Breg"<<std::endl;
+          std::shared_ptr<BregCell> ll_plasma_cell = turnIntoBreg(ll_plasma_cell);
+        };
 
         // ll_plasma_cell->check_breg_status();
 

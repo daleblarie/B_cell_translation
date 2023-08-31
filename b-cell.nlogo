@@ -53,7 +53,7 @@ to setup
   ;ask fdcs [ set shape "square" set color brown move-to one-of patches in-radius 30 with [any? fdcs-here = false and any? fdcs-on neighbors = false]]   ; Ensures FDCs don't spawn ontop of eachother
   ask fdcs [ set shape "square" set color brown ]
   ask fdcs [ move-to one-of patches in-radius 30 with [not any? other fdcs in-radius 3]]   ; Ensures FDCs don't spawn ontop of eachother or too close together
-
+  ask fdcs [ write pxcor + 50 show pycor + 50]
 
   ; Initializes the starting population of Tfh cells
   create-tfh-cells 50
@@ -70,7 +70,7 @@ to setup
 end
 
 
-; Called every tick
+; Called every tickpatch-type
 to go
   calculate-incoming-tnfa-il6-level
   ;if ticks > 960 [ ;; start simuluating background inflammation on day 20, or 960 ticks, so that the first inoculation isn't affected by background inflammation
@@ -314,7 +314,7 @@ to activated-b-cell-function
     ; Only performs the following commands if currently inside the follicle, and NOT in the blood/lymph
     if patch-type = 2 [   ; If the cell reaches the follicle exit (patch-type 2)
       set in-blood true
-      hide-turtle
+      ;hide-turtle
     ]
 
     isotype-switch   ; Determines which isotype to switch to
@@ -699,6 +699,37 @@ end
 to tfh-cell-function
   if distance patch 0 0 > 20 or bcell-binding-status = false [
     chemotaxis
+    if [who] of self = 130 [
+      write "\n\n"
+      set color orange
+      set size 2
+      set shape "bug"
+
+      show pxcor
+      show pycor
+      write "heading "
+      show heading
+      write "s1pr1 weight "
+      show s1pr1-level / 100
+      let max-s1p-patch max-one-of neighbors [s1p-level]  ;; or neighbors4
+      show towards max-s1p-patch
+      write "s1pr2 weight "
+      show s1pr2-level / 100
+      let max-s1pr2-patch max-one-of neighbors [s1p-level]  ;; or neighbors4
+      show towards max-s1pr2-patch
+      write "cxcr5 weight "
+      show cxcr5-level / 100
+      let max-cxcl13-patch max-one-of neighbors [cxcl13-level]  ;; or neighbors4
+      show towards max-cxcl13-patch
+      write "ccr7 weight "
+      show ccr7-level / 100
+      let max-ccr7-patch max-one-of neighbors [ccl19-level]  ;; or neighbors4
+      show towards max-ccr7-patch
+      write "ebi2r weight "
+      show ebi2r-level / 100
+      let max-ebi2r-patch max-one-of neighbors [ebi2-level]  ;; or neighbors4
+      show towards max-ebi2r-patch
+    ]
     move
   ]
 
@@ -847,13 +878,16 @@ to update-chemokine-gradient
         set pcolor scale-color green tnf-a 0.1 3  ;;used to visualize cxcl13 or ccl19 gradient
       ]
       if cytokine-to-visualize = "il6" [
-        set pcolor scale-color green il6 0.1 3  ;;used to visualize cxcl13 or ccl19 gradient
+        set pcolor scale-color green il6 .00001 3  ;;used to visualize cxcl13 or ccl19 gradient
       ]
       if cytokine-to-visualize = "il10" [
         set pcolor scale-color green il10 0.1 3  ;;used to visualize cxcl13 or ccl19 gradient
       ]
       if cytokine-to-visualize = "s1p" [
         set pcolor scale-color green s1p-level 0.01 3  ;;used to visualize cxcl13 or ccl19 gradient
+      ]
+      if cytokine-to-visualize = "ebi2" [
+        set pcolor scale-color green ebi2-level 0.01 3  ;;used to visualize cxcl13 or ccl19 gradient
       ]
     ]
   ]
@@ -1080,8 +1114,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-1
-1
+0
+0
 1
 -50
 50
@@ -1269,8 +1303,8 @@ CHOOSER
 526
 cytokine-to-visualize
 cytokine-to-visualize
-"none" "tnf-a" "il6" "il10" "s1p"
-0
+"none" "tnf-a" "il6" "il10" "s1p" "ebi2"
+3
 
 MONITOR
 145
