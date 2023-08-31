@@ -53,7 +53,7 @@ class Agent: std::enable_shared_from_this<Agent> {
       // std::cout<<"getting angle2"<<std::endl;
       // std::cout<<"Target Location ("<<targetx<<", "<<targety<<")"<<std::endl;
       int delta_x = targetx - x;
-      int delta_y = targety - y;
+      int delta_y = y - targety;
       // std::cout<<"getting angle3"<<std::endl;
       // std::cout<<"Delta Positions ("<<delta_x<<", "<<delta_y<<")"<<std::endl;
       if ((delta_x + WORLD_WIDTH) < abs(delta_x)){
@@ -83,7 +83,7 @@ class Agent: std::enable_shared_from_this<Agent> {
       // std::cout<<"Angle To neighbor 7-BR(degrees)"<<atan2(-1,1) * 180/M_PI<<std::endl;
       // double angle_radian = atan(delta_x/delta_y);
       double angle_radian = atan2(delta_y, delta_x);
-      if (angle_radian<0){angle_radian+=2*M_PI;}
+      while (angle_radian<0){angle_radian+=2*M_PI;}
       // if (angle_radian<-1*M_PI){angle_radian+=2*M_PI;}
       // std::cout<<"Angle To (degrees)"<<angle_radian * 180/M_PI<<std::endl;
       return angle_radian *  180/M_PI;
