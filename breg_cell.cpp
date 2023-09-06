@@ -3,11 +3,13 @@
 
 BregCell::BregCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    // std::cout<<"Creating a breg cell with ID "<<id<<std::endl;
+    std::cout<<"Creating a breg cell with ID "<<id<<std::endl;
 }
 
 
 void World::bregFunction(std::shared_ptr<BregCell> breg_cell) {
+  if (!breg_cell->get_is_alive()) {return;}
+
     // std::cout<<"breg_function for ID number "<<breg_cell->getID()<<std::endl;
 
     // Get the patch where the BReg cell is
@@ -19,6 +21,8 @@ void World::bregFunction(std::shared_ptr<BregCell> breg_cell) {
 
     // Chemotaxis and move
     chemotaxis(breg_cell);
+    // std::cout<<"Moving breg"<<std::endl;
+    
     move_turtle(breg_cell);
 
     // Check TNF status
@@ -29,6 +33,7 @@ void World::bregFunction(std::shared_ptr<BregCell> breg_cell) {
 
     // Kill if the time alive exceeds 300
     if((breg_cell->getTimeAlive() > 300)|| die_by_tnf) {
-        kill(breg_cell);
+      std::cout<<"killing breg_cell at end of life. ID is "<<breg_cell->getID()<<std::endl;
+      kill(breg_cell);
     }
 }

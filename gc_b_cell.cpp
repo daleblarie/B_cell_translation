@@ -4,10 +4,18 @@
 
 GCBCell::GCBCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
+    std::cout<<"creating GCBcell"<<std::endl;
+
 }
 
 void World::gc_b_cell_function(std::shared_ptr<GCBCell> gc_b_cell) {
+  if (!gc_b_cell->get_is_alive()) {return;}
+
+  std::cout<<"doing GCB cell function for cell "<<gc_b_cell->getID()<<std::endl;
+
     if(!gc_b_cell->getInBlood()) {
+      // std::cout<<"doing GCB cell function for cell not in blood "<<gc_b_cell->getID()<<std::endl;
+      // std::cout<<"location is "<<gc_b_cell->getX()<<", "<<gc_b_cell->getY()<<std::endl;
         Patch& current_patch = get_patch(gc_b_cell->getX(), gc_b_cell->getY());
 
         if(current_patch.getPatchType() == 2) {
@@ -21,11 +29,14 @@ void World::gc_b_cell_function(std::shared_ptr<GCBCell> gc_b_cell) {
 
         // The GC B-cell only moves if it has not yet reached the follicle center
         if(calculateDistance(WORLD_WIDTH/2, WORLD_HEIGHT/2, gc_b_cell->getX(), gc_b_cell->getY()) > 15) {
+          // std::cout<<"doing GCB cell function for large distance to center  "<<gc_b_cell->getID()<<std::endl;
             chemotaxis(gc_b_cell);
+            std::cout<<"Moving gcb"<<std::endl;
+            
             move_turtle(gc_b_cell, 0.5);
             // gc_b_cell->gc_move();
         } else {
-          std::cout<<"DISTANCE OF GC B CELL TO CENTER IS > 15 SO DOING ELSE PART OF GCB CELL FUNCTION"<<std::endl;
+          std::cout<<"DISTANCE OF GC B CELL TO CENTER IS < 15 SO DOING ELSE PART OF GCB CELL FUNCTION"<<std::endl;
             int proPC2 = current_patch.getIl21() + current_patch.getIl10() * 2 + current_patch.getIfA() + current_patch.getIfG();
             int proMem2 = current_patch.getIl21() + current_patch.getIl4();
             int proPC = RNG_Engine() % proPC2;
@@ -46,7 +57,7 @@ void World::gc_b_cell_function(std::shared_ptr<GCBCell> gc_b_cell) {
                     std::weak_ptr<Turtle> plasma_cell_weak_ptr = plasma_cell;
                     all_turtles.push_back(plasma_cell_weak_ptr);
                     all_ll_plasma_cells.push_back(plasma_cell);
-                    current_patch.add_turtle(plasma_cell);
+                    get_patch(plasma_cell->getX(), plasma_cell->getY()).add_turtle(plasma_cell);
 
                 } else {
                     auto mem_b_cell = std::make_shared<MemBCell>(gc_b_cell->getX(), gc_b_cell->getY(), gc_b_cell->getHeading());
@@ -63,7 +74,7 @@ void World::gc_b_cell_function(std::shared_ptr<GCBCell> gc_b_cell) {
                     std::weak_ptr<Turtle> mem_b_cell_weak_ptr = mem_b_cell;
                     all_turtles.push_back(mem_b_cell_weak_ptr);
                     all_mem_b_cells.push_back(mem_b_cell);
-                    current_patch.add_turtle(mem_b_cell);
+                    get_patch(mem_b_cell->getX(), mem_b_cell->getY()).add_turtle(mem_b_cell);
                 }
             }
         }

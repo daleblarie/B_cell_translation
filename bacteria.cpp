@@ -2,10 +2,13 @@
 #include "world.h"
 Bacteria::Bacteria(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
+    std::cout<<"creating bacteria"<<std::endl;
+
 }
 
 
 void World::bacteriaFunction(std::shared_ptr<Bacteria> bacteria) {
+  if (!bacteria->get_is_alive()) {return;}
     Patch& current_patch = get_patch(bacteria->getX(), bacteria->getY());
 
     // Check if the current patch type is 2
@@ -29,12 +32,15 @@ void World::bacteriaFunction(std::shared_ptr<Bacteria> bacteria) {
                 } else {
                     fdc->setPresentedAntigenType(2);
                 }
+                std::cout<<"killing bacteria at end of life. ID is "<<bacteria->getID()<<std::endl;
                 kill(bacteria);
+                return;
             }
         }
     }
 
     bacteria->setS1pr1Level(bacteria->getS1pr1Level() + 0.004);
     chemotaxis(bacteria);
+    std::cout<<"Moving bacteria"<<std::endl;
     move_turtle(bacteria);
 }

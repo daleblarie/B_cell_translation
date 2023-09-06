@@ -19,6 +19,7 @@ int main(int argc, char const *argv[]) {
   // setting up rendering engine
   RenderingEngine engine = RenderingEngine(worldptr);
   bool quit=false;
+  bool paused=false;
   SDL_Event event;
 
 
@@ -29,7 +30,9 @@ int main(int argc, char const *argv[]) {
     if (i%10==0){
       std::cout<<"beginning step number " <<i<<std::endl;
     }
-    world.go();
+    if (!paused){
+      world.go();
+    }
 
     // rendering loop
     if (RENDERING){
@@ -38,26 +41,35 @@ int main(int argc, char const *argv[]) {
       engine.renderPatchMode();
       engine.renderAllTurtles();
       engine.render();
-      SDL_PollEvent(&event);
-      // /* will pause every step until ctrl+c is pressed
-      // useful for debugging, but tgere is no way to break out of it.
-      // kind of annoying, only use it when NUM_STEPS is low*/
-      //
-      // quit=false;
-      // while (!quit) {
-      //         while (SDL_PollEvent(&event)) {
-      //               if (event.type == SDL_QUIT) {
-      //                     quit = true;
-      //                 }
-      //             }
-      //         }
-      /* will loop through and display every turn until end of NUM_STEPS, can break out with ctrl+c */
-      if (event.type == SDL_QUIT) {
-        quit = true;
-      }
-      if(quit){break;}
-    }
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      while (SDL_PollEvent(&event)) {
+           if (event.type == SDL_QUIT) {
+               quit = true;
+           }
+           if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
+               paused = !paused; // Toggle pause state
+           }
+       }
+
+       if (quit) {
+           break;
+       }
+
+       // While paused, keep checking for events and only proceed if space is pressed again
+       while (paused) {
+           while (SDL_PollEvent(&event)) {
+               if (event.type == SDL_QUIT) {
+                   quit = true;
+                   paused = false;
+               }
+               if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
+                   paused = !paused; // Toggle pause state
+               }
+           }
+           std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Sleep for a short duration to avoid busy-waiting
+       }
+   }
+
+   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   }
   auto endTime = std::chrono::high_resolution_clock::now();

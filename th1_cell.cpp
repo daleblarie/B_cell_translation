@@ -3,12 +3,18 @@
 
 Th1Cell::Th1Cell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
+    std::cout<<"creating TH 1 cell"<<std::endl;
+
 }
 
 void World::th1CellFunction(std::shared_ptr<Th1Cell> th1_cell) {
+  if (!th1_cell->get_is_alive()) {return;}
+
     Patch& current_patch = get_patch(th1_cell->getX(), th1_cell->getY());
 
     chemotaxis(th1_cell);
+    // std::cout<<"Moving th1"<<std::endl;
+    
     move_turtle(th1_cell);
 
     // Secretes the following cytokines

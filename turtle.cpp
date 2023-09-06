@@ -9,7 +9,12 @@
 void Turtle::addLinkedTurtle(std::weak_ptr<Turtle> linkedTurtle) {
   std::cout<<"LINKING TURTLE NOW "<<std::endl<<"OTHER TURLTE ID IS "<<linkedTurtle.lock()->getID()<<"MY ID IS "<<this->getID()<<std::endl;
     linkedTurtles.push_back(linkedTurtle);
-    linkedTurtle.lock()->getLinkedTurtles().push_back(this->createWeakTurtlePtr());
+    std::cout<<"other turtle linked to this turtle"<<std::endl;
+    std::shared_ptr<Turtle> temp_shared_ptr = std::dynamic_pointer_cast<Turtle>(shared_from_this());
+    std::weak_ptr<Turtle> weak_ptr = temp_shared_ptr;
+    linkedTurtle.lock()->getLinkedTurtles().push_back(weak_ptr);
+    std::cout<<"this turtle linked to other turtle"<<std::endl;
+    temp_shared_ptr.reset();
 }
 
 std::vector<std::weak_ptr<Turtle>>& Turtle::getLinkedTurtles() {
@@ -32,6 +37,8 @@ void Turtle::removeLinkedTurtle(){
           std::cout << "Neighbor Linked turtle not found in the vector. 2 ERRORRRR" << std::endl;
       }
   }
+  // neighbor.reset();
+  linkedTurtles.clear();
 }
 
 
@@ -105,10 +112,10 @@ void Turtle::copy_other_turtle_attributes(std::shared_ptr<Turtle> otherTurtle){
   this->setHeading(otherTurtle->getHeading());
   this->setTimeAlive(otherTurtle->getTimeAlive());
   // Copying the additional attributes
-  this->x_dec = otherTurtle->get_x_dec();
-  this->y_dec = otherTurtle->get_y_dec();
-  this->temp_x = otherTurtle->get_temp_x();
-  this->temp_y = otherTurtle->get_temp_y();
+  // this->x_dec = otherTurtle->get_x_dec();
+  // this->y_dec = otherTurtle->get_y_dec();
+  // this->temp_x = otherTurtle->get_temp_x();
+  // this->temp_y = otherTurtle->get_temp_y();
   this->setInBlood(otherTurtle->getInBlood());
   this->setBcr(otherTurtle->getBcr());
   this->setIsotype(otherTurtle->getIsotype());

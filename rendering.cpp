@@ -82,8 +82,28 @@ std::tuple<int, int, int> RenderingEngine::getColor(const std::string& color){
     green = 128;
     blue = 128;
   }
+  else if (color =="pink"){
+    red = 255;
+    green = 16;
+    blue = 240;
+  }
+  else if (color =="lime"){
+    red = 191;
+    green = 255;
+    blue = 0;
+  }
+  
+  else if (color == "mauve"){
+    red = 172;
+    blue = 79;
+    green = 106;
+  }
+
 
   else {
+    std::cout<<"using OTHER color"<<std::endl;
+    std::cout<<"color is "<<color<<std::endl;
+    
       red = 255;
       green = 16;
       blue = 240;
@@ -115,8 +135,8 @@ void RenderingEngine::drawCircle(double centerX, double centerY, double radius, 
   std::tuple<int, int, int> RGB = getColor(color);
   SDL_SetRenderDrawColor(renderer, std::get<0>(RGB), std::get<1>(RGB), std::get<2>(RGB), alpha);
 
-	for (int y = -radius; y <= radius; ++y) {
-	    for (int x = -radius; x <= radius; ++x) {
+	for (int y = -radius; y <= radius; y++) {
+	    for (int x = -radius; x <= radius; x++) {
 	        if (x*x + y*y <= radius*radius) {
 	            SDL_RenderDrawPoint(renderer, centerX + x, centerY + y);
 	        }
@@ -131,6 +151,24 @@ void RenderingEngine::drawSquare(int x, int y, int size, const std::string& colo
   SDL_Rect rect = { x, y, size, size };
   SDL_RenderFillRect(renderer, &rect);
   // SDL_RenderPresent(renderer);
+}
+
+void RenderingEngine::drawFilledEllipse(int centerX, int centerY, int radiusX, int radiusY, const std::string& color, int alpha, int angleDegrees) {
+  std::tuple<int, int, int> RGB = getColor(color);
+  SDL_SetRenderDrawColor(renderer, std::get<0>(RGB), std::get<1>(RGB), std::get<2>(RGB), alpha);
+  double angleRadians = angleDegrees * M_PI / 180.0;
+
+    for (int x = centerX - radiusX; x <= centerX + radiusX; ++x) {
+      for (int y = centerY - radiusY; y <= centerY + radiusY; ++y) {
+          double rotatedX = centerX + (x - centerX) * cos(angleRadians) - (y - centerY) * sin(angleRadians);
+          double rotatedY = centerY + (x - centerX) * sin(angleRadians) + (y - centerY) * cos(angleRadians);
+
+          if (((rotatedX - centerX) * (rotatedX - centerX)) / (radiusX * radiusX) +
+              ((rotatedY - centerY) * (rotatedY - centerY)) / (radiusY * radiusY) <= 1) {
+              SDL_RenderDrawPoint(renderer, static_cast<int>(rotatedX), static_cast<int>(rotatedY));
+          }
+      }
+  }
 }
 
 void RenderingEngine::renderAllPatches(){
@@ -182,12 +220,29 @@ void RenderingEngine::renderAllTurtles(){
       drawSquare(x,y,(GRID_SIZE-1) * agent.lock()->getSize(), color, opacity);
       drawCircle(x,y,(((GRID_SIZE/2)*agent.lock()->getSize())-2), "black", opacity);
     }else if (shape=="bug"){
+      // going to be an elipse with two little antennae on the front 
       int angle = agent.lock()->getHeading();
-      float x_offset = sin(angle) * (GRID_SIZE/2);
-      float y_offset = cos(angle) * (GRID_SIZE/2);
       
-      drawSquare(x,y,(GRID_SIZE-3) * agent.lock()->getSize(), color, opacity);
-      drawCircle(x + x_offset,y + y_offset,(((GRID_SIZE/2)*agent.lock()->getSize())-2), color, opacity);
+      drawFilledEllipse(x,y, (GRID_SIZE-1) * agent.lock()->getSize(), (GRID_SIZE-1) * agent.lock()->getSize()/2, color, opacity, angle);
+      drawLine(x,y, x+cos(angle*M_PI/180)*GRID_SIZE* agent.lock()->getSize(), y + sin(angle*M_PI/180)*GRID_SIZE* agent.lock()->getSize(), color, opacity);
+      // bounding rect
+      // SDL_Rect ellipseRect = 
+      
+      // for (int x_draw=-1 * agent.lock()->getSize()*GRID_SIZE; x_draw <= agent.lock()->getSize()*GRID_SIZE; x_draw++){
+      //   for (int y_draw=-1 * agent.lock()->getSize()*GRID_SIZE; y_draw <= agent.lock()->getSize()*GRID_SIZE; y_draw++){
+      //     if (x_draw < ){
+      // 
+      //     };
+      // 
+      //   }
+      // }
+      
+      
+      // float x_offset = sin(angle) * (GRID_SIZE/2);
+      // float y_offset = cos(angle) * (GRID_SIZE/2);
+      // 
+      // drawSquare(x,y,(GRID_SIZE-2) * agent.lock()->getSize(), color, opacity);
+      // drawCircle(x + x_offset,y + y_offset,(((GRID_SIZE/2)*agent.lock()->getSize())-2), color, opacity);
 
     }else{
       drawCircle(x,y,((GRID_SIZE/2)), color, opacity);
@@ -195,3 +250,5 @@ void RenderingEngine::renderAllTurtles(){
     }
   }
 }
+
+// SDL_RenderPresent(renderer);

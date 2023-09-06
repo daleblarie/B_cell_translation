@@ -4,15 +4,21 @@
 
 Th2Cell::Th2Cell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
+    std::cout<<"creating TH 2 cell"<<std::endl;
+
 }
 
 
 void World::th2CellFunction(std::shared_ptr<Th2Cell> th2_cell) {
+  if (!th2_cell->get_is_alive()) {return;}
+
     Patch& current_patch = get_patch(th2_cell->getX(), th2_cell->getY());
 
     // Calculate the Euclidean distance between the cell's location and the center of the world (WORLD_WIDTH/2, WORLD_HEIGHT/2)
     if (calculateDistance(WORLD_WIDTH/2, WORLD_HEIGHT/2, th2_cell->getX(), th2_cell->getY()) > 20 || !th2_cell->getBcellBindingStatus()) {
         chemotaxis(th2_cell);
+        // std::cout<<"Moving th2"<<std::endl;
+        
         move_turtle(th2_cell);
     }
 

@@ -12,6 +12,7 @@ void Patch::add_turtle(std::shared_ptr<Turtle> turtle_to_add){
 
 void Patch::remove_turtle(std::shared_ptr<Turtle> turtle_to_remove){
   turtles_here.erase(std::remove(turtles_here.begin(), turtles_here.end(), turtle_to_remove), turtles_here.end());
+  turtle_to_remove.reset();
 }
 
 void Patch::display() {

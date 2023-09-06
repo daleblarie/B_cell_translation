@@ -10,7 +10,7 @@
 #include <random>
 #include "parameters.h"
 
-class Agent: std::enable_shared_from_this<Agent> {
+class Agent: public std::enable_shared_from_this<Agent> {
   protected:
     Agent(int x, int y) : x(x), y(y) {}
   private:
@@ -42,7 +42,7 @@ class Agent: std::enable_shared_from_this<Agent> {
     void setVisible(bool status){visible = status;}
     bool getVisible() const {return visible;}
 
-    std::weak_ptr<Agent> createWeakPtr() {return shared_from_this();}
+    std::weak_ptr<Agent> createWeakPtr() {std::cout<<"getting pointer from this in agent" <<std::endl; return shared_from_this();}
 
     template <typename agent>
     double angle_to(agent& target){

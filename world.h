@@ -203,8 +203,8 @@ public:
   template <typename CellType>
   std::shared_ptr<BregCell> turnIntoBreg(CellType& cell){
     // std::cout<<std::endl<<std::endl<<std::endl<<std::endl;
-    // std::cout<<"turning into breg"<<std::endl;
-    // std::cout<<"original cell ID "<<cell->getID()<< " and location "<<cell<<std::endl;
+    std::cout<<"turning into breg"<<std::endl;
+    std::cout<<"original cell ID "<<cell->getID()<< " and location "<<cell<<std::endl;
     CellType placeholder = cell;
     // std::cout<<"placeholder cell ID "<<placeholder->getID()<<" and location "<<placeholder<<std::endl;
 

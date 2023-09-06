@@ -3,10 +3,14 @@
 
 LLPlasmaCell::LLPlasmaCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
+    std::cout<<"creating LL Plasma cell"<<std::endl;
+
 }
 
 
 void World::ll_plasma_cell_function(std::shared_ptr<LLPlasmaCell> ll_plasma_cell) {
+  if (!ll_plasma_cell->get_is_alive()) {return;}
+
   Patch& current_patch = get_patch(ll_plasma_cell->getX(), ll_plasma_cell->getY());
   bool turn_into_breg;
     if(!ll_plasma_cell->getInBlood()) {
@@ -26,7 +30,8 @@ void World::ll_plasma_cell_function(std::shared_ptr<LLPlasmaCell> ll_plasma_cell
         // ll_plasma_cell->check_breg_status();
 
         chemotaxis(ll_plasma_cell);
-        ll_plasma_cell->move();
+        std::cout<<"moving ll_plasma_cell with use count "<<ll_plasma_cell.use_count()<<std::endl;
+        move_turtle(ll_plasma_cell);
       
     }
     else {
@@ -36,11 +41,12 @@ void World::ll_plasma_cell_function(std::shared_ptr<LLPlasmaCell> ll_plasma_cell
             antibody->setTimeAlive(0);
             antibody->setAntibodyType(ll_plasma_cell->getIsotype());
             // antibody->setHidden(true);
+            antibody->setColor("mauve");
             
             std::weak_ptr<Turtle> antibody_weak_ptr = antibody;
             all_turtles.push_back(antibody_weak_ptr);
             all_antibodies.push_back(antibody);
-            current_patch.add_turtle(antibody);
+            get_patch(antibody->getX(), antibody->getY()).add_turtle(antibody);
         }
     }
 

@@ -111,7 +111,9 @@ void World::move_turtle(std::shared_ptr<Turtle> turtle, float distance){
   }
   else{
     turtle->execute_move(true);
+    int temp = turtle_current_patch.getTurtlesHere().size();
     turtle_current_patch.remove_turtle(turtle);
+    if ((temp - turtle_current_patch.getTurtlesHere().size()) != 1){std::cout<<"We did not remove the turtle from a patch when moving it. current size is "<< turtle_current_patch.getTurtlesHere().size()<<". This is a problem and we will exit now"; exit(10);}
     target_patch.add_turtle(turtle);
   }
 }
@@ -142,29 +144,73 @@ void World::turtle_wiggle(std::shared_ptr<Turtle> turtle){
 
 void World::kill_turtle(std::shared_ptr<Turtle> turtle){
   // removed turtle from its patch
+  turtle->set_is_alive(false);
   Patch &turtle_current_patch = get_patch(turtle->getX(), turtle->getY());
   turtle_current_patch.remove_turtle(turtle);
+  turtle.reset();
 }
 
 //void kill(std::shared_ptr<T> &ptr) <-- templated function that will kill any turtle or subclass of turtle. implemented in header file
 
 void World::updateTurtleVectors(){
     for(auto& turtle : all_turtles_to_kill){
-      if (std::shared_ptr<Bacteria> bacteria = std::dynamic_pointer_cast<Bacteria>(turtle)) { all_bacterias.erase(std::remove(begin(all_bacterias), end(all_bacterias), bacteria), end(all_bacterias));
-      } else if (std::shared_ptr<Antibodies> antibody = std::dynamic_pointer_cast<Antibodies>(turtle)) { all_antibodies.erase(std::remove(begin(all_antibodies), end(all_antibodies), antibody), end(all_antibodies));
-      } else if (std::shared_ptr<FDCs> fdc = std::dynamic_pointer_cast<FDCs>(turtle)) {all_fdcs.erase(std::remove(begin(all_fdcs), end(all_fdcs), fdc), end(all_fdcs));
+      if (std::shared_ptr<Bacteria> bacteria = std::dynamic_pointer_cast<Bacteria>(turtle)) {
+        all_bacterias.erase(std::remove(begin(all_bacterias), end(all_bacterias), bacteria), end(all_bacterias));
+        bacteria.reset();
+      } else if (std::shared_ptr<Antibodies> antibody = std::dynamic_pointer_cast<Antibodies>(turtle)) { 
+        all_antibodies.erase(std::remove(begin(all_antibodies), end(all_antibodies), antibody), end(all_antibodies));
+      } else if (std::shared_ptr<FDCs> fdc = std::dynamic_pointer_cast<FDCs>(turtle)) {
+        all_fdcs.erase(std::remove(begin(all_fdcs), end(all_fdcs), fdc), end(all_fdcs));
+        fdc.reset();
       } else if (std::shared_ptr<NaiveBCell> naive_b_cell = std::dynamic_pointer_cast<NaiveBCell>(turtle)) {
-      all_naive_b_cells.erase(std::remove(begin(all_naive_b_cells), end(all_naive_b_cells), naive_b_cell), end(all_naive_b_cells));
-      } else if (std::shared_ptr<ActivatedBCell> activated_b_cell = std::dynamic_pointer_cast<ActivatedBCell>(turtle)) {all_activated_b_cells.erase(std::remove(begin(all_activated_b_cells), end(all_activated_b_cells), activated_b_cell),end(all_activated_b_cells));
-      } else if (std::shared_ptr<GCBCell> gcb_cell = std::dynamic_pointer_cast<GCBCell>(turtle)) {all_gcb_cells.erase(std::remove(begin(all_gcb_cells), end(all_gcb_cells), gcb_cell), end(all_gcb_cells));
-      } else if (std::shared_ptr<SLPlasmaCell> sl_plasma_cell = std::dynamic_pointer_cast<SLPlasmaCell>(turtle)) {all_sl_plasma_cells.erase(std::remove(begin(all_sl_plasma_cells), end(all_sl_plasma_cells), sl_plasma_cell), end(all_sl_plasma_cells));
-      } else if (std::shared_ptr<LLPlasmaCell> ll_plasma_cell = std::dynamic_pointer_cast<LLPlasmaCell>(turtle)) {all_ll_plasma_cells.erase(std::remove(begin(all_ll_plasma_cells), end(all_ll_plasma_cells), ll_plasma_cell), end(all_ll_plasma_cells));
-      } else if (std::shared_ptr<MemBCell> mem_b_cell = std::dynamic_pointer_cast<MemBCell>(turtle)) {all_mem_b_cells.erase(std::remove(begin(all_mem_b_cells), end(all_mem_b_cells), mem_b_cell), end(all_mem_b_cells));
-      } else if (std::shared_ptr<BregCell> breg_cell = std::dynamic_pointer_cast<BregCell>(turtle)) {all_breg_cells.erase(std::remove(begin(all_breg_cells), end(all_breg_cells), breg_cell), end(all_breg_cells));
-      } else if (std::shared_ptr<TfhCell> tfh_cell = std::dynamic_pointer_cast<TfhCell>(turtle)) {all_tfh_cells.erase(std::remove(begin(all_tfh_cells), end(all_tfh_cells), tfh_cell), end(all_tfh_cells));
-      } else if (std::shared_ptr<Th0Cell> th0_cell = std::dynamic_pointer_cast<Th0Cell>(turtle)) {all_th0_cells.erase(std::remove(begin(all_th0_cells), end(all_th0_cells), th0_cell), end(all_th0_cells));
-      } else if (std::shared_ptr<Th1Cell> th1_cell = std::dynamic_pointer_cast<Th1Cell>(turtle)){all_th1_cells.erase(std::remove(begin(all_th1_cells), end(all_th1_cells), th1_cell), end(all_th1_cells));
-      } else if (std::shared_ptr<Th2Cell> th2_cell = std::dynamic_pointer_cast<Th2Cell>(turtle)) {all_th2_cells.erase(std::remove(begin(all_th2_cells), end(all_th2_cells), th2_cell), end(all_th2_cells));}
+        // std::cout<<"B cell vector size before "<<all_naive_b_cells.size()<<std::endl;
+        // std::cout<<"b_cell use count "<<naive_b_cell.use_count()<<std::endl;
+        // std::cout<<"naive_b_cell ID "<<naive_b_cell->getID()<<std::endl;
+        all_naive_b_cells.erase(std::remove(begin(all_naive_b_cells), end(all_naive_b_cells), naive_b_cell), end(all_naive_b_cells));
+        // std::cout<<"B cell vector size after "<<all_naive_b_cells.size()<<std::endl;
+        // std::cout<<"b_cell use count "<<naive_b_cell.use_count()<<std::endl;
+        naive_b_cell.reset();
+        // std::cout<<"b_cell use count after reset"<<naive_b_cell.use_count()<<std::endl;
+      } else if (std::shared_ptr<ActivatedBCell> activated_b_cell = std::dynamic_pointer_cast<ActivatedBCell>(turtle)) {
+        std::cout<<"all_activated_b_cells vector size before "<<all_activated_b_cells.size()<<std::endl;
+        std::cout<<"activated_b_cell use count "<<activated_b_cell.use_count()<<std::endl;
+        std::cout<<"activated_b_cell ID "<<activated_b_cell->getID()<<std::endl;
+        all_activated_b_cells.erase(std::remove(begin(all_activated_b_cells), end(all_activated_b_cells), activated_b_cell),end(all_activated_b_cells));
+        std::cout<<"all_activated_b_cells vector size after "<<all_activated_b_cells.size()<<std::endl;
+        std::cout<<"activated_b_cell use count "<<activated_b_cell.use_count()<<std::endl;
+        activated_b_cell.reset();
+        std::cout<<"activated_b_cell use count after reset"<<activated_b_cell.use_count()<<std::endl;
+
+        
+      } else if (std::shared_ptr<GCBCell> gcb_cell = std::dynamic_pointer_cast<GCBCell>(turtle)) {
+        all_gcb_cells.erase(std::remove(begin(all_gcb_cells), end(all_gcb_cells), gcb_cell), end(all_gcb_cells));
+        gcb_cell.reset();
+      } else if (std::shared_ptr<SLPlasmaCell> sl_plasma_cell = std::dynamic_pointer_cast<SLPlasmaCell>(turtle)) {
+        all_sl_plasma_cells.erase(std::remove(begin(all_sl_plasma_cells), end(all_sl_plasma_cells), sl_plasma_cell), end(all_sl_plasma_cells));
+        sl_plasma_cell.reset();
+      } else if (std::shared_ptr<LLPlasmaCell> ll_plasma_cell = std::dynamic_pointer_cast<LLPlasmaCell>(turtle)) {
+        all_ll_plasma_cells.erase(std::remove(begin(all_ll_plasma_cells), end(all_ll_plasma_cells), ll_plasma_cell), end(all_ll_plasma_cells));
+        ll_plasma_cell.reset();
+      } else if (std::shared_ptr<MemBCell> mem_b_cell = std::dynamic_pointer_cast<MemBCell>(turtle)) {
+        all_mem_b_cells.erase(std::remove(begin(all_mem_b_cells), end(all_mem_b_cells), mem_b_cell), end(all_mem_b_cells));
+        mem_b_cell.reset();
+      } else if (std::shared_ptr<BregCell> breg_cell = std::dynamic_pointer_cast<BregCell>(turtle)) {
+        all_breg_cells.erase(std::remove(begin(all_breg_cells), end(all_breg_cells), breg_cell), end(all_breg_cells));
+        breg_cell.reset();
+      } else if (std::shared_ptr<TfhCell> tfh_cell = std::dynamic_pointer_cast<TfhCell>(turtle)) {
+        all_tfh_cells.erase(std::remove(begin(all_tfh_cells), end(all_tfh_cells), tfh_cell), end(all_tfh_cells));
+        tfh_cell.reset();
+      } else if (std::shared_ptr<Th0Cell> th0_cell = std::dynamic_pointer_cast<Th0Cell>(turtle)) {
+        all_th0_cells.erase(std::remove(begin(all_th0_cells), end(all_th0_cells), th0_cell), end(all_th0_cells));
+        th0_cell.reset();
+      } else if (std::shared_ptr<Th1Cell> th1_cell = std::dynamic_pointer_cast<Th1Cell>(turtle)){
+        all_th1_cells.erase(std::remove(begin(all_th1_cells), end(all_th1_cells), th1_cell), end(all_th1_cells));
+        th1_cell.reset();
+      } else if (std::shared_ptr<Th2Cell> th2_cell = std::dynamic_pointer_cast<Th2Cell>(turtle)) {
+        all_th2_cells.erase(std::remove(begin(all_th2_cells), end(all_th2_cells), th2_cell), end(all_th2_cells));
+        th2_cell.reset();
+      }
+      std::cout<<"turtle ID "<<turtle->getID()<<" use count "<<turtle.use_count()<<std::endl;
       turtle.reset();
 
     }
@@ -173,7 +219,7 @@ void World::updateTurtleVectors(){
     // erasing the turtle weak pointers that are now a null pointer because they have been reset
     all_turtles.erase(std::remove_if(all_turtles.begin(), all_turtles.end(),
     [](const std::weak_ptr<Turtle>& wp) {     //lambda function to check if weak pointer is expired (aka killed and reset() has been called)
-        // if (wp.expired()){std::cout<<"Deleting expired Turtle"<<std::endl;}
+        if (wp.expired()){std::cout<<"Deleting expired Turtle"<<std::endl;}
         return wp.expired();
       }),
     all_turtles.end());
@@ -210,6 +256,10 @@ void World::setup(){
   // Check if random runs is false, then set seed
   if (!RandomRuns) {
       set_rng_seed(RNG_SEED);
+      std::cout<<"printing test RNG"<<std::endl;
+      for (size_t i = 0; i < 10; i++) {
+        std::cout<<RNG_Engine()<<std::endl;
+      }
   }
 
   // Sets up the world structure
@@ -241,6 +291,22 @@ void World::setup(){
                 Patch& p = get_patch(x, y);
                 p.setPatchType(0);
                 p.setColor("black");
+            }
+          }
+      }
+  }
+  // display for GCb cell 15 unit radius from center
+  for (int x = center_x - 15; x <= center_x + 15; x++) {
+      for (int y = center_y - 15; y <= center_y + 15; y++) {
+          if (x >= 0 && x < WORLD_WIDTH && y >= 0 && y < WORLD_HEIGHT) {
+            // Calculate the distance from the center
+            int dist_x = center_x - x;
+            int dist_y = center_y - y;
+            if (dist_x * dist_x + dist_y * dist_y <= 15 * 15) {  // Radius of 15 units
+                Patch& p = get_patch(x, y);
+                p.setPatchType(0);
+                p.setColor("red");
+                p.setOpacity(50);
             }
           }
       }
@@ -550,7 +616,7 @@ void World::auto_inoculate(int numBac) {
         all_fdcs[random_FDC_index]->setResponsiveness(std::min(all_fdcs[random_FDC_index]->getResponsiveness() + 50, 100));
         all_fdcs[random_FDC_index]->setTimePresenting(0);
         all_fdcs[random_FDC_index]->setPresentedAntigen(BACTERIA_EPITOPE_TYPE);
-        // all_fdcs[random_FDC_index]->setColor("red");  // Assuming you have some way to represent color in your FDC class
+        all_fdcs[random_FDC_index]->setColor("red");  // Assuming you have some way to represent color in your FDC class
 
         int rTI = RNG_Engine() % NUMBER_OF_TI_EPITOPES;
         int rTD = RNG_Engine() % NUMBER_OF_TD_EPITOPES;

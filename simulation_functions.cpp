@@ -2,42 +2,6 @@
 
 // functions here are ones that are used in the simulation, but are not go or setup. Functions defined in world.cpp are more general or dont have to do much with the specific simulation, besudes setup and go
 
-void World::spawnBCell() {
-  if(step % 10 == 0) {
-    std::cout<<"SPAWNING B CELL"<<std::endl;
-      // Position of the new Naive B-cell
-      int cell_x = WORLD_WIDTH -2; //I added std::floor()
-      int cell_y = std::floor(WORLD_HEIGHT / 2);
-
-      // Create a new Naive B-cell
-      auto b_cell = std::make_shared<NaiveBCell>(cell_x, cell_y, global_ID_counter++, 180);
-      std::weak_ptr<Turtle> b_cell_weak_ptr = b_cell;
-      // Set the properties of the new Naive B-cell
-      b_cell->setShape("circle");
-      b_cell->setColor("white");
-      b_cell->setSize(1);
-      b_cell->setTimeAlive(0);
-      b_cell->setBcr(RNG_Engine() % 30);
-      b_cell->setIsotype("md");
-      b_cell->setS1pr1Level(0);
-      b_cell->setS1pr2Level(0);
-      b_cell->setCxcr5Level(16);
-      b_cell->setCcr7Level(0);
-      b_cell->setEbi2rLevel(0);
-      b_cell->setCd21Level(0);
-      b_cell->setInBlood(false);
-
-      // Set thresholds
-      b_cell->setTnfaThreshold(BCELL_TNFA_APOP_THRESHOLD + (RNG_Engine() % 50));
-      b_cell->setBregThreshold(BCELL_BREG_DIFF_THRESHOLD + (RNG_Engine() % 50));
-
-      // Add the new Naive B-cell to the list
-      all_naive_b_cells.push_back(b_cell);
-      all_turtles.push_back(b_cell_weak_ptr);
-      get_patch(b_cell->getX(), b_cell->getY()).add_turtle(b_cell);
-
-  }
-}
 
 
 void World::spawnTh0Cell() {

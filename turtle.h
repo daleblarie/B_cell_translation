@@ -33,6 +33,7 @@ class Turtle : public Agent{
     int heading;
     // int age;
     int time_alive;
+    bool is_alive=true;
     float x_dec; //x and y decimal coordinates
     float y_dec;
     float temp_x; // temporary coords for turtle move, before actual turtle coords are moved in case destination patch is full.
@@ -91,6 +92,8 @@ class Turtle : public Agent{
 
 
     // Add setter and getter for new variables here
+    void set_is_alive(bool new_is_alive) { is_alive = new_is_alive; }
+    bool get_is_alive() const { return is_alive; }
     // in_blood
     void setInBlood(bool inBlood) { in_blood = inBlood; }
     bool getInBlood() const { return in_blood; }
@@ -159,7 +162,12 @@ class Turtle : public Agent{
     void setExposureNumber(int exposureNumber) { exposure_number = exposureNumber; }
     int getExposureNumber() const { return exposure_number; }
 
-    std::weak_ptr<Turtle> createWeakTurtlePtr() {std::weak_ptr<Turtle> test = std::dynamic_pointer_cast<Turtle>(createWeakPtr().lock()); return test;}
+    std::weak_ptr<Turtle> createWeakTurtlePtr() {
+      std::weak_ptr<Turtle> test = std::dynamic_pointer_cast<Turtle>(createWeakPtr().lock());
+      std::cout<<"greated weak turtle pointer in turtle function"<<std::endl;
+       return test;
+     }
+    
     bool operator== (const Turtle& turt2){return this->ID_num==turt2.ID_num;};
     bool operator== (const Turtle* turt2){return this->ID_num==turt2->ID_num;};
     bool operator== (const std::weak_ptr<Turtle> turt2){return this->ID_num==turt2.lock()->ID_num;};

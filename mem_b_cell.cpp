@@ -3,10 +3,15 @@
 
 MemBCell::MemBCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
+    std::cout<<"creating memory B cell"<<std::endl;
+
 }
 
 void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
+  if (!mem_b_cell->get_is_alive()) {return;}
+
   std::cout<<"memory_b_cellfunction for ID number "<<mem_b_cell->getID()<<std::endl;
+  std::cout<<"memory_b_cellfunction location "<<mem_b_cell->getX()<<", "<<mem_b_cell->getY()<<std::endl;
 
   // Get the current patch of the Memory B cell
   Patch& current_patch = get_patch(mem_b_cell->getX(), mem_b_cell->getY());
@@ -30,6 +35,8 @@ void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
 
   mem_b_cell->setTimeAlive(mem_b_cell->getTimeAlive() + 1);
   if(mem_b_cell->getTimeAlive() > 15000) {
+    std::cout<<"Killing mem_b_cell for age "<<mem_b_cell->getID()<<". use count:"<<mem_b_cell.use_count()<<std::endl;
+
     kill(mem_b_cell);
   }
 
@@ -46,6 +53,7 @@ void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
       new_activated_b_cell->setProBreg(0);
       new_activated_b_cell->setShape("circle");
       new_activated_b_cell->setSize(1);
+      new_activated_b_cell->setColor("yellow");
       new_activated_b_cell->setCsrBool(false);
       new_activated_b_cell->setTimeAlive(100);
 
@@ -61,6 +69,7 @@ void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
           new_activated_b_cell->setCcr7Level(12);
           new_activated_b_cell->setEbi2rLevel(12);
         }
+        std::cout<<"Killing antigen in memory_b_cell function "<<antigen->getID()<<". use count:"<<antigen.use_count()<<std::endl;
         kill(antigen);
       }
       else if (apc != nullptr){
@@ -77,7 +86,7 @@ void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
       std::weak_ptr<Turtle> new_activated_b_cell_weak_ptr = new_activated_b_cell;
       all_turtles.push_back(new_activated_b_cell_weak_ptr);
       all_activated_b_cells.push_back(new_activated_b_cell);
-      current_patch.add_turtle(new_activated_b_cell);
+      get_patch(new_activated_b_cell->getX(), new_activated_b_cell->getY()).add_turtle(new_activated_b_cell);
 
       kill(mem_b_cell); // kill old memory b cell because its not an activated b cell
       std::shared_ptr<ActivatedBCell> mem_b_cell = new_activated_b_cell;  //renaming mem_b_cell so rest of the function still works on the new cell
@@ -91,6 +100,8 @@ void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
   };
 
   chemotaxis(mem_b_cell);
+  std::cout<<"Moving mem_b cell"<<std::endl;
+  
   move_turtle(mem_b_cell);
 
 
