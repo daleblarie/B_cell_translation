@@ -36,7 +36,7 @@ void World::ll_plasma_cell_function(std::shared_ptr<LLPlasmaCell> ll_plasma_cell
     }
     else {
         if(ll_plasma_cell->getTimeAlive() % 200 == 0) {
-            auto antibody = std::make_shared<Antibodies>(ll_plasma_cell->getX(), ll_plasma_cell->getX(), global_ID_counter++, ll_plasma_cell->getHeading());
+            auto antibody = std::make_shared<Antibodies>(ll_plasma_cell->getX(), ll_plasma_cell->getY(), global_ID_counter++, ll_plasma_cell->getHeading());
             antibody->copy_other_turtle_attributes(ll_plasma_cell);
             antibody->setTimeAlive(0);
             antibody->setAntibodyType(ll_plasma_cell->getIsotype());
