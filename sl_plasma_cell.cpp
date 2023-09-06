@@ -3,18 +3,17 @@
 
 SLPlasmaCell::SLPlasmaCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"creating SL plasma cell"<<std::endl;
+    std::cout<<"creating SL plasma cell with ID "<<id<<std::endl;
 
 }
 
 void World::sl_plasma_cell_function(std::shared_ptr<SLPlasmaCell> sl_plasma_cell) {
   if (!sl_plasma_cell->get_is_alive()) {return;}
-
+  bool print_test = false;
   Patch& current_patch = get_patch(sl_plasma_cell->getX(), sl_plasma_cell->getY());
-  // std::cout<<"doing SL plasma function for "<<sl_plasma_cell->getID()<<std::endl;
+  if (print_test){std::cout<<"doing SL plasma function for "<<sl_plasma_cell->getID()<<std::endl;}
     if(!sl_plasma_cell->getInBlood()) {
-      // std::cout<<"doing SL plasma cause not in blood "<<sl_plasma_cell->getID()<<std::endl;
-      // std::cout<<"doing SL plasma cause not in blood at "<<sl_plasma_cell->getX()<<", "<<sl_plasma_cell->getY()<<std::endl;
+      if (print_test){std::cout<<"doing SL plasma cause not in blood at "<<sl_plasma_cell->getX()<<", "<<sl_plasma_cell->getY()<<std::endl;}
 
         if(current_patch.getPatchType() == 2) {
             sl_plasma_cell->setInBlood(true);
@@ -24,12 +23,12 @@ void World::sl_plasma_cell_function(std::shared_ptr<SLPlasmaCell> sl_plasma_cell
         // Assuming you have a check_breg_status function
         bool turn_into_breg = checkBregStatus(sl_plasma_cell);
         if (turn_into_breg){
-          std::cout<<"sl_plasma ID "<<sl_plasma_cell->getID()<<"turning into Breg"<<std::endl;
+          if (print_test){std::cout<<"sl_plasma ID "<<sl_plasma_cell->getID()<<"turning into Breg"<<std::endl;}
           std::shared_ptr<BregCell> sl_plasma_cell = turnIntoBreg(sl_plasma_cell);
         };
 
         chemotaxis(sl_plasma_cell);
-        //std::cout<<"moving SL_plasma_cell with use count "<<sl_plasma_cell.use_count()<<std::endl;
+        if (print_test){std::cout<<"moving SL_plasma_cell with use count "<<sl_plasma_cell.use_count()<<std::endl;}
 
         move_turtle(sl_plasma_cell);
         //std::cout<<"moved SL_plasma_cell with use count "<<sl_plasma_cell.use_count()<<std::endl;

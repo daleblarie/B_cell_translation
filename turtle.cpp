@@ -9,11 +9,11 @@
 void Turtle::addLinkedTurtle(std::weak_ptr<Turtle> linkedTurtle) {
   std::cout<<"LINKING TURTLE NOW "<<std::endl<<"OTHER TURLTE ID IS "<<linkedTurtle.lock()->getID()<<"MY ID IS "<<this->getID()<<std::endl;
     linkedTurtles.push_back(linkedTurtle);
-    std::cout<<"other turtle linked to this turtle"<<std::endl;
+    std::cout<<"other turtle "<<linkedTurtle.lock()->getID()<<" linked to this turtle "<<this->getID()<<std::endl;
     std::shared_ptr<Turtle> temp_shared_ptr = std::dynamic_pointer_cast<Turtle>(shared_from_this());
     std::weak_ptr<Turtle> weak_ptr = temp_shared_ptr;
     linkedTurtle.lock()->getLinkedTurtles().push_back(weak_ptr);
-    std::cout<<"this turtle linked to other turtle"<<std::endl;
+    std::cout<<"this turtle "<<this->getID()<<"linked to other turtle "<< linkedTurtle.lock()->getID()<<std::endl;
     temp_shared_ptr.reset();
 }
 

@@ -3,16 +3,18 @@
 
 ActivatedBCell::ActivatedBCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
+    std::cout<<"Creating activated b cell with ID "<<id<<std::endl;
 }
 
 
 void World::activatedBCellFunction(std::shared_ptr<ActivatedBCell> abcell) {
+  bool print_test = false;
   if (!abcell->get_is_alive()) {return;}
     // Only performs the following commands if currently inside the follicle, and NOT in the blood/lymph
-    std::cout<<"ABC function for ID "<<abcell->getID()<<" use count is "<<abcell.use_count()<<std::endl;
+    if (print_test){std::cout<<"ABC function for ID "<<abcell->getID()<<" use count is "<<abcell.use_count()<<std::endl;}
 
     if (!abcell->getInBlood()) {
-      std::cout<<"doing ABC function for not in blood"<<std::endl;
+      if (print_test){std::cout<<"doing ABC function for not in blood"<<std::endl;}
         // Get the patch where the B cell is
         Patch& bcell_patch = get_patch(abcell->getX(), abcell->getY());
 
@@ -20,43 +22,43 @@ void World::activatedBCellFunction(std::shared_ptr<ActivatedBCell> abcell) {
         if(bcell_patch.getPatchType() == 2) {
             abcell->setInBlood(true);
             abcell->setVisible(false);
-            std::cout<<"killing abc cell at follicle exit "<<abcell->getID()<<std::endl;
-            std::cout<<"abcell use count is "<<abcell.use_count()<<std::endl;
+            if (print_test){std::cout<<"killing abc cell at follicle exit "<<abcell->getID()<<std::endl;}
+            if (print_test){std::cout<<"abcell use count is "<<abcell.use_count()<<std::endl;}
             kill(abcell);
             return;
         }
 
         isotypeSwitch(abcell);   // Determines which isotype to switch to
-        std::cout<<"abcell use count 1is "<<abcell.use_count()<<std::endl;
+        if (print_test){std::cout<<"abcell use count 1is "<<abcell.use_count()<<std::endl;}
 
         if (abcell->getResponseType() == 2) {
             tdResponse(abcell);
-            std::cout<<"abcell use count 2ais "<<abcell.use_count()<<std::endl;
+            if (print_test){std::cout<<"abcell use count 2ais "<<abcell.use_count()<<std::endl;}
             return;
         } else if (abcell->getResponseType() == 1) {
             tiResponse(abcell);
             // return;
-            std::cout<<"abcell use count 2bis "<<abcell.use_count()<<std::endl;
+            if (print_test){std::cout<<"abcell use count 2bis "<<abcell.use_count()<<std::endl;}
         }
 
         //abcell->checkBregStatus();
-        std::cout<<"abcell use count 3is "<<abcell.use_count()<<std::endl;
+        if (print_test){std::cout<<"abcell use count 3is "<<abcell.use_count()<<std::endl;}
 
         chemotaxis(abcell);
-        std::cout<<"abcell use count 4is "<<abcell.use_count()<<std::endl;
+        if (print_test){std::cout<<"abcell use count 4is "<<abcell.use_count()<<std::endl;}
 
         move_turtle(abcell);
-        std::cout<<"abcell use count 5is "<<abcell.use_count()<<std::endl;
+        if (print_test){std::cout<<"abcell use count 5is "<<abcell.use_count()<<std::endl;}
 
     }
 
     bool die_by_tnf = checkTNFStatus(abcell);
-    std::cout<<"abcell use count 6is "<<abcell.use_count()<<std::endl;
+    if (print_test){std::cout<<"abcell use count 6is "<<abcell.use_count()<<std::endl;}
 
     abcell->setTimeAlive(abcell->getTimeAlive() + 1);
     if ((abcell->getTimeAlive() > 300) || die_by_tnf) {
         kill(abcell);
-        std::cout<<"killing abc cell at time alive or TNF"<<std::endl;
+        if (print_test){std::cout<<"killing abc cell at time alive or TNF"<<std::endl;}
 
     }
 }
@@ -156,6 +158,7 @@ void World::tdResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
 
 
 void World::tiResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
+    bool print_test = false;
     // Activated B-cells undergoing TI response secrete TNF-a
     auto current_patch = get_patch(activated_b_cell->getX(), activated_b_cell->getY());
     current_patch.setTnfA(current_patch.getTnfA() + 1);
@@ -178,7 +181,7 @@ void World::tiResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
             all_turtles.push_back(new_sl_plasma_cell_weak_ptr);
             all_sl_plasma_cells.push_back(new_sl_plasma_cell);
             get_patch(new_sl_plasma_cell->getX(), new_sl_plasma_cell->getY()).add_turtle(new_sl_plasma_cell);
-            std::cout<<"final SL plasma cell use count "<<new_sl_plasma_cell.use_count()<<std::endl;
+            if(print_test){std::cout<<"final SL plasma cell use count "<<new_sl_plasma_cell.use_count()<<std::endl;}
         } else {
             if (step < 2800) {
                 // Create a new Memory B Cell and add it to the corresponding containers

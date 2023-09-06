@@ -88,9 +88,9 @@ std::tuple<int, int, int> RenderingEngine::getColor(const std::string& color){
     blue = 240;
   }
   else if (color =="lime"){
-    red = 191;
-    green = 255;
-    blue = 0;
+    red = 50;
+    green = 205;
+    blue = 50;
   }
   
   else if (color == "mauve"){
@@ -154,21 +154,22 @@ void RenderingEngine::drawSquare(int x, int y, int size, const std::string& colo
 }
 
 void RenderingEngine::drawFilledEllipse(int centerX, int centerY, int radiusX, int radiusY, const std::string& color, int alpha, int angleDegrees) {
-  std::tuple<int, int, int> RGB = getColor(color);
-  SDL_SetRenderDrawColor(renderer, std::get<0>(RGB), std::get<1>(RGB), std::get<2>(RGB), alpha);
-  double angleRadians = angleDegrees * M_PI / 180.0;
+    std::tuple<int, int, int> RGB = getColor(color);
+    SDL_SetRenderDrawColor(renderer, std::get<0>(RGB), std::get<1>(RGB), std::get<2>(RGB), alpha);
+    double angleRadians = (90 + angleDegrees) * M_PI / 180.0;
+    int major_axis = std::max(radiusX, radiusY);
+    for (int x = centerX - major_axis; x <= centerX + major_axis; ++x) {
+        for (int y = centerY - major_axis; y <= centerY + major_axis; ++y) {
+            // Compute the position of (x, y) in the rotated ellipse's frame of reference
+            double rotatedX = (x - centerX) * cos(-angleRadians) - (y - centerY) * sin(-angleRadians);
+            double rotatedY = (x - centerX) * sin(-angleRadians) + (y - centerY) * cos(-angleRadians);
 
-    for (int x = centerX - radiusX; x <= centerX + radiusX; ++x) {
-      for (int y = centerY - radiusY; y <= centerY + radiusY; ++y) {
-          double rotatedX = centerX + (x - centerX) * cos(angleRadians) - (y - centerY) * sin(angleRadians);
-          double rotatedY = centerY + (x - centerX) * sin(angleRadians) + (y - centerY) * cos(angleRadians);
-
-          if (((rotatedX - centerX) * (rotatedX - centerX)) / (radiusX * radiusX) +
-              ((rotatedY - centerY) * (rotatedY - centerY)) / (radiusY * radiusY) <= 1) {
-              SDL_RenderDrawPoint(renderer, static_cast<int>(rotatedX), static_cast<int>(rotatedY));
-          }
-      }
-  }
+            // Check if this rotated point lies within the unrotated ellipse
+            if ((rotatedX * rotatedX) / (radiusX * radiusX) + (rotatedY * rotatedY) / (radiusY * radiusY) <= 1) {
+                SDL_RenderDrawPoint(renderer, x, y);
+            }
+        }
+    }
 }
 
 void RenderingEngine::renderAllPatches(){
@@ -218,13 +219,13 @@ void RenderingEngine::renderAllTurtles(){
       drawSquare(x,y,(GRID_SIZE-1) * agent.lock()->getSize(), color, opacity);
     }else if(shape=="target"){
       drawSquare(x,y,(GRID_SIZE-1) * agent.lock()->getSize(), color, opacity);
-      drawCircle(x,y,(((GRID_SIZE/2)*agent.lock()->getSize())-2), "black", opacity);
+      drawCircle(x-1,y-1,(((GRID_SIZE/2)*agent.lock()->getSize())-2), "black", opacity);
     }else if (shape=="bug"){
       // going to be an elipse with two little antennae on the front 
       int angle = agent.lock()->getHeading();
       
-      drawFilledEllipse(x,y, (GRID_SIZE-1) * agent.lock()->getSize(), (GRID_SIZE-1) * agent.lock()->getSize()/2, color, opacity, angle);
-      drawLine(x,y, x+cos(angle*M_PI/180)*GRID_SIZE* agent.lock()->getSize(), y + sin(angle*M_PI/180)*GRID_SIZE* agent.lock()->getSize(), color, opacity);
+      drawFilledEllipse(x,y, (GRID_SIZE-1) * agent.lock()->getSize()/2, (GRID_SIZE-1) * agent.lock()->getSize()/4, color, opacity, angle);
+      drawLine(x,y, x+cos(angle*M_PI/180)*GRID_SIZE* agent.lock()->getSize(), y - sin(angle*M_PI/180)*GRID_SIZE* agent.lock()->getSize(), color, opacity);
       // bounding rect
       // SDL_Rect ellipseRect = 
       

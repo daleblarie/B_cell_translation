@@ -172,14 +172,14 @@ void World::updateTurtleVectors(){
         naive_b_cell.reset();
         // std::cout<<"b_cell use count after reset"<<naive_b_cell.use_count()<<std::endl;
       } else if (std::shared_ptr<ActivatedBCell> activated_b_cell = std::dynamic_pointer_cast<ActivatedBCell>(turtle)) {
-        std::cout<<"all_activated_b_cells vector size before "<<all_activated_b_cells.size()<<std::endl;
-        std::cout<<"activated_b_cell use count "<<activated_b_cell.use_count()<<std::endl;
-        std::cout<<"activated_b_cell ID "<<activated_b_cell->getID()<<std::endl;
+        //std::cout<<"all_activated_b_cells vector size before "<<all_activated_b_cells.size()<<std::endl;
+        //std::cout<<"activated_b_cell use count "<<activated_b_cell.use_count()<<std::endl;
+        //std::cout<<"activated_b_cell ID "<<activated_b_cell->getID()<<std::endl;
         all_activated_b_cells.erase(std::remove(begin(all_activated_b_cells), end(all_activated_b_cells), activated_b_cell),end(all_activated_b_cells));
-        std::cout<<"all_activated_b_cells vector size after "<<all_activated_b_cells.size()<<std::endl;
-        std::cout<<"activated_b_cell use count "<<activated_b_cell.use_count()<<std::endl;
+        //std::cout<<"all_activated_b_cells vector size after "<<all_activated_b_cells.size()<<std::endl;
+        //std::cout<<"activated_b_cell use count "<<activated_b_cell.use_count()<<std::endl;
         activated_b_cell.reset();
-        std::cout<<"activated_b_cell use count after reset"<<activated_b_cell.use_count()<<std::endl;
+        //std::cout<<"activated_b_cell use count after reset"<<activated_b_cell.use_count()<<std::endl;
 
         
       } else if (std::shared_ptr<GCBCell> gcb_cell = std::dynamic_pointer_cast<GCBCell>(turtle)) {

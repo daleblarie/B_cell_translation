@@ -2,12 +2,13 @@
 #include "world.h"
 Bacteria::Bacteria(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"creating bacteria"<<std::endl;
+    std::cout<<"creating bacteria with ID "<<id<<std::endl;
 
 }
 
 
 void World::bacteriaFunction(std::shared_ptr<Bacteria> bacteria) {
+  bool print_test = true;
   if (!bacteria->get_is_alive()) {return;}
     Patch& current_patch = get_patch(bacteria->getX(), bacteria->getY());
 
@@ -23,7 +24,7 @@ void World::bacteriaFunction(std::shared_ptr<Bacteria> bacteria) {
                 auto fdc = available_fdcs[RNG_Engine() % available_fdcs.size()];
                 fdc->setTimePresenting(0);
                 fdc->setPresentedAntigen(bacteria->getEpitopeType());
-                std::cout<<"BACTERIA SETTING FDC COLOR TO RED"<<std::endl;
+                if (print_test){std::cout<<"BACTERIA SETTING FDC COLOR TO RED"<<std::endl;}
                 fdc->setColor("red");
                 int rTI = RNG_Engine() % bacteria->getNumTIep();
                 int rTD = RNG_Engine() % bacteria->getNumTDep();
@@ -32,7 +33,7 @@ void World::bacteriaFunction(std::shared_ptr<Bacteria> bacteria) {
                 } else {
                     fdc->setPresentedAntigenType(2);
                 }
-                std::cout<<"killing bacteria at end of life. ID is "<<bacteria->getID()<<std::endl;
+                if (print_test){std::cout<<"killing bacteria at end of life. ID is "<<bacteria->getID()<<std::endl;}
                 kill(bacteria);
                 return;
             }
@@ -41,6 +42,6 @@ void World::bacteriaFunction(std::shared_ptr<Bacteria> bacteria) {
 
     bacteria->setS1pr1Level(bacteria->getS1pr1Level() + 0.004);
     chemotaxis(bacteria);
-    std::cout<<"Moving bacteria"<<std::endl;
+    if (print_test){std::cout<<"Moving bacteria"<<std::endl;}
     move_turtle(bacteria);
 }

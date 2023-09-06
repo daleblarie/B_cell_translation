@@ -3,7 +3,7 @@
 
 Antibodies::Antibodies(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"creating antibdy at "<<x<<", "<<y<<std::endl;
+    std::cout<<"creating antibdy at "<<x<<", "<<y<<" with ID "<<id<<std::endl;
 }
 
 

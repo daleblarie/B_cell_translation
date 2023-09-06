@@ -4,14 +4,14 @@
 
 GCBCell::GCBCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"creating GCBcell"<<std::endl;
+    std::cout<<"creating GCBcell with ID "<<id<<std::endl;
 
 }
 
 void World::gc_b_cell_function(std::shared_ptr<GCBCell> gc_b_cell) {
   if (!gc_b_cell->get_is_alive()) {return;}
-
-  std::cout<<"doing GCB cell function for cell "<<gc_b_cell->getID()<<std::endl;
+  bool print_test = false;
+  if (print_test){std::cout<<"doing GCB cell function for cell "<<gc_b_cell->getID()<<std::endl;}
 
     if(!gc_b_cell->getInBlood()) {
       // std::cout<<"doing GCB cell function for cell not in blood "<<gc_b_cell->getID()<<std::endl;
@@ -31,12 +31,12 @@ void World::gc_b_cell_function(std::shared_ptr<GCBCell> gc_b_cell) {
         if(calculateDistance(WORLD_WIDTH/2, WORLD_HEIGHT/2, gc_b_cell->getX(), gc_b_cell->getY()) > 15) {
           // std::cout<<"doing GCB cell function for large distance to center  "<<gc_b_cell->getID()<<std::endl;
             chemotaxis(gc_b_cell);
-            std::cout<<"Moving gcb"<<std::endl;
+            if (print_test){std::cout<<"Moving gcb"<<std::endl;}
             
             move_turtle(gc_b_cell, 0.5);
             // gc_b_cell->gc_move();
         } else {
-          std::cout<<"DISTANCE OF GC B CELL TO CENTER IS < 15 SO DOING ELSE PART OF GCB CELL FUNCTION"<<std::endl;
+          if (print_test){std::cout<<"DISTANCE OF GC B CELL TO CENTER IS < 15 SO DOING ELSE PART OF GCB CELL FUNCTION"<<std::endl;}
             int proPC2 = current_patch.getIl21() + current_patch.getIl10() * 2 + current_patch.getIfA() + current_patch.getIfG();
             int proMem2 = current_patch.getIl21() + current_patch.getIl4();
             int proPC = RNG_Engine() % proPC2;

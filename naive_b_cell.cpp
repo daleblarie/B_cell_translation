@@ -4,7 +4,7 @@
 
 NaiveBCell::NaiveBCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"creating naive B cell"<<std::endl;
+    std::cout<<"creating naive B cell with ID "<<id<<std::endl;
 
 }
 // NaiveBCell use count after creation  1
@@ -14,6 +14,7 @@ NaiveBCell::NaiveBCell(int x, int y, int id, int heading) : Turtle(x, y, id, hea
 // NaiveBCell use count after all patch add  3
 
 void World::spawnBCell() {
+  bool print_test = false;
   if(step % 10 == 0) {
     // std::cout<<"SPAWNING B CELL"<<std::endl;
       // Position of the new Naive B-cell
@@ -22,10 +23,10 @@ void World::spawnBCell() {
 
       // Create a new Naive B-cell
       auto b_cell = std::make_shared<NaiveBCell>(cell_x, cell_y, global_ID_counter++, 180);
-      std::cout<< "NaiveBCell use count after creation  "<<b_cell.use_count()<<std::endl;
+      if (print_test){std::cout<< "NaiveBCell use count after creation  "<<b_cell.use_count()<<std::endl;}
 
       std::weak_ptr<Turtle> b_cell_weak_ptr = b_cell;
-      std::cout<< "NaiveBCell use count after weap tr  "<<b_cell.use_count()<<std::endl;
+      if (print_test){std::cout<< "NaiveBCell use count after weap tr  "<<b_cell.use_count()<<std::endl;}
 
       // Set the properties of the new Naive B-cell
       b_cell->setShape("circle");
@@ -48,13 +49,13 @@ void World::spawnBCell() {
 
       // Add the new Naive B-cell to the list
       all_naive_b_cells.push_back(b_cell);
-      std::cout<< "NaiveBCell use count after all cells pushback  "<<b_cell.use_count()<<std::endl;
+      if (print_test){std::cout<< "NaiveBCell use count after all cells pushback  "<<b_cell.use_count()<<std::endl;}
 
       all_turtles.push_back(b_cell_weak_ptr);
-      std::cout<< "NaiveBCell use count after all turtles pushback  "<<b_cell.use_count()<<std::endl;
+      if (print_test){std::cout<< "NaiveBCell use count after all turtles pushback  "<<b_cell.use_count()<<std::endl;}
 
       get_patch(b_cell->getX(), b_cell->getY()).add_turtle(b_cell);
-      std::cout<< "NaiveBCell use count after all patch add  "<<b_cell.use_count()<<std::endl;
+      if (print_test){std::cout<< "NaiveBCell use count after all patch add  "<<b_cell.use_count()<<std::endl;}
 
   }
 }
@@ -62,7 +63,7 @@ void World::spawnBCell() {
 void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
   if (!naive_b_cell->get_is_alive()) {return;}
 
-  bool print_test = true;
+  bool print_test = false;
   bool activated = false;
   // std::cout<<"naive_b_cellfunction for ID number "<<naive_b_cell->getID()<<"Ebi2rLevel "<<naive_b_cell->getEbi2rLevel()<<std::endl;
   // Get the current patch of the naive B cell
@@ -92,9 +93,9 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
       // std::cout<<"Before turning into activated b cell, original naive_b_cell use count is "<<naive_b_cell.use_count()<<std::endl;
 
       auto new_activated_b_cell = std::make_shared<ActivatedBCell>(naive_b_cell->getX(), naive_b_cell->getX(), global_ID_counter++, naive_b_cell->getHeading());
-      std::cout<< "new_activated_b_cell use count upon creation "<<new_activated_b_cell.use_count()<<std::endl;
+      if (print_test){std::cout<< "new_activated_b_cell use count upon creation "<<new_activated_b_cell.use_count()<<std::endl;}
       new_activated_b_cell->copy_other_turtle_attributes(naive_b_cell);
-      std::cout<< "new_activated_b_cell use count after copy  "<<new_activated_b_cell.use_count()<<std::endl;
+      if (print_test){std::cout<< "new_activated_b_cell use count after copy  "<<new_activated_b_cell.use_count()<<std::endl;}
 
       // std::cout<<"After creeating but before turning into activated b cell, original naive_b_cell use count is "<<naive_b_cell.use_count()<<std::endl;
       
@@ -106,7 +107,7 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
       new_activated_b_cell->setCsrBool(false);
       new_activated_b_cell->setTimeAlive(0);
 
-      std::cout<<"location of mew activated_b_Cell is "<<new_activated_b_cell->getX()<<", "<<new_activated_b_cell->getX()<<std::endl;
+      if (print_test){std::cout<<"location of mew activated_b_Cell is "<<new_activated_b_cell->getX()<<", "<<new_activated_b_cell->getX()<<std::endl;}
 
       int rTI = RNG_Engine() % 100;
       int rTD = RNG_Engine() % 100;
@@ -119,7 +120,7 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
           new_activated_b_cell->setCcr7Level(12);
           new_activated_b_cell->setEbi2rLevel(12);
         }
-        std::cout<<"Killing antigen in naive_b_cell function "<<antigen->getID()<<". use count:"<<antigen.use_count()<<std::endl;
+        if (print_test){std::cout<<"Killing antigen in naive_b_cell function "<<antigen->getID()<<". use count:"<<antigen.use_count()<<std::endl;}
 
         kill(antigen);
       }
@@ -136,16 +137,16 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
 
 
       std::weak_ptr<Turtle> new_activated_b_cell_weak_ptr = new_activated_b_cell;
-      std::cout<< "new_activated_b_cell use count after weak ptr  "<<new_activated_b_cell.use_count()<<std::endl;
+      if (print_test){std::cout<< "new_activated_b_cell use count after weak ptr  "<<new_activated_b_cell.use_count()<<std::endl;}
 
       all_activated_b_cells.push_back(new_activated_b_cell);
-      std::cout<< "new_activated_b_cell use count after all_activated_b_cells pushback "<<new_activated_b_cell.use_count()<<std::endl;
+      if (print_test){std::cout<< "new_activated_b_cell use count after all_activated_b_cells pushback "<<new_activated_b_cell.use_count()<<std::endl;}
       all_turtles.push_back(new_activated_b_cell_weak_ptr);
-      std::cout<< "new_activated_b_cell use count after turtles pushback  "<<new_activated_b_cell.use_count()<<std::endl;
+      if (print_test){std::cout<< "new_activated_b_cell use count after turtles pushback  "<<new_activated_b_cell.use_count()<<std::endl;}
       
       get_patch(new_activated_b_cell->getX(), new_activated_b_cell->getY()).add_turtle(new_activated_b_cell);
       // current_patch.add_turtle(new_activated_b_cell);
-      std::cout<< "new_activated_b_cell use count after patch add  "<<new_activated_b_cell.use_count()<<std::endl;
+      if (print_test){std::cout<< "new_activated_b_cell use count after patch add  "<<new_activated_b_cell.use_count()<<std::endl;}
       // std::cout<<"After turning into activated b cell, original naive_b_cell use count is "<<naive_b_cell.use_count()<<std::endl;
       // std::cout<<"After turning into activated b cell, original naive_b_cell ID is "<<naive_b_cell->getID()<<std::endl;
       kill(naive_b_cell);
