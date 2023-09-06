@@ -29,14 +29,14 @@ void World::sl_plasma_cell_function(std::shared_ptr<SLPlasmaCell> sl_plasma_cell
         };
 
         chemotaxis(sl_plasma_cell);
-        std::cout<<"moving SL_plasma_cell with use count "<<sl_plasma_cell.use_count()<<std::endl;
+        //std::cout<<"moving SL_plasma_cell with use count "<<sl_plasma_cell.use_count()<<std::endl;
 
         move_turtle(sl_plasma_cell);
-        std::cout<<"moved SL_plasma_cell with use count "<<sl_plasma_cell.use_count()<<std::endl;
+        //std::cout<<"moved SL_plasma_cell with use count "<<sl_plasma_cell.use_count()<<std::endl;
     }
 
     if(sl_plasma_cell->getTimeAlive() % 50 == 0) {
-        auto antibody = std::make_shared<Antibodies>(sl_plasma_cell->getX(), sl_plasma_cell->getX(), global_ID_counter++, sl_plasma_cell->getHeading());
+        auto antibody = std::make_shared<Antibodies>(sl_plasma_cell->getX(), sl_plasma_cell->getY(), global_ID_counter++, sl_plasma_cell->getHeading());
         antibody->copy_other_turtle_attributes(sl_plasma_cell);
         antibody->setTimeAlive(0);
         antibody->setAntibodyType(sl_plasma_cell->getIsotype());
