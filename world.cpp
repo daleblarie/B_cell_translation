@@ -349,7 +349,7 @@ void World::setup(){
   // creates 100 coordinates, centered on our origin (center_x/y) within 30 units of the center, and each at least 3 units apart
 
   // using the above command, I told gpt to recreate the pmn example from the general world.h example, but doing a different initialization command
-  for (int i = 0; i < FDCcoordinates.size(); i++) {
+  for (size_t i = 0; i < FDCcoordinates.size(); i++) {
       int x = FDCcoordinates[i].first;  // x-coordinate of the FDC
       int y = FDCcoordinates[i].second; // y-coordinate of the FDC
       auto fdc = std::make_shared<FDCs>(x, y, global_ID_counter++); // creating the actual FDC turtle

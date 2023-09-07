@@ -195,7 +195,8 @@ public:
     if (cell->getProBreg() > cell->getBregThreshold()){
       return true;
     } else{
-      cell->setProBreg(((current_patch.getIl6() + current_patch.getIl21()) * 45));
+      float amount_to_set = (current_patch.getIl6() + current_patch.getIl21()) * 45;
+      cell->setProBreg(amount_to_set);
       return false;
     }
   }
