@@ -8,7 +8,7 @@ Bacteria::Bacteria(int x, int y, int id, int heading) : Turtle(x, y, id, heading
 
 
 void World::bacteriaFunction(std::shared_ptr<Bacteria> bacteria) {
-  bool print_test = true;
+  bool print_test = false;
   if (!bacteria->get_is_alive()) {return;}
     Patch& current_patch = get_patch(bacteria->getX(), bacteria->getY());
 
@@ -19,7 +19,8 @@ void World::bacteriaFunction(std::shared_ptr<Bacteria> bacteria) {
             place_turtle(WORLD_WIDTH-2, std::ceil(WORLD_HEIGHT/2), bacteria);
             bacteria->setS1pr1Level(0);
         } else {
-            auto available_fdcs = get_fdcs_with_no_presented_antigen(bacteria->getX(), bacteria->getY());
+            std::vector<std::shared_ptr<FDCs>> available_fdcs = get_fdcs_with_no_presented_antigen();
+
             if (!available_fdcs.empty()) {
                 auto fdc = available_fdcs[RNG_Engine() % available_fdcs.size()];
                 fdc->setTimePresenting(0);

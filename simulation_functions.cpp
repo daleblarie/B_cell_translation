@@ -97,15 +97,31 @@ std::shared_ptr<FDCs> World::getOneFDCHere(int patchX, int patchY){
 std::shared_ptr<Bacteria> World::getOneBacteriaHere(int patchX, int patchY){
     // Create a vector to store antibodies on the specified patch
     std::vector<std::shared_ptr<Bacteria>> bacteriaOnPatch;
-    Patch& current_patch = get_patch(patchX, patchY);
-    std::vector<std::shared_ptr<Turtle>> turtles_on_patch = current_patch.getTurtlesHere();
-    // Find antibodies on the patch
-    for (const auto& turtle : turtles_on_patch) {
-      if (std::shared_ptr<Bacteria> bacteria = std::dynamic_pointer_cast<Bacteria>(turtle)) {
-        // The turtle is a NaiveBCell, add it to the corresponding vector
-        bacteriaOnPatch.push_back(bacteria);
+    for (float x =-BACTERIA_SIZE/2; x <= BACTERIA_SIZE/2; x++){
+      for (float y =-BACTERIA_SIZE/2; y <= BACTERIA_SIZE/2; y++){
+        float x_to_get, y_to_get;
+        if (!TOROIDAL_WORLD) {
+          x_to_get = std::min(patchX+x,(float)WORLD_WIDTH);
+          x_to_get = std::max(x_to_get,(float)0);
+          y_to_get = std::min(patchY+y,(float)WORLD_HEIGHT);
+          y_to_get = std::min(y_to_get,(float)0);
+        } else {
+          x_to_get = fmod(patchX+x,WORLD_WIDTH);
+          y_to_get = fmod(patchY+y,WORLD_HEIGHT);
+        }
+
+        Patch& current_patch = get_patch(x_to_get, y_to_get);
+        std::vector<std::shared_ptr<Turtle>> turtles_on_patch = current_patch.getTurtlesHere();
+        // Find antibodies on the patch
+        for (const auto& turtle : turtles_on_patch) {
+          if (std::shared_ptr<Bacteria> bacteria = std::dynamic_pointer_cast<Bacteria>(turtle)) {
+            // The turtle is a NaiveBCell, add it to the corresponding vector
+            bacteriaOnPatch.push_back(bacteria);
+          }
+        }
       }
     }
+
     // Check if any antibodies are found on the patch
     if (bacteriaOnPatch.empty()) {
         return nullptr; // Return nullptr if no antibodies found on the patch
@@ -168,15 +184,11 @@ std::shared_ptr<ActivatedBCell> World::getOneActivatedBCellHere(int patchX, int 
 }
 
 
-std::vector<std::shared_ptr<FDCs>> World::get_fdcs_with_no_presented_antigen(int patchX, int patchY){
+std::vector<std::shared_ptr<FDCs>> World::get_fdcs_with_no_presented_antigen(){
   std::vector<std::shared_ptr<FDCs>> FDCs_with_no_anitigen;
-  Patch& current_patch = get_patch(patchX, patchY);
-  std::vector<std::shared_ptr<Turtle>> turtles_on_patch = current_patch.getTurtlesHere();
-  for (const auto& turtle : turtles_on_patch) {
-    if (std::shared_ptr<FDCs> fdc = std::dynamic_pointer_cast<FDCs>(turtle)) {
-      if (fdc->getPresentedAntigen() ==0) {
-        FDCs_with_no_anitigen.push_back(fdc);
-      }
+  for (auto fdc : all_fdcs){
+    if (fdc->getPresentedAntigen() ==0) {
+      FDCs_with_no_anitigen.push_back(fdc);
     }
   }
   return FDCs_with_no_anitigen;

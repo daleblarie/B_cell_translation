@@ -3,7 +3,7 @@
 
 Th0Cell::Th0Cell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"creating TH 0 cell"<<std::endl;
+    std::cout<<"creating TH 0 cell with ID "<<id<<std::endl;
 
 }
 
@@ -43,7 +43,7 @@ void World::th0CellFunction(std::shared_ptr<Th0Cell> th0_cell) {
         th1_cell->setTimeAlive(0);
         th1_cell->setSize(1);
         th1_cell->setShape("circle");
-        
+
         std::weak_ptr<Turtle> th1_cell_weak_ptr = th1_cell;
         all_turtles.push_back(th1_cell_weak_ptr);
         all_th1_cells.push_back(th1_cell);
@@ -59,7 +59,7 @@ void World::th0CellFunction(std::shared_ptr<Th0Cell> th0_cell) {
         th2_cell->setSize(1);
         th2_cell->setShape("circle");
         th2_cell->setBcellBindingStatus(false);
-        
+
         std::weak_ptr<Turtle> th2_cell_weak_ptr = th2_cell;
         all_turtles.push_back(th2_cell_weak_ptr);
         all_th2_cells.push_back(th2_cell);
@@ -67,7 +67,7 @@ void World::th0CellFunction(std::shared_ptr<Th0Cell> th0_cell) {
 
         kill(th0_cell);
         std::shared_ptr<Th2Cell> th0_cell = th2_cell;
-        
+
     } else if (th0_cell->getTfhActivation() >= 20) {
         auto tfh_cell = std::make_shared<TfhCell>(th0_cell->getX(), th0_cell->getY(), global_ID_counter++, th0_cell->getHeading());
         global_ID_counter++;
@@ -78,7 +78,7 @@ void World::th0CellFunction(std::shared_ptr<Th0Cell> th0_cell) {
         tfh_cell->setSize(1);
         tfh_cell->setTimeAlive(0);
         tfh_cell->setBcellBindingStatus(false);
-        
+
         std::weak_ptr<Turtle> tfh_cell_weak_ptr = tfh_cell;
         all_turtles.push_back(tfh_cell_weak_ptr);
         all_tfh_cells.push_back(tfh_cell);
@@ -86,12 +86,12 @@ void World::th0CellFunction(std::shared_ptr<Th0Cell> th0_cell) {
 
         kill(th0_cell);
         std::shared_ptr<TfhCell> th0_cell = tfh_cell;
-        
+
     }
     std::cout<<"chemotaxin from TH0 "<<std::endl;
     chemotaxis(th0_cell);
     // std::cout<<"Moving th0"<<std::endl;
-    
+
     move_turtle(th0_cell);
 
     th0_cell->setTimeAlive(th0_cell->getTimeAlive() + 1);

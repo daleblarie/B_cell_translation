@@ -7,7 +7,9 @@ void World::add_patch(int x, int y){
   all_patches[x][y] = Patch(x,y);
 }
 
-Patch& World::get_patch(int x, int y){
+Patch& World::get_patch(double x_arg, double y_arg){
+  int x = trunc(x_arg);
+  int y = trunc(y_arg);
   x = (x+WORLD_WIDTH)%WORLD_WIDTH;
   y = (y+WORLD_HEIGHT)%WORLD_HEIGHT;
   return all_patches[x][y];
@@ -102,11 +104,9 @@ void World::move_turtle(std::shared_ptr<Turtle> turtle, float distance){
   // moves the turtle but asking the turtle to calculate its movement, and if there is space on the target_patch, the world executes the move
   turtle->wiggle(RNG_Engine);
   Patch &turtle_current_patch = get_patch(turtle->getX(), turtle->getY());
-  std::pair<int,int> new_coords = turtle->move(distance); //moving along turtle.heading for the default value of 1 unit
+  std::pair<double,double> new_coords = turtle->move(distance); //moving along turtle.heading for the default value of 1 unit
   Patch& target_patch = get_patch(new_coords.first, new_coords.second);
-  if (turtle_current_patch == target_patch){
-    return;
-  } else if (target_patch.is_at_capacity()){
+  if (target_patch.is_at_capacity()){
     turtle->execute_move(false);
   }
   else{
@@ -157,7 +157,7 @@ void World::updateTurtleVectors(){
       if (std::shared_ptr<Bacteria> bacteria = std::dynamic_pointer_cast<Bacteria>(turtle)) {
         all_bacterias.erase(std::remove(begin(all_bacterias), end(all_bacterias), bacteria), end(all_bacterias));
         bacteria.reset();
-      } else if (std::shared_ptr<Antibodies> antibody = std::dynamic_pointer_cast<Antibodies>(turtle)) { 
+      } else if (std::shared_ptr<Antibodies> antibody = std::dynamic_pointer_cast<Antibodies>(turtle)) {
         all_antibodies.erase(std::remove(begin(all_antibodies), end(all_antibodies), antibody), end(all_antibodies));
       } else if (std::shared_ptr<FDCs> fdc = std::dynamic_pointer_cast<FDCs>(turtle)) {
         all_fdcs.erase(std::remove(begin(all_fdcs), end(all_fdcs), fdc), end(all_fdcs));
@@ -181,7 +181,7 @@ void World::updateTurtleVectors(){
         activated_b_cell.reset();
         //std::cout<<"activated_b_cell use count after reset"<<activated_b_cell.use_count()<<std::endl;
 
-        
+
       } else if (std::shared_ptr<GCBCell> gcb_cell = std::dynamic_pointer_cast<GCBCell>(turtle)) {
         all_gcb_cells.erase(std::remove(begin(all_gcb_cells), end(all_gcb_cells), gcb_cell), end(all_gcb_cells));
         gcb_cell.reset();
@@ -315,7 +315,7 @@ void World::setup(){
   get_patch(0,WORLD_HEIGHT-1).setColor("green");
   get_patch(WORLD_WIDTH-1,0).setColor("yellow");
   get_patch(WORLD_WIDTH-1,WORLD_HEIGHT-1).setColor("orange");
-  
+
   std::cout<<"Angle To neighbor 0-TL(degrees)"<<atan2(1,-1) * 180/M_PI<<std::endl;
   std::cout<<"Angle To neighbor 1-T(degrees)"<<atan2(1,0) * 180/M_PI<<std::endl;
   std::cout<<"Angle To neighbor 2-TR(degrees)"<<atan2(1,1) * 180/M_PI<<std::endl;
@@ -324,7 +324,7 @@ void World::setup(){
   std::cout<<"Angle To neighbor 5-BL(degrees)"<<atan2(-1,-1) * 180/M_PI<<std::endl;
   std::cout<<"Angle To neighbor 6-B(degrees)"<<atan2(-1,0) * 180/M_PI<<std::endl;
   std::cout<<"Angle To neighbor 7-BR(degrees)"<<atan2(-1,1) * 180/M_PI<<std::endl;
-  
+
   get_patch(0,0).setColor("pink");
   get_patch(1,0).setColor("blue");
   get_patch(2,0).setColor("green");
@@ -334,7 +334,7 @@ void World::setup(){
   get_patch(0,2).setColor("yellow");
   get_patch(1,2).setColor("orange");
   get_patch(2,2).setColor("cyan");
-  
+
   // Exit from follicle
   for (int y = center_y - 5; y <= center_y + 5; y++) {
       if (y >= 0 && y < WORLD_HEIGHT) {
@@ -380,8 +380,6 @@ void World::setup(){
           int random_y = RNG_Engine() % WORLD_HEIGHT;
           coord = std::make_pair(random_x, random_y);
       } while (get_patch(coord.first, coord.second).getPatchType() != 1);
-      std::cout<<coord.first<<", "<<coord.second<< ", "<< get_patch(coord.first, coord.second).getPatchType()<<std::endl;
-
       auto tfhCell = std::make_shared<TfhCell>(coord.first, coord.second, global_ID_counter++, RNG_Engine()%360); // create the TfhCell
       Patch& patch = get_patch(coord.first, coord.second); // get patch to add the turtle to
 
@@ -471,6 +469,7 @@ void World::setup(){
 
 
 void World::go() {
+  bool print_test = false;
   calculateIncomingTNFaIL6Level();
   simulateBackgroundInflammation();
 
@@ -503,38 +502,54 @@ void World::go() {
           }
       }
   }
-
+  if (print_test){std::cout<<"go 1"<<std::endl;}
   // Ask all agents to perform their functions
   for (auto& fdc : all_fdcs){fdcFunction(fdc);}
-  //
+  if (print_test){std::cout<<"go 2"<<std::endl;}
+
   for (auto& naiveBCell : all_naive_b_cells){naiveBCellFunction(naiveBCell);}
+  if (print_test){std::cout<<"go 3"<<std::endl;}
 
   for (auto& activatedBCell : all_activated_b_cells){activatedBCellFunction(activatedBCell);}
+  if (print_test){std::cout<<"go 4"<<std::endl;}
 
   for (auto& gcbCell : all_gcb_cells){gc_b_cell_function(gcbCell);}
+  if (print_test){std::cout<<"go 5"<<std::endl;}
 
   for (auto& llPlasmaCell : all_ll_plasma_cells){ll_plasma_cell_function(llPlasmaCell);}
+  if (print_test){std::cout<<"go 6"<<std::endl;}
 
   for (auto& slPlasmaCell : all_sl_plasma_cells){sl_plasma_cell_function(slPlasmaCell);}
+  if (print_test){std::cout<<"go 7"<<std::endl;}
 
   for (auto& memBCell : all_mem_b_cells){memBCellFunction(memBCell);}
+  if (print_test){std::cout<<"go 8"<<std::endl;}
 
   for (auto& antibody : all_antibodies){antibodiesFunction(antibody);}
+  if (print_test){std::cout<<"go 9"<<std::endl;}
 
   for (auto& bregCell : all_breg_cells){bregFunction(bregCell);}
+  if (print_test){std::cout<<"go 10"<<std::endl;}
 
   for (auto& tfhCell : all_tfh_cells){tfhCellFunction(tfhCell);}
+  if (print_test){std::cout<<"go 11"<<std::endl;}
 
   for (auto& th0Cell : all_th0_cells){th0CellFunction(th0Cell);}
+  if (print_test){std::cout<<"go 12"<<std::endl;}
 
   for (auto& th1Cell : all_th1_cells){th1CellFunction(th1Cell);}
+  if (print_test){std::cout<<"go 13"<<std::endl;}
 
   for (auto& th2Cell : all_th2_cells){th2CellFunction(th2Cell);}
+  if (print_test){std::cout<<"go 14"<<std::endl;}
 
   for (auto& bacteria : all_bacterias){bacteriaFunction(bacteria);}
+  if (print_test){std::cout<<"go 15"<<std::endl;}
 
   update_chemokine_gradient();
+  if (print_test){std::cout<<"go 16"<<std::endl;}
   check_overall_cd21_expression();
+  if (print_test){std::cout<<"go 17"<<std::endl;}
 
   // Check if autoinoculate is active
   if(AUTOINOCULATE) {
@@ -555,6 +570,8 @@ void World::go() {
   step++;
   // end of go
   updateTurtleVectors(); // need to update turtle positions/delete dead turtles
+  if (print_test){std::cout<<"go 18"<<std::endl;}
+
 }
 
 
@@ -635,7 +652,7 @@ void World::auto_inoculate(int numBac) {
 
         new_bacteria->setColor("red");
         new_bacteria->setShape("bug");
-        new_bacteria->setSize(2);
+        new_bacteria->setSize(BACTERIA_SIZE);
         new_bacteria->setTimeAlive(0);
         new_bacteria->setInBlood(false);
         new_bacteria->setEpitopeType(BACTERIA_EPITOPE_TYPE);

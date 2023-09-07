@@ -71,7 +71,7 @@ public:
 
   World(){};
 
-  Patch& get_patch(int x, int y);
+  Patch& get_patch(double x_arg, double y_arg);
   Patch& get_patch_ahead(std::shared_ptr<Turtle> turtle, float distance=1);
   Patch& get_patch_ahead_right(std::shared_ptr<Turtle> turtle, float distance=1);
   Patch& get_patch_ahead_left(std::shared_ptr<Turtle> turtle, float distance=1);
@@ -136,7 +136,7 @@ public:
   std::shared_ptr<Th2Cell> getOneTh2Here(int patchX, int patchY);
   std::shared_ptr<TfhCell> getOneTfhHere(int patchX, int patchY);
   std::shared_ptr<ActivatedBCell> getOneActivatedBCellHere(int patchX, int patchY);
-  std::vector<std::shared_ptr<FDCs>> get_fdcs_with_no_presented_antigen(int patchX, int patchY);
+  std::vector<std::shared_ptr<FDCs>> get_fdcs_with_no_presented_antigen();
 
   // void checkTNFStatus(std::shared_ptr<T> cell) lives at bottom because of template declaration restrictions
   void isotypeSwitch(std::shared_ptr<ActivatedBCell> activated_b_cell);
@@ -218,8 +218,8 @@ public:
     // std::cout<<"original cell ID "<<cell->getID()<< " and location "<<cell<<std::endl;
     // std::cout<<"placeholder cell ID "<<placeholder->getID()<<" and location "<<placeholder<<std::endl;
 
-    
-    
+
+
     breg->copy_other_turtle_attributes(cell);
     breg->setSize(1);
     breg->setShape("circle");
@@ -244,11 +244,11 @@ public:
     // std::cout<<"my location" <<cell->getX()<<", "<< cell->getY()<<std::endl;
     Patch& current_patch = get_patch(cell->getX(), cell->getY());
     double final_heading = cell->getHeading();
-    std::shared_ptr<TfhCell> b_cell = std::dynamic_pointer_cast<TfhCell>(cell);
-    // bool print_test = (b_cell != NULL);
-    // if (print_test){print_test = bool(b_cell->getID() == 120);}
-    // if (print_test){b_cell->setColor("orange"); b_cell->setShape("bug");}
+    std::shared_ptr<Bacteria> test_cell = std::dynamic_pointer_cast<Bacteria>(cell);
     bool print_test = false;
+    // bool print_test = (test_cell != NULL);
+    // if (print_test){print_test = bool(test_cell->getID() == 120);}
+    // if (print_test){test_cell->setColor("orange"); test_cell->setShape("bug");}
     // if (print_test){
     //   print_test = (cell->getX() == WORLD_WIDTH);
     // }
@@ -290,8 +290,8 @@ public:
     if (angle_relative_to_s1p<-180){angle_relative_to_s1p+=360;}
     if (angle_relative_to_s1p>180){angle_relative_to_s1p-=360;}
     angle_relative_to_s1p = fmod(angle_relative_to_s1p,360);
-    
-    if (print_test){std::cout<<"my current position is "<<b_cell->getX()<<", "<<b_cell->getY()<<std::endl;
+
+    if (print_test){std::cout<<"my current position is "<<test_cell->getX()<<", "<<test_cell->getY()<<std::endl;
       std::cout<<"Max Patch position is "<<max_patch.getX()<<", "<<max_patch.getY()<<std::endl;}
 
 
@@ -320,7 +320,7 @@ public:
     if (angle_relative_to_s1pr2>180){angle_relative_to_s1pr2-=360;}
     angle_relative_to_s1pr2 = fmod(angle_relative_to_s1pr2,360);
 
-    if (print_test){std::cout<<"my current position is "<<b_cell->getX()<<", "<<b_cell->getY()<<std::endl;
+    if (print_test){std::cout<<"my current position is "<<test_cell->getX()<<", "<<test_cell->getY()<<std::endl;
       std::cout<<"Max Patch position is "<<max_patch.getX()<<", "<<max_patch.getY()<<std::endl;}
 
 
@@ -348,7 +348,7 @@ public:
     if (angle_relative_to_cxcl13>180){angle_relative_to_cxcl13-=360;}
     angle_relative_to_cxcl13 = fmod(angle_relative_to_cxcl13,360);
 
-    if (print_test){std::cout<<"my current position is "<<b_cell->getX()<<", "<<b_cell->getY()<<std::endl;
+    if (print_test){std::cout<<"my current position is "<<test_cell->getX()<<", "<<test_cell->getY()<<std::endl;
       std::cout<<"Max Patch position is "<<max_patch.getX()<<", "<<max_patch.getY()<<std::endl;}
 
     final_heading += angle_relative_to_cxcl13*cxcr5_weight;
@@ -356,13 +356,13 @@ public:
     std::cout<<"angle_absolute_to_cxcl13  "<<angle_absolute_to_cxcl13<<std::endl;
     std::cout<<"angle_relative_to_cxcl13  "<<angle_relative_to_cxcl13<<std::endl;
     };
-    
+
     // for ccr7/ccl19
     // random_max_patch_ind = RNG_Engine() % neighbors.size();
     // max_patch = neighbors[random_max_patch_ind];
     double cccl7_weight = cell->getCcr7Level() / 100.0;
     double max_ccl19 = 0;
-    for (auto neighbor_patch: neighbors){      
+    for (auto neighbor_patch: neighbors){
         if (neighbor_patch.getCcl19Level() > max_ccl19) {
             max_ccl19 = neighbor_patch.getCcl19Level();
             max_patch = get_patch(neighbor_patch.getX(), neighbor_patch.getY());
@@ -374,7 +374,7 @@ public:
     if (angle_relative_to_ccl19>180){angle_relative_to_ccl19-=360;}
     angle_relative_to_ccl19 = fmod(angle_relative_to_ccl19,360);
 
-    if (print_test){std::cout<<"my current position is "<<b_cell->getX()<<", "<<b_cell->getY()<<std::endl;
+    if (print_test){std::cout<<"my current position is "<<test_cell->getX()<<", "<<test_cell->getY()<<std::endl;
       std::cout<<"Max Patch position is "<<max_patch.getX()<<", "<<max_patch.getY()<<std::endl;}
 
     final_heading += angle_relative_to_ccl19*cccl7_weight;
@@ -388,9 +388,9 @@ public:
     // max_patch = neighbors[random_max_patch_ind];
     double ebi2r_weight = cell->getEbi2rLevel() / 100.0;
     double max_ebi2 = 0;
-    for (auto neighbor_patch: neighbors){    
+    for (auto neighbor_patch: neighbors){
         if (neighbor_patch.getEbi2Level() > max_ebi2) {
-          
+
             max_ebi2 = neighbor_patch.getEbi2Level();
             max_patch = get_patch(neighbor_patch.getX(), neighbor_patch.getY());
         }
@@ -401,7 +401,7 @@ public:
     if (angle_relative_to_ebi2>180){angle_relative_to_ebi2-=360;}
     angle_relative_to_ebi2 = fmod(angle_relative_to_ebi2,360);
 
-    if (print_test){std::cout<<"my current position is "<<b_cell->getX()<<", "<<b_cell->getY()<<std::endl;
+    if (print_test){std::cout<<"my current position is "<<test_cell->getX()<<", "<<test_cell->getY()<<std::endl;
       std::cout<<"Max Patch position is "<<max_patch.getX()<<", "<<max_patch.getY()<<std::endl;}
 
 

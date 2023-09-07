@@ -60,7 +60,7 @@ class Turtle : public Agent{
     // add more variables that apply to all turtles here for the specific NetLogo model being ported
 
   public:
-    std::pair<int,int> move(float distance=1);
+    std::pair<double,double> move(float distance=1);
     std::pair<int,int> jumpRandom(std::mt19937 &RNG_Engine);
     void execute_move(bool didMove);
     void wiggle(std::mt19937 &RNG_Engine);
@@ -167,7 +167,7 @@ class Turtle : public Agent{
       std::cout<<"greated weak turtle pointer in turtle function"<<std::endl;
        return test;
      }
-    
+
     bool operator== (const Turtle& turt2){return this->ID_num==turt2.ID_num;};
     bool operator== (const Turtle* turt2){return this->ID_num==turt2->ID_num;};
     bool operator== (const std::weak_ptr<Turtle> turt2){return this->ID_num==turt2.lock()->ID_num;};

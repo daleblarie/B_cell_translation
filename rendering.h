@@ -21,7 +21,7 @@ private:
 
 
 public:
-  const static int GRID_SIZE = 8;
+  const static int GRID_SIZE = 7;
   const static int SCREEN_WIDTH = WORLD_WIDTH * GRID_SIZE;
   const static int SCREEN_HEIGHT = WORLD_WIDTH * GRID_SIZE;
   RenderingEngine();

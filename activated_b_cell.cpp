@@ -191,7 +191,7 @@ void World::tiResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
                 new_mem_b_cell->setExposureNumber(1);
                 new_mem_b_cell->setTimeAlive(0);
                 // Set color, shape, size, etc. as required
-                new_mem_b_cell->setColor("white");
+                new_mem_b_cell->setColor("pink");
                 new_mem_b_cell->setShape("target");
                 new_mem_b_cell->setSize(1);
                 new_mem_b_cell->setS1pr1Level(10);
@@ -203,7 +203,7 @@ void World::tiResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
                 all_turtles.push_back(new_mem_b_cell_weak_ptr);
                 all_mem_b_cells.push_back(new_mem_b_cell);
                 get_patch(new_mem_b_cell->getX(), new_mem_b_cell->getY()).add_turtle(new_mem_b_cell);
-                
+
             } else {
                 // Create a new Memory B Cell and add it to the corresponding containers
                 auto new_mem_b_cell = std::make_shared<MemBCell>(activated_b_cell->getX(), activated_b_cell->getY(), global_ID_counter++);
@@ -212,14 +212,14 @@ void World::tiResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
                 new_mem_b_cell->setExposureNumber(2);
                 new_mem_b_cell->setTimeAlive(0);
                 // Set color, shape, size, etc. as required
-                new_mem_b_cell->setColor("white");
+                new_mem_b_cell->setColor("pink");
                 new_mem_b_cell->setShape("target");
                 new_mem_b_cell->setSize(1);
                 new_mem_b_cell->setS1pr1Level(10);
                 new_mem_b_cell->setProBreg(0);
                 new_mem_b_cell->setCd21Level(0);
                 new_mem_b_cell->setCxcr5Level(10);
-                
+
                 std::weak_ptr<Turtle> new_mem_b_cell_weak_ptr = new_mem_b_cell;
                 all_turtles.push_back(new_mem_b_cell_weak_ptr);
                 all_mem_b_cells.push_back(new_mem_b_cell);

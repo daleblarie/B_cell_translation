@@ -4,13 +4,13 @@
 
 TfhCell::TfhCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"creating TFH cell"<<std::endl;
+    std::cout<<"creating TFH cell ID "<<id<<std::endl;
 
 }
 void World::tfhCellFunction(std::shared_ptr<TfhCell> tfh_cell) {
   if (!tfh_cell->get_is_alive()) {return;}
-
-  // std::cout<<"TfH function"<<std::endl;
+  bool print_test = false;
+  if (print_test){std::cout<<"TfH function for ID "<<tfh_cell->getID()<<std::endl;}
 
     Patch& current_patch = get_patch(tfh_cell->getX(), tfh_cell->getY());
 
@@ -19,7 +19,7 @@ void World::tfhCellFunction(std::shared_ptr<TfhCell> tfh_cell) {
 
         chemotaxis(tfh_cell);
         // std::cout<<"Moving tfh"<<std::endl;
-        
+
         move_turtle(tfh_cell);
     }
 

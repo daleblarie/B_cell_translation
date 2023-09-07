@@ -4,11 +4,11 @@
 
 const bool RENDERING = true;
 const bool SAVING_DATA = false;
-const bool TURTLE_CONTINOUS_MOVEMENT = false;
+const bool TURTLE_CONTINOUS_MOVEMENT = true;
 const bool TOROIDAL_WORLD = false;
 
 const int RNG_SEED=108;
-const int NUM_STEPS = 2000;
+const int NUM_STEPS = 10000;
 
 
 const static int WORLD_WIDTH = 101;
@@ -24,6 +24,7 @@ const int AUTOINOCULATE_SECOND_TIME = 2880;
 const int STOP_EXPOSURE_TIME = 4800;
 const int FIRST_EXPOSURE_AMOUNT = 50;
 const int SECOND_EXPOSURE_AMOUNT = 50;
+const int BACTERIA_SIZE = 2;
 
 const int BACTERIA_EPITOPE_TYPE = 30;
 const int NUMBER_OF_TI_EPITOPES = 10;

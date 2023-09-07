@@ -42,13 +42,13 @@ void Turtle::removeLinkedTurtle(){
 }
 
 
-std::pair<int,int> Turtle::move(float distance) {
+std::pair<double,double> Turtle::move(float distance) {
   // default val for distance=1
   // calculates the movement for the turtle based on its heading and distance to move and returns the coordinates of the destination patch
     temp_x = x_dec;   //placeholders in case we are not able to actually execute the move. In that case, these will reset x/y decimal values
     temp_y = y_dec;
-    float d_x = cos(heading * M_PI/180) * distance;   // converting degrees to radians and getting delta x and delta y
-    float d_y = -1 * sin(heading * M_PI/180) * distance;
+    double d_x = cos(heading * M_PI/180) * distance;   // converting degrees to radians and getting delta x and delta y
+    double d_y = -1 * sin(heading * M_PI/180) * distance;
     if (!TURTLE_CONTINOUS_MOVEMENT) {   //ie discrete movement, turtles always land on the middle of patches
       d_x = round(d_x);
       d_y = round(d_y);
@@ -64,11 +64,11 @@ std::pair<int,int> Turtle::move(float distance) {
       if (x_dec < 0){x_dec = 0;}
       if (y_dec < 0){y_dec = 0;}
     }
-    int newx, newy;
-    newx = trunc(x_dec);    // truncating decimal coords to get int coords
-    newy = trunc(y_dec);
+    // int newx, newy;
+    // newx = trunc(x_dec);    // truncating decimal coords to get int coords
+    // newy = trunc(y_dec);
 
-    return std::make_pair(newx, newy);
+    return std::make_pair(x_dec, y_dec);
 }
 std::pair<int,int> Turtle::jumpRandom(std::mt19937 &RNG_Engine) {
   // get a random direction, then a random distance, then return the coordinates that we jumped to
@@ -84,6 +84,8 @@ void Turtle::execute_move(bool didMove){
   if(didMove){
     setX(trunc(x_dec));                             // truncating decimal coords to get int coords
     setY(trunc(y_dec));
+    temp_x = x_dec;
+    temp_y = y_dec;
   } else{
     x_dec = temp_x;
     y_dec = temp_y;

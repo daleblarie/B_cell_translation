@@ -4,13 +4,15 @@
 
 Th2Cell::Th2Cell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"creating TH 2 cell"<<std::endl;
+    std::cout<<"creating TH 2 cell ID "<<id<<std::endl;
 
 }
 
 
 void World::th2CellFunction(std::shared_ptr<Th2Cell> th2_cell) {
   if (!th2_cell->get_is_alive()) {return;}
+  bool print_test = false;
+  if (print_test){std::cout<<"TH2 function for "<<th2_cell->getID()<<std::endl;}
 
     Patch& current_patch = get_patch(th2_cell->getX(), th2_cell->getY());
 
@@ -18,7 +20,7 @@ void World::th2CellFunction(std::shared_ptr<Th2Cell> th2_cell) {
     if (calculateDistance(WORLD_WIDTH/2, WORLD_HEIGHT/2, th2_cell->getX(), th2_cell->getY()) > 20 || !th2_cell->getBcellBindingStatus()) {
         chemotaxis(th2_cell);
         // std::cout<<"Moving th2"<<std::endl;
-        
+
         move_turtle(th2_cell);
     }
 
