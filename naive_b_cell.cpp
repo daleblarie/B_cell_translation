@@ -4,7 +4,7 @@
 
 NaiveBCell::NaiveBCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"creating naive B cell with ID "<<id<<std::endl;
+    // std::cout<<"creating naive B cell with ID "<<id<<std::endl;
 
 }
 // NaiveBCell use count after creation  1
@@ -64,7 +64,6 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
   if (!naive_b_cell->get_is_alive()) {return;}
 
   bool print_test = false;
-  bool activated = false;
   // std::cout<<"naive_b_cellfunction for ID number "<<naive_b_cell->getID()<<"Ebi2rLevel "<<naive_b_cell->getEbi2rLevel()<<std::endl;
   // Get the current patch of the naive B cell
   Patch& current_patch = get_patch(naive_b_cell->getX(), naive_b_cell->getY());
@@ -92,7 +91,7 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
       // creating a new activated_b_cell
       // std::cout<<"Before turning into activated b cell, original naive_b_cell use count is "<<naive_b_cell.use_count()<<std::endl;
 
-      auto new_activated_b_cell = std::make_shared<ActivatedBCell>(naive_b_cell->getX(), naive_b_cell->getX(), global_ID_counter++, naive_b_cell->getHeading());
+      auto new_activated_b_cell = std::make_shared<ActivatedBCell>(naive_b_cell->getX(), naive_b_cell->getY(), global_ID_counter++, naive_b_cell->getHeading());
       if (print_test){std::cout<< "new_activated_b_cell use count upon creation "<<new_activated_b_cell.use_count()<<std::endl;}
       new_activated_b_cell->copy_other_turtle_attributes(naive_b_cell);
       if (print_test){std::cout<< "new_activated_b_cell use count after copy  "<<new_activated_b_cell.use_count()<<std::endl;}
@@ -103,11 +102,11 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
       new_activated_b_cell->setProBreg(0);
       new_activated_b_cell->setShape("target");
       new_activated_b_cell->setSize(1);
-      new_activated_b_cell->setColor("yellow");
+      new_activated_b_cell->setColor("red");
       new_activated_b_cell->setCsrBool(false);
       new_activated_b_cell->setTimeAlive(0);
 
-      if (print_test){std::cout<<"location of mew activated_b_Cell is "<<new_activated_b_cell->getX()<<", "<<new_activated_b_cell->getX()<<std::endl;}
+      if (print_test){std::cout<<"location of mew activated_b_Cell is "<<new_activated_b_cell->getX()<<", "<<new_activated_b_cell->getY()<<std::endl;}
 
       int rTI = RNG_Engine() % 100;
       int rTD = RNG_Engine() % 100;
@@ -150,7 +149,6 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
       // std::cout<<"After turning into activated b cell, original naive_b_cell use count is "<<naive_b_cell.use_count()<<std::endl;
       // std::cout<<"After turning into activated b cell, original naive_b_cell ID is "<<naive_b_cell->getID()<<std::endl;
       kill(naive_b_cell);
-      activated = true;
 
       // std::shared_ptr<ActivatedBCell> naive_b_cell = new_activated_b_cell; // renaming naive_b_Cell so the rest of the function still works as expected
       // std::cout<< "new_activated_b_cell use count after rename  "<<new_activated_b_cell.use_count()<<std::endl;
@@ -173,7 +171,7 @@ void World::naiveBCellFunction(std::shared_ptr<NaiveBCell> naive_b_cell) {
   // Checks level of stimulation of b-reg differentiation
   bool turn_into_breg = checkBregStatus(naive_b_cell);
   if (turn_into_breg){
-    std::cout<<"naive_b cell ID "<<naive_b_cell->getID()<<"turning into Breg"<<std::endl;
+    if (print_test){std::cout<<"naive_b cell ID "<<naive_b_cell->getID()<<"turning into Breg"<<std::endl;}
     // cant do it like below, leads to weird error where orignal cell is overwritten in templated turnIntoBreg function.
     // std::shared_ptr<BregCell> naive_b_cell = turnIntoBreg(naive_b_cell);
     // need to do it like this instead

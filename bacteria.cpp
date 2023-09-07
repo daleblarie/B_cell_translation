@@ -2,7 +2,7 @@
 #include "world.h"
 Bacteria::Bacteria(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"creating bacteria with ID "<<id<<std::endl;
+    // std::cout<<"creating bacteria with ID "<<id<<std::endl;
 
 }
 

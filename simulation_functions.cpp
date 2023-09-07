@@ -101,9 +101,9 @@ std::shared_ptr<Bacteria> World::getOneBacteriaHere(int patchX, int patchY){
       for (float y =-BACTERIA_SIZE/2; y <= BACTERIA_SIZE/2; y++){
         float x_to_get, y_to_get;
         if (!TOROIDAL_WORLD) {
-          x_to_get = std::min(patchX+x,(float)WORLD_WIDTH);
+          x_to_get = std::min(patchX+x,(float)WORLD_WIDTH-1);
           x_to_get = std::max(x_to_get,(float)0);
-          y_to_get = std::min(patchY+y,(float)WORLD_HEIGHT);
+          y_to_get = std::min(patchY+y,(float)WORLD_HEIGHT-1);
           y_to_get = std::min(y_to_get,(float)0);
         } else {
           x_to_get = fmod(patchX+x,WORLD_WIDTH);
@@ -115,7 +115,8 @@ std::shared_ptr<Bacteria> World::getOneBacteriaHere(int patchX, int patchY){
         // Find antibodies on the patch
         for (const auto& turtle : turtles_on_patch) {
           if (std::shared_ptr<Bacteria> bacteria = std::dynamic_pointer_cast<Bacteria>(turtle)) {
-            // The turtle is a NaiveBCell, add it to the corresponding vector
+            // The turtle is a bacteria, add it to the corresponding vector
+            // std::cout<<"FOUND BACTERIA ON PATCH"<<std::endl;
             bacteriaOnPatch.push_back(bacteria);
           }
         }

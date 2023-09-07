@@ -3,7 +3,7 @@
 
 FDCs::FDCs(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"creating FDC with ID "<<id<<std::endl;
+    // std::cout<<"creating FDC with ID "<<id<<std::endl;
 
 }
 void World::fdcFunction(std::shared_ptr<FDCs> fdc) {

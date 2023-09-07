@@ -3,7 +3,7 @@
 
 SLPlasmaCell::SLPlasmaCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"creating SL plasma cell with ID "<<id<<std::endl;
+    // std::cout<<"creating SL plasma cell with ID "<<id<<std::endl;
 
 }
 
@@ -18,6 +18,8 @@ void World::sl_plasma_cell_function(std::shared_ptr<SLPlasmaCell> sl_plasma_cell
         if(current_patch.getPatchType() == 2) {
             sl_plasma_cell->setInBlood(true);
             sl_plasma_cell->setVisible(false);
+            if(print_test){std::cout<<"killing Sl_plasma cell at follicle exit"<<std::endl;}
+            return;
         }
 
         // Assuming you have a check_breg_status function

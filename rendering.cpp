@@ -74,8 +74,8 @@ std::tuple<int, int, int> RenderingEngine::getColor(const std::string& color){
   }
   else if (color == "orange"){
     red = 255;
-    green = 165;
-    blue = 0;
+    green = 95;
+    blue = 31;
   }
   else if (color == "grey" || color =="gray"){
     red = 128;

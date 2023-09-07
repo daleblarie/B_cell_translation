@@ -7,13 +7,14 @@
 #include "parameters.h"
 
 void Turtle::addLinkedTurtle(std::weak_ptr<Turtle> linkedTurtle) {
-  std::cout<<"LINKING TURTLE NOW "<<std::endl<<"OTHER TURLTE ID IS "<<linkedTurtle.lock()->getID()<<"MY ID IS "<<this->getID()<<std::endl;
+  // std::cout<<"LINKING TURTLE NOW "<<std::endl<<"OTHER TURLTE ID IS "<<linkedTurtle.lock()->getID()<<"MY ID IS "<<this->getID()<<std::endl;
+  // std::cout<<"LINKING TURTLE Location "<<this->get_x_dec()<<", "<<this->get_y_dec()<<std::endl<<"OTHER TURLTE location IS "<<linkedTurtle.lock()->get_x_dec()<<", "<<linkedTurtle.lock()->get_y_dec()<<std::endl;
     linkedTurtles.push_back(linkedTurtle);
-    std::cout<<"other turtle "<<linkedTurtle.lock()->getID()<<" linked to this turtle "<<this->getID()<<std::endl;
+    // std::cout<<"other turtle "<<linkedTurtle.lock()->getID()<<" linked to this turtle "<<this->getID()<<std::endl;
     std::shared_ptr<Turtle> temp_shared_ptr = std::dynamic_pointer_cast<Turtle>(shared_from_this());
     std::weak_ptr<Turtle> weak_ptr = temp_shared_ptr;
     linkedTurtle.lock()->getLinkedTurtles().push_back(weak_ptr);
-    std::cout<<"this turtle "<<this->getID()<<"linked to other turtle "<< linkedTurtle.lock()->getID()<<std::endl;
+    // std::cout<<"this turtle "<<this->getID()<<"linked to other turtle "<< linkedTurtle.lock()->getID()<<std::endl;
     temp_shared_ptr.reset();
 }
 
@@ -23,6 +24,7 @@ std::vector<std::weak_ptr<Turtle>>& Turtle::getLinkedTurtles() {
 
 void Turtle::removeLinkedTurtle(){
   for(auto neighbor : this->getLinkedTurtles()){
+    // std::cout<<"unlinking turtle"<<std::endl;
     auto iter = std::find_if(neighbor.lock()->getLinkedTurtles().begin(), neighbor.lock()->getLinkedTurtles().end(), WeakPtrComparator<Turtle>(ID_num));  // finding where current ID_num of this turtle is in the nieghbors list of links
     if (iter != neighbor.lock()->getLinkedTurtles().end()) {
          neighbor.lock()->getLinkedTurtles().erase(iter);

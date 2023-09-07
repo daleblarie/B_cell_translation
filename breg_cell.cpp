@@ -3,7 +3,7 @@
 
 BregCell::BregCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"Creating a breg cell with ID "<<id<<std::endl;
+    // std::cout<<"Creating a breg cell with ID "<<id<<std::endl;
 }
 
 
@@ -33,7 +33,7 @@ void World::bregFunction(std::shared_ptr<BregCell> breg_cell) {
 
     // Kill if the time alive exceeds 300
     if((breg_cell->getTimeAlive() > 300)|| die_by_tnf) {
-      std::cout<<"killing breg_cell at end of life. ID is "<<breg_cell->getID()<<std::endl;
+      // std::cout<<"killing breg_cell at end of life. ID is "<<breg_cell->getID()<<std::endl;
       kill(breg_cell);
     }
 }

@@ -3,7 +3,7 @@
 
 Th0Cell::Th0Cell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"creating TH 0 cell with ID "<<id<<std::endl;
+    // std::cout<<"creating TH 0 cell with ID "<<id<<std::endl;
 
 }
 

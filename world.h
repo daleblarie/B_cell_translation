@@ -80,7 +80,7 @@ public:
   void display_patches();
 
   void add_turtle(int x, int y, int id, int heading=0);
-  void place_turtle(int x, int y, std::shared_ptr<Turtle> turtle);
+  void place_turtle(double x, double y, std::shared_ptr<Turtle> turtle);
   void move_turtle(std::shared_ptr<Turtle> turtle, float distance=1);
   void move_turtle_random_jump(std::shared_ptr<Turtle> turtle);
   void turtle_wiggle(std::shared_ptr<Turtle> turtle);
@@ -90,7 +90,7 @@ public:
   // templated function to kill any turtle or agent
   template <typename T>
   void kill(std::shared_ptr<T> &ptr){
-    std::cout<<"Killing turtle with ID "<<ptr->getID()<<std::endl;
+    // std::cout<<"Killing turtle with ID "<<ptr->getID()<<std::endl;
     ptr->removeLinkedTurtle();
     all_turtles_to_kill.push_back(ptr);
     kill_turtle(ptr);
@@ -203,8 +203,8 @@ public:
   template <typename CellType>
   std::shared_ptr<BregCell> turnIntoBreg(CellType& cell){
     // std::cout<<std::endl<<std::endl<<std::endl<<std::endl;
-    std::cout<<"turning into breg"<<std::endl;
-    std::cout<<"original cell ID "<<cell->getID()<< " and location "<<cell<<std::endl;
+    // std::cout<<"turning into breg"<<std::endl;
+    // std::cout<<"original cell ID "<<cell->getID()<< " and location "<<cell<<std::endl;
     CellType placeholder = cell;
     // std::cout<<"placeholder cell ID "<<placeholder->getID()<<" and location "<<placeholder<<std::endl;
 
@@ -246,7 +246,7 @@ public:
     double final_heading = cell->getHeading();
     std::shared_ptr<Bacteria> test_cell = std::dynamic_pointer_cast<Bacteria>(cell);
     bool print_test = false;
-    // bool print_test = (test_cell != NULL);
+    // print_test = (test_cell != NULL);
     // if (print_test){print_test = bool(test_cell->getID() == 120);}
     // if (print_test){test_cell->setColor("orange"); test_cell->setShape("bug");}
     // if (print_test){

@@ -86,11 +86,11 @@ void World::add_turtle(int x, int y, int id, int heading){
   all_turtles.emplace_back(new_turtle);
 }
 
-void World::place_turtle(int x, int y, std::shared_ptr<Turtle> turtle){
+void World::place_turtle(double x, double y, std::shared_ptr<Turtle> turtle){
   Patch& original_patch = get_patch(turtle->getX(), turtle->getY());
   Patch& new_patch = get_patch(x, y);
-  turtle->setX(x);
-  turtle->setY(y);
+  turtle->setX(trunc(x));
+  turtle->setY(trunc(y));
   turtle->set_x_dec(x);
   turtle->set_y_dec(y);
   turtle->set_temp_x(x);
@@ -110,6 +110,18 @@ void World::move_turtle(std::shared_ptr<Turtle> turtle, float distance){
     turtle->execute_move(false);
   }
   else{
+    float main_turtle_dx = new_coords.first - turtle->get_temp_x();
+    float main_turtle_dy = new_coords.second - turtle->get_temp_y();
+    if (turtle->getLinkedTurtles().size()>0){
+      // std::cout<<"main_turtle delta location "<< main_turtle_dx<<", "<<main_turtle_dy<<std::endl;
+      for (auto link : turtle->getLinkedTurtles()) {
+        float current_x = link.lock()->get_x_dec();
+        float current_y = link.lock()->get_y_dec();
+        place_turtle(current_x+main_turtle_dx, current_y+main_turtle_dy, link.lock());
+        // std::cout<<"moving self("<<turtle->getID()<<") to "<<new_coords.first<<", "<< new_coords.second<<std::endl;
+        // std::cout<<"Placed other turtle("<<link.lock()->getID()<<") at "<<current_x+main_turtle_dx<<", "<<current_y+main_turtle_dy<<std::endl<<std::endl<<std::endl;
+      }
+    }
     turtle->execute_move(true);
     int temp = turtle_current_patch.getTurtlesHere().size();
     turtle_current_patch.remove_turtle(turtle);
@@ -210,7 +222,7 @@ void World::updateTurtleVectors(){
         all_th2_cells.erase(std::remove(begin(all_th2_cells), end(all_th2_cells), th2_cell), end(all_th2_cells));
         th2_cell.reset();
       }
-      std::cout<<"turtle ID "<<turtle->getID()<<" use count "<<turtle.use_count()<<std::endl;
+      // std::cout<<"turtle ID "<<turtle->getID()<<" use count "<<turtle.use_count()<<std::endl;
       turtle.reset();
 
     }
@@ -219,7 +231,7 @@ void World::updateTurtleVectors(){
     // erasing the turtle weak pointers that are now a null pointer because they have been reset
     all_turtles.erase(std::remove_if(all_turtles.begin(), all_turtles.end(),
     [](const std::weak_ptr<Turtle>& wp) {     //lambda function to check if weak pointer is expired (aka killed and reset() has been called)
-        if (wp.expired()){std::cout<<"Deleting expired Turtle"<<std::endl;}
+        // if (wp.expired()){std::cout<<"Deleting expired Turtle"<<std::endl;}
         return wp.expired();
       }),
     all_turtles.end());
@@ -295,22 +307,7 @@ void World::setup(){
           }
       }
   }
-  // display for GCb cell 15 unit radius from center
-  for (int x = center_x - 15; x <= center_x + 15; x++) {
-      for (int y = center_y - 15; y <= center_y + 15; y++) {
-          if (x >= 0 && x < WORLD_WIDTH && y >= 0 && y < WORLD_HEIGHT) {
-            // Calculate the distance from the center
-            int dist_x = center_x - x;
-            int dist_y = center_y - y;
-            if (dist_x * dist_x + dist_y * dist_y <= 15 * 15) {  // Radius of 15 units
-                Patch& p = get_patch(x, y);
-                p.setPatchType(0);
-                p.setColor("red");
-                p.setOpacity(50);
-            }
-          }
-      }
-  }
+
   get_patch(0,0).setColor("pink");
   get_patch(0,WORLD_HEIGHT-1).setColor("green");
   get_patch(WORLD_WIDTH-1,0).setColor("yellow");
@@ -658,6 +655,12 @@ void World::auto_inoculate(int numBac) {
         new_bacteria->setEpitopeType(BACTERIA_EPITOPE_TYPE);
         new_bacteria->setNumTIep(NUMBER_OF_TI_EPITOPES);
         new_bacteria->setNumTDep(NUMBER_OF_TD_EPITOPES);
+
+        new_bacteria->setS1pr1Level(0);
+        new_bacteria->setS1pr2Level(0);
+        new_bacteria->setCxcr5Level(0);
+        new_bacteria->setCcr7Level(0);
+        new_bacteria->setEbi2rLevel(0);
 
         std::weak_ptr<Turtle> new_bacteria_weak_ptr = new_bacteria;
         all_bacterias.push_back(new_bacteria);  // Assuming you have a list named all_bacteria

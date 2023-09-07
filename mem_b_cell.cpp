@@ -3,7 +3,7 @@
 
 MemBCell::MemBCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"creating memory B cell"<<std::endl;
+    // std::cout<<"creating memory B cell ID "<<id<<" at x,y "<<x<<", "<<y<<std::endl;
 
 }
 
@@ -38,6 +38,7 @@ void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
     if (print_test){std::cout<<"Killing mem_b_cell for age "<<mem_b_cell->getID()<<". use count:"<<mem_b_cell.use_count()<<std::endl;}
 
     kill(mem_b_cell);
+    return;
   }
 
   auto apc = getOneFDCHere(mem_b_cell->getX(), mem_b_cell->getY());
@@ -47,13 +48,13 @@ void World::memBCellFunction(std::shared_ptr<MemBCell> mem_b_cell) {
   if((apc != nullptr && apc->getPresentedAntigen() != 0 && apc->getResponsiveness() > random_encounter) || antigen != nullptr){
     if(mem_b_cell->getCd21Level() > BCELL_CD21_ACTIVATION_THRESHOLD){
 
-      auto new_activated_b_cell = std::make_shared<ActivatedBCell>(mem_b_cell->getX(), mem_b_cell->getX(), global_ID_counter++, mem_b_cell->getHeading());
+      auto new_activated_b_cell = std::make_shared<ActivatedBCell>(mem_b_cell->getX(), mem_b_cell->getY(), global_ID_counter++, mem_b_cell->getHeading());
       new_activated_b_cell->copy_other_turtle_attributes(mem_b_cell);
       current_patch.setIl6(current_patch.getIl6() + PHAG_IL6_BURST);
       new_activated_b_cell->setProBreg(0);
-      new_activated_b_cell->setShape("circle");
+      new_activated_b_cell->setShape("target");
       new_activated_b_cell->setSize(1);
-      new_activated_b_cell->setColor("yellow");
+      new_activated_b_cell->setColor("cyan");
       new_activated_b_cell->setCsrBool(false);
       new_activated_b_cell->setTimeAlive(100);
 

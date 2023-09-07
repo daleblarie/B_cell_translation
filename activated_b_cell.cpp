@@ -3,7 +3,7 @@
 
 ActivatedBCell::ActivatedBCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"Creating activated b cell with ID "<<id<<std::endl;
+    // std::cout<<"Creating activated b cell with ID "<<id<<std::endl;
 }
 
 
@@ -34,7 +34,7 @@ void World::activatedBCellFunction(std::shared_ptr<ActivatedBCell> abcell) {
         if (abcell->getResponseType() == 2) {
             tdResponse(abcell);
             if (print_test){std::cout<<"abcell use count 2ais "<<abcell.use_count()<<std::endl;}
-            return;
+            if (!abcell->get_is_alive()){return;}
         } else if (abcell->getResponseType() == 1) {
             tiResponse(abcell);
             // return;
@@ -103,7 +103,7 @@ void World::tdResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
     if (tfh) {
       if (tfh->getBcellBindingStatus()){std::cout<<"TFH CELL IS ALREADY BOUND TO, but we are gonna try to bind again"<<std::endl;}
         auto new_gc_b_cell = std::make_shared<GCBCell>(activated_b_cell->getX(), activated_b_cell->getY(), global_ID_counter++, activated_b_cell->getHeading());
-        std::cout<< "activated b cell doing tdResponse at "<< activated_b_cell->getX()<<", "<<activated_b_cell->getY()<<std::endl;
+        // std::cout<< "activated b cell doing tdResponse at "<< activated_b_cell->getX()<<", "<<activated_b_cell->getY()<< "for ID "<<activated_b_cell->getID()<<std::endl;
         new_gc_b_cell->copy_other_turtle_attributes(activated_b_cell);
         new_gc_b_cell->setProBreg(0);
         new_gc_b_cell->setColor("orange");
@@ -123,14 +123,15 @@ void World::tdResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
         tfh->setBcellBindingStatus(true);
 
         kill(activated_b_cell);
+        return;
     } else {
         // If no Tfh cell is found, try to get a Th2 cell in the current location of the activated B cell
         auto th2 = getOneTh2Here(activated_b_cell->getX(), activated_b_cell->getY());
 
         // If a Th2 cell is found, create a new GcB cell and link it with the Th2 cell
         if (th2) {
-          if (th2->getBcellBindingStatus()){std::cout<<"th2 CELL IS ALREADY BOUND TO, but we are gonna try to bind again"<<std::endl;}
-          std::cout<< "activated b cell doing tdResponse at "<< activated_b_cell->getX()<<", "<<activated_b_cell->getY()<<std::endl;
+          if (th2->getBcellBindingStatus()){std::cout<<"th2 CELL IS ALREADY BOUND TO, but we are gonna try to bind again from b cell with ID "<<activated_b_cell->getID()<<std::endl;}
+          // std::cout<< "activated b cell doing tdResponse at "<< activated_b_cell->getX()<<", "<<activated_b_cell->getY()<< "for ID "<<activated_b_cell->getID()<<std::endl;
 
             auto new_gc_b_cell = std::make_shared<GCBCell>(activated_b_cell->getX(), activated_b_cell->getY(), global_ID_counter++, activated_b_cell->getHeading());
             new_gc_b_cell->copy_other_turtle_attributes(activated_b_cell);
@@ -152,6 +153,7 @@ void World::tdResponse(std::shared_ptr<ActivatedBCell> activated_b_cell) {
             th2->setBcellBindingStatus(true);
 
             kill(activated_b_cell);
+            return;
         }
     }
 }

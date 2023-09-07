@@ -4,7 +4,7 @@
 
 GCBCell::GCBCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"creating GCBcell with ID "<<id<<std::endl;
+    // std::cout<<"creating GCBcell with ID "<<id<<std::endl;
 
 }
 

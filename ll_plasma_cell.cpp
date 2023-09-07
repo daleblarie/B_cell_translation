@@ -3,13 +3,14 @@
 
 LLPlasmaCell::LLPlasmaCell(int x, int y, int id, int heading) : Turtle(x, y, id, heading) {
     // Constructor
-    std::cout<<"creating LL Plasma cell"<<std::endl;
+    // std::cout<<"creating LL Plasma cell"<<std::endl;
 
 }
 
 
 void World::ll_plasma_cell_function(std::shared_ptr<LLPlasmaCell> ll_plasma_cell) {
   if (!ll_plasma_cell->get_is_alive()) {return;}
+  bool print_test = false;
 
   Patch& current_patch = get_patch(ll_plasma_cell->getX(), ll_plasma_cell->getY());
   bool turn_into_breg;
@@ -18,19 +19,22 @@ void World::ll_plasma_cell_function(std::shared_ptr<LLPlasmaCell> ll_plasma_cell
         if(current_patch.getPatchType() == 2) {
             ll_plasma_cell->setInBlood(true);
             ll_plasma_cell->setVisible(false);
+            kill(ll_plasma_cell);
+            if(print_test){std::cout<<"killing ll_plasma cell at follicle exit"<<std::endl;}
+            return;
         }
 
         // Assuming you have a check_breg_status function
         turn_into_breg = checkBregStatus(ll_plasma_cell);
         if (turn_into_breg){
-          std::cout<<"ll_plasma ID "<<ll_plasma_cell->getID()<<"turning into Breg"<<std::endl;
+          if (print_test){std::cout<<"ll_plasma ID "<<ll_plasma_cell->getID()<<"turning into Breg"<<std::endl;}
           std::shared_ptr<BregCell> ll_plasma_cell = turnIntoBreg(ll_plasma_cell);
         };
 
         // ll_plasma_cell->check_breg_status();
 
         chemotaxis(ll_plasma_cell);
-        std::cout<<"moving ll_plasma_cell with use count "<<ll_plasma_cell.use_count()<<std::endl;
+        if (print_test){std::cout<<"moving ll_plasma_cell with use count "<<ll_plasma_cell.use_count()<<std::endl;}
         move_turtle(ll_plasma_cell);
       
     }
