@@ -3,6 +3,8 @@
 
 
 RenderingEngine::RenderingEngine(){
+  std::cout<<"calling default Constructor"<<std::endl;
+
   // SDL_Init(SDL_INIT_VIDEO);
   // window = SDL_CreateWindow("SDL Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
   // renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -11,6 +13,7 @@ RenderingEngine::RenderingEngine(){
 }
 
 RenderingEngine::RenderingEngine(World *world){
+  std::cout<<"calling world Constructor"<<std::endl;
   myWorld = world;
   SDL_Init(SDL_INIT_VIDEO);
   window = SDL_CreateWindow("SDL Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);

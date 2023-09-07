@@ -17,7 +17,10 @@ int main(int argc, char const *argv[]) {
   world.updateTurtleVectors();
 
   // setting up rendering engine
-  if (RENDERING){engine = RenderingEngine(worldptr);}
+  if (RENDERING){
+    engine.~RenderingEngine();
+    new (&engine) RenderingEngine(worldptr);
+  }
   bool quit=false;
   bool paused=false;
   SDL_Event event;
@@ -67,9 +70,9 @@ int main(int argc, char const *argv[]) {
            }
            std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Sleep for a short duration to avoid busy-waiting
        }
+       std::this_thread::sleep_for(std::chrono::milliseconds(50));
    }
 
-   // std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   }
   auto endTime = std::chrono::high_resolution_clock::now();

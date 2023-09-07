@@ -26,7 +26,7 @@ public:
   const static int SCREEN_HEIGHT = WORLD_WIDTH * GRID_SIZE;
   RenderingEngine();
   RenderingEngine(World *world);
-  virtual ~RenderingEngine ();
+  ~RenderingEngine ();
 
   std::tuple<int, int, int> getColor(const std::string& color);
   void drawCircle(double centerX, double centerY, double radius=GRID_SIZE/2, const std::string& color="red", int alpha=SDL_ALPHA_OPAQUE);
