@@ -3,11 +3,11 @@
 
 
 RenderingEngine::RenderingEngine(){
-  SDL_Init(SDL_INIT_VIDEO);
-  window = SDL_CreateWindow("SDL Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-  SDL_RenderClear(renderer);
+  // SDL_Init(SDL_INIT_VIDEO);
+  // window = SDL_CreateWindow("SDL Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+  // renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+  // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+  // SDL_RenderClear(renderer);
 }
 
 RenderingEngine::RenderingEngine(World *world){
