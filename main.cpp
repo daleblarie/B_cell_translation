@@ -10,14 +10,14 @@ int main(int argc, char const *argv[]) {
   std::cout<<"starting main"<<std::endl;
   World world = World();
   World* worldptr = &world; // pointer to give to rendering engine
-
+  RenderingEngine engine;
   // setting up world
   world.setup();
   // world.injure_sterile(INJURY_NUMBER);
   world.updateTurtleVectors();
 
   // setting up rendering engine
-  RenderingEngine engine = RenderingEngine(worldptr);
+  if (RENDERING){engine = RenderingEngine(worldptr);}
   bool quit=false;
   bool paused=false;
   SDL_Event event;
@@ -27,7 +27,7 @@ int main(int argc, char const *argv[]) {
   // main loop
   std::cout<<"STARTING GO"<<std::endl;
   for (size_t i = 0; i < NUM_STEPS; i++) {
-    if (i%10==0){
+    if (i%100==0){
       std::cout<<"#######################################################\n Beginning Step Number " <<i<<"\n#######################################################"<<std::endl;
     }
     if (!paused){
@@ -69,7 +69,7 @@ int main(int argc, char const *argv[]) {
        }
    }
 
-   std::this_thread::sleep_for(std::chrono::milliseconds(100));
+   // std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   }
   auto endTime = std::chrono::high_resolution_clock::now();
