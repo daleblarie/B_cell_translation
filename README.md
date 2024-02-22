@@ -18,7 +18,7 @@ Here is a short video of the simulation output.
 - In the blood, there are 3 types of objects: B-cells, bacteria, and antibodies
 	- B-cells are circles
 	- Bacteria are oval things with antennae
-	- Antibodies are mauve circles
+	- Antibodies are light brown circles
 - Each B-cell expresses a single BCR
 - Each bacteria is simplified to express only a single epitope
 - Each antibody can bind to a single bacterial epitope
