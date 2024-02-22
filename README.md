@@ -26,11 +26,10 @@ sudo make install
 compile this using `source ./compile.sh` and run using `./test.o`
 
 
-Here is a video of the simulation output.
+Here is a short video of the simulation output.
 
 
-<img src="https://github.com/daleblarie/B_cell_translation/assets/33942693/9af0fb4f-86c3-4369-82f0-3e999f20cb3e" alt="alternatetext" style="width:800px;height:800px;margin-left: auto;margin-right: auto;">
-
+<img src="https://github.com/daleblarie/B_cell_translation/assets/33942693/9af0fb4f-86c3-4369-82f0-3e999f20cb3e" alt="" style="width:600px;height:600px;margin-left: auto;margin-right: auto;">
 
 
 ## Description of the model
