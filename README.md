@@ -29,8 +29,7 @@ compile this using `source ./compile.sh` and run using `./test.o`
 Here is a video of the simulation output.
 
 
-![bcell (1)](https://github.com/daleblarie/B_cell_translation/assets/33942693/9af0fb4f-86c3-4369-82f0-3e999f20cb3e)
-<img src="https://github.com/daleblarie/B_cell_translation/assets/33942693/9af0fb4f-86c3-4369-82f0-3e999f20cb3e" alt="alternatetext" style="width:500px;height:500px;">
+<img src="https://github.com/daleblarie/B_cell_translation/assets/33942693/9af0fb4f-86c3-4369-82f0-3e999f20cb3e" alt="alternatetext" style="width:800px;height:800px;margin-left: auto;margin-right: auto;">
 
 
 
